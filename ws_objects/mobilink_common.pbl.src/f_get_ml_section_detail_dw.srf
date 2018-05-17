@@ -1,0 +1,111 @@
+﻿$PBExportHeader$f_get_ml_section_detail_dw.srf
+global type f_get_ml_section_detail_dw from function_object
+end type
+
+forward prototypes
+global subroutine f_get_ml_section_detail_dw (datawindow adw_passed)
+end prototypes
+
+global subroutine f_get_ml_section_detail_dw (datawindow adw_passed);long ll_Row
+long ll_Row_2
+string ls_MB_String
+string ls_MB_String_2
+string ls_Parameters[]
+string ls_Delimiters[]
+string ls_Blank[]
+
+adw_passed.SetRedraw(FALSE)
+ll_Row = w_select_from_asa.dw_section.GetRow()
+
+//tagout_type_id
+ll_Row_2 = adw_passed.InsertRow(0)
+ls_Parameters[1] = w_select_from_asa.is_Tagout_Label
+ls_Delimiters[1] = '###TO_LABEL###'
+ls_MB_String = '###TO_LABEL### Type:'
+ls_MB_String = guo_user_settings.uf_LanguageString_2('###TO_LABEL###_TYPE:', ls_MB_String, ls_Parameters, ls_Delimiters)
+ls_Parameters = ls_Blank
+ls_Delimiters = ls_Blank
+adw_passed.Object.header[ll_Row_2] = ls_MB_String
+adw_passed.Object.text[ll_Row_2] = w_select_from_asa.dw_section.Object.tagout_type_id[ll_Row]
+//tagout_type_desc
+ll_Row_2 = adw_passed.InsertRow(0)
+ll_Row_2 = adw_passed.InsertRow(0)
+ls_Parameters[1] = w_select_from_asa.is_Tagout_Label
+ls_Delimiters[1] = '###TO_LABEL###'
+ls_MB_String = '###TO_LABEL### Type Description:'
+ls_MB_String = guo_user_settings.uf_LanguageString_2('###TO_LABEL###_TYPE_DESCRIPTION:', ls_MB_String, ls_Parameters, ls_Delimiters)
+ls_Parameters = ls_Blank
+ls_Delimiters = ls_Blank
+adw_passed.Object.header[ll_Row_2] = ls_MB_String
+adw_passed.Object.text[ll_Row_2] = w_select_from_asa.dw_section.Object.tagout_type_desc[ll_Row]
+//act_tagout_number
+ll_Row_2 = adw_passed.InsertRow(0)
+ll_Row_2 = adw_passed.InsertRow(0)
+ls_Parameters[1] = w_select_from_asa.is_Tagout_Label
+ls_Delimiters[1] = '###TO_LABEL###'
+ls_MB_String = '###TO_LABEL### Number:'
+ls_MB_String = guo_user_settings.uf_LanguageString_2('###TO_LABEL###_NUMBER:', ls_MB_String, ls_Parameters, ls_Delimiters)
+ls_Parameters = ls_Blank
+ls_Delimiters = ls_Blank
+adw_passed.Object.header[ll_Row_2] = ls_MB_String
+adw_passed.Object.text[ll_Row_2] = w_select_from_asa.dw_section.Object.act_tagout_number[ll_Row]
+//act_tagout_section_number
+ll_Row_2 = adw_passed.InsertRow(0)
+ll_Row_2 = adw_passed.InsertRow(0)
+ls_Parameters[1] = w_select_from_asa.is_Section_Label
+ls_Delimiters[1] = '###TOS_LABEL###'
+ls_MB_String = '###TOS_LABEL### Number:'
+ls_MB_String = guo_user_settings.uf_LanguageString_2('###TOS_LABEL###_NUMBER:', ls_MB_String, ls_Parameters, ls_Delimiters)
+ls_Parameters = ls_Blank
+ls_Delimiters = ls_Blank
+adw_passed.Object.header[ll_Row_2] = ls_MB_String
+adw_passed.Object.text[ll_Row_2] = w_select_from_asa.dw_section.Object.act_tagout_section_number[ll_Row]
+//act_tagout_section_description
+ll_Row_2 = adw_passed.InsertRow(0)
+ls_Parameters[1] = w_select_from_asa.is_Section_Label
+ls_Delimiters[1] = '###TOS_LABEL###'
+ls_MB_String = '###TOS_LABEL### Description:'
+ls_MB_String = guo_user_settings.uf_LanguageString_2('###TOS_LABEL###_DESCRIPTION:', ls_MB_String, ls_Parameters, ls_Delimiters)
+ls_Parameters = ls_Blank
+ls_Delimiters = ls_Blank
+adw_passed.Object.header[ll_Row_2] = ls_MB_String
+adw_passed.Object.text[ll_Row_2] = TRIM(w_select_from_asa.dw_section.Object.act_tagout_section_description[ll_Row])
+//equip_operator_id
+ll_Row_2 = adw_passed.InsertRow(0)
+adw_passed.Object.header[ll_Row_2] = f_DW_Language_Call_2('Equipment:')
+adw_passed.Object.text[ll_Row_2] = TRIM(w_select_from_asa.dw_section.Object.equip_operator_id[ll_Row])
+//act_tagout_section_reason
+ll_Row_2 = adw_passed.InsertRow(0)
+ls_Parameters[1] = w_select_from_asa.is_Section_Label
+ls_Delimiters[1] = '###TOS_LABEL###'
+ls_MB_String = '###TOS_LABEL### Reason:'
+ls_MB_String = guo_user_settings.uf_LanguageString_2('###TOS_LABEL###_REASON:', ls_MB_String, ls_Parameters, ls_Delimiters)
+ls_Parameters = ls_Blank
+ls_Delimiters = ls_Blank
+adw_passed.Object.header[ll_Row_2] = ls_MB_String
+adw_passed.Object.text[ll_Row_2] = TRIM(w_select_from_asa.dw_section.Object.act_tagout_section_reason[ll_Row])
+//act_tagout_section_hazards
+ll_Row_2 = adw_passed.InsertRow(0)
+ls_Parameters[1] = w_select_from_asa.is_Section_Label
+ls_Delimiters[1] = '###TOS_LABEL###'
+ls_MB_String = '###TOS_LABEL### Hazards:'
+ls_MB_String = guo_user_settings.uf_LanguageString_2('###TOS_LABEL###_HAZARDS:', ls_MB_String, ls_Parameters, ls_Delimiters)
+ls_Parameters = ls_Blank
+ls_Delimiters = ls_Blank
+adw_passed.Object.header[ll_Row_2] = ls_MB_String
+adw_passed.Object.text[ll_Row_2] = TRIM(w_select_from_asa.dw_section.Object.act_tagout_section_hazards[ll_Row])
+//act_tagout_section_completion
+ll_Row_2 = adw_passed.InsertRow(0)
+ls_Parameters[1] = w_select_from_asa.is_Section_Label
+ls_Delimiters[1] = '###TOS_LABEL###'
+ls_MB_String = '###TOS_LABEL### Completion:'
+ls_MB_String = guo_user_settings.uf_LanguageString_2('###TOS_LABEL###_COMPLETION:', ls_MB_String, ls_Parameters, ls_Delimiters)
+ls_Parameters = ls_Blank
+ls_Delimiters = ls_Blank
+adw_passed.Object.header[ll_Row_2] = ls_MB_String
+adw_passed.Object.text[ll_Row_2] = TRIM(w_select_from_asa.dw_section.Object.act_tagout_section_completion[ll_Row])
+
+adw_passed.SetRedraw(TRUE)
+
+end subroutine
+

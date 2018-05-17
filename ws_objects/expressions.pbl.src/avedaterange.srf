@@ -1,0 +1,11 @@
+﻿$PBExportHeader$avedaterange.srf
+global type avedaterange from function_object
+end type
+
+forward prototypes
+global function string avedaterange (integer sta, string start_date, string end_date)
+end prototypes
+
+global function string avedaterange (integer sta, string start_date, string end_date);RETURN GenDateRange(sta,start_date,end_date,"AVERAGE")
+end function
+

@@ -1,0 +1,11 @@
+﻿$PBExportHeader$maxlastx.srf
+global type maxlastx from function_object
+end type
+
+forward prototypes
+global function string maxlastx (integer sta, integer count)
+end prototypes
+
+global function string maxlastx (integer sta, integer count);RETURN GenLastX(sta,count,"MAX")
+end function
+

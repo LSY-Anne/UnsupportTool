@@ -1,0 +1,8 @@
+Save Format v3.0(19990112)
+@begin Projects
+ 0 "1&equip_exe&equip.pkl";
+@end;
+LibList "equip.pkl;support.pkl;mobilink_eq.pkl;mobilink_common.pkl";
+applib "equip.pkl";
+type "pb";
+appname "equip";

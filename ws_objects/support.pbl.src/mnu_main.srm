@@ -1,0 +1,663 @@
+﻿$PBExportHeader$mnu_main.srm
+forward
+global type mnu_main from menu
+end type
+type m_file from menu within mnu_main
+end type
+type m_open from menu within m_file
+end type
+type m_download from menu within m_file
+end type
+type m_logout from menu within m_file
+end type
+type m_scratchpad from menu within m_file
+end type
+type m_preferences from menu within m_file
+end type
+type m_options from menu within m_file
+end type
+type m_exit from menu within m_file
+end type
+type m_file from menu within mnu_main
+m_open m_open
+m_download m_download
+m_logout m_logout
+m_scratchpad m_scratchpad
+m_preferences m_preferences
+m_options m_options
+m_exit m_exit
+end type
+type m_window from menu within mnu_main
+end type
+type m_tour1 from menu within m_window
+end type
+type m_tour2 from menu within m_window
+end type
+type m_tour3 from menu within m_window
+end type
+type m_tour4 from menu within m_window
+end type
+type m_tour5 from menu within m_window
+end type
+type m_tour6 from menu within m_window
+end type
+type m_tour7 from menu within m_window
+end type
+type m_window from menu within mnu_main
+m_tour1 m_tour1
+m_tour2 m_tour2
+m_tour3 m_tour3
+m_tour4 m_tour4
+m_tour5 m_tour5
+m_tour6 m_tour6
+m_tour7 m_tour7
+end type
+global type mnu_main from menu
+m_file m_file
+m_window m_window
+end type
+end forward
+
+global type mnu_main from menu
+m_file m_file
+m_window m_window
+end type
+global mnu_main mnu_main
+
+on mnu_main.create
+mnu_main=this
+call super::create
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_file=create m_file
+this.m_window=create m_window
+this.Item[UpperBound(this.Item)+1]=this.m_file
+this.Item[UpperBound(this.Item)+1]=this.m_window
+end on
+
+on mnu_main.destroy
+call super::destroy
+destroy(this.m_file)
+destroy(this.m_window)
+end on
+
+type m_file from menu within mnu_main
+m_open m_open
+m_download m_download
+m_logout m_logout
+m_scratchpad m_scratchpad
+m_preferences m_preferences
+m_options m_options
+m_exit m_exit
+end type
+
+on m_file.create
+call super::create
+this.text = "Tools"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_open=create m_open
+this.m_download=create m_download
+this.m_logout=create m_logout
+this.m_scratchpad=create m_scratchpad
+this.m_preferences=create m_preferences
+this.m_options=create m_options
+this.m_exit=create m_exit
+this.Item[UpperBound(this.Item)+1]=this.m_open
+this.Item[UpperBound(this.Item)+1]=this.m_download
+this.Item[UpperBound(this.Item)+1]=this.m_logout
+this.Item[UpperBound(this.Item)+1]=this.m_scratchpad
+this.Item[UpperBound(this.Item)+1]=this.m_preferences
+this.Item[UpperBound(this.Item)+1]=this.m_options
+this.Item[UpperBound(this.Item)+1]=this.m_exit
+end on
+
+on m_file.destroy
+call super::destroy
+destroy(this.m_open)
+destroy(this.m_download)
+destroy(this.m_logout)
+destroy(this.m_scratchpad)
+destroy(this.m_preferences)
+destroy(this.m_options)
+destroy(this.m_exit)
+end on
+
+type m_open from menu within m_file
+end type
+
+on m_open.create
+call super::create
+this.text = "Open"
+this.enabled = false
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_open.destroy
+call super::destroy
+end on
+
+event clicked;guo_module_specific.uf_Open()
+end event
+
+type m_download from menu within m_file
+event clicked ( )
+end type
+
+event clicked;//OpenWithParm(w_select_from_asa, 'DOWNLOAD')
+
+end event
+
+on m_download.create
+call super::create
+this.text = "Synchronize"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_download.destroy
+call super::destroy
+end on
+
+type m_logout from menu within m_file
+end type
+
+on m_logout.create
+call super::create
+this.text = "Login - Logout"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_logout.destroy
+call super::destroy
+end on
+
+event clicked;w_main.wf_View_Login(TRUE)
+guo_user.Reset()
+Timer(0, w_main)
+Open(w_loading)
+w_main.Visible = FALSE
+w_main.wf_Update_Menu(FALSE)
+w_main.Visible = TRUE
+Close(w_loading)
+
+end event
+
+type m_scratchpad from menu within m_file
+event clicked ( )
+end type
+
+event clicked;f_Open_Scratchpad()
+
+end event
+
+on m_scratchpad.create
+call super::create
+this.text = "Scratch Pad"
+this.enabled = false
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_scratchpad.destroy
+call super::destroy
+end on
+
+type m_preferences from menu within m_file
+end type
+
+event clicked;//boolean lb_SIP_Is_Visible
+//
+//lb_SIP_Is_Visible = IsSIPVisible()
+Open(w_preferences_dw)
+//IF NOT lb_SIP_Is_Visible THEN
+//	SetSIPPreferredState(Handle(This), SIPForceDown!)
+//END IF
+end event
+
+on m_preferences.create
+call super::create
+this.text = "Preferences"
+this.enabled = false
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_preferences.destroy
+call super::destroy
+end on
+
+type m_options from menu within m_file
+event clicked ( )
+end type
+
+event clicked;Open(w_options)
+
+end event
+
+on m_options.create
+call super::create
+this.text = "Options"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_options.destroy
+call super::destroy
+end on
+
+type m_exit from menu within m_file
+end type
+
+on m_exit.create
+call super::create
+this.text = "Exit"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_exit.destroy
+call super::destroy
+end on
+
+event clicked;Close(ParentWindow)
+end event
+
+type m_window from menu within mnu_main
+m_tour1 m_tour1
+m_tour2 m_tour2
+m_tour3 m_tour3
+m_tour4 m_tour4
+m_tour5 m_tour5
+m_tour6 m_tour6
+m_tour7 m_tour7
+end type
+
+on m_window.create
+call super::create
+this.text = "Window"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_tour1=create m_tour1
+this.m_tour2=create m_tour2
+this.m_tour3=create m_tour3
+this.m_tour4=create m_tour4
+this.m_tour5=create m_tour5
+this.m_tour6=create m_tour6
+this.m_tour7=create m_tour7
+this.Item[UpperBound(this.Item)+1]=this.m_tour1
+this.Item[UpperBound(this.Item)+1]=this.m_tour2
+this.Item[UpperBound(this.Item)+1]=this.m_tour3
+this.Item[UpperBound(this.Item)+1]=this.m_tour4
+this.Item[UpperBound(this.Item)+1]=this.m_tour5
+this.Item[UpperBound(this.Item)+1]=this.m_tour6
+this.Item[UpperBound(this.Item)+1]=this.m_tour7
+end on
+
+on m_window.destroy
+call super::destroy
+destroy(this.m_tour1)
+destroy(this.m_tour2)
+destroy(this.m_tour3)
+destroy(this.m_tour4)
+destroy(this.m_tour5)
+destroy(this.m_tour6)
+destroy(this.m_tour7)
+end on
+
+type m_tour1 from menu within m_window
+end type
+
+on m_tour1.create
+call super::create
+this.visible = false
+this.text = "Tour 1"
+this.enabled = false
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_tour1.destroy
+call super::destroy
+end on
+
+event clicked;guo_module_specific.uf_Open_Object(Integer(This.Tag), mnu_main)
+end event
+
+type m_tour2 from menu within m_window
+end type
+
+on m_tour2.create
+call super::create
+this.visible = false
+this.text = "Tour 2"
+this.enabled = false
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_tour2.destroy
+call super::destroy
+end on
+
+event clicked;guo_module_specific.uf_Open_Object(Integer(This.Tag), mnu_main)
+end event
+
+type m_tour3 from menu within m_window
+end type
+
+on m_tour3.create
+call super::create
+this.visible = false
+this.text = "Tour 3"
+this.enabled = false
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_tour3.destroy
+call super::destroy
+end on
+
+event clicked;guo_module_specific.uf_Open_Object(Integer(This.Tag), mnu_main)
+end event
+
+type m_tour4 from menu within m_window
+end type
+
+on m_tour4.create
+call super::create
+this.visible = false
+this.text = "Tour 4"
+this.enabled = false
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_tour4.destroy
+call super::destroy
+end on
+
+event clicked;guo_module_specific.uf_Open_Object(Integer(This.Tag), mnu_main)
+end event
+
+type m_tour5 from menu within m_window
+end type
+
+on m_tour5.create
+call super::create
+this.visible = false
+this.text = "Tour 5"
+this.enabled = false
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_tour5.destroy
+call super::destroy
+end on
+
+event clicked;guo_module_specific.uf_Open_Object(Integer(This.Tag), mnu_main)
+end event
+
+type m_tour6 from menu within m_window
+end type
+
+on m_tour6.create
+call super::create
+this.visible = false
+this.text = "Tour 6"
+this.enabled = false
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_tour6.destroy
+call super::destroy
+end on
+
+event clicked;guo_module_specific.uf_Open_Object(Integer(This.Tag), mnu_main)
+end event
+
+type m_tour7 from menu within m_window
+end type
+
+on m_tour7.create
+call super::create
+this.visible = false
+this.text = "Tour 7"
+this.enabled = false
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_tour7.destroy
+call super::destroy
+end on
+
+event clicked;guo_module_specific.uf_Open_Object(Integer(This.Tag), mnu_main)
+end event
+

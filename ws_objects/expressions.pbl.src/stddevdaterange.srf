@@ -1,0 +1,11 @@
+﻿$PBExportHeader$stddevdaterange.srf
+global type stddevdaterange from function_object
+end type
+
+forward prototypes
+global function string stddevdaterange (integer sta, string start_date, string end_date)
+end prototypes
+
+global function string stddevdaterange (integer sta, string start_date, string end_date);RETURN GenDateRange(sta,start_date,end_date,"STD")
+end function
+

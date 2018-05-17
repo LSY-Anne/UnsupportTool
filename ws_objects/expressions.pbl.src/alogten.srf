@@ -1,0 +1,13 @@
+﻿$PBExportHeader$alogten.srf
+global type alogten from function_object
+end type
+
+forward prototypes
+global function dec alogten (dec number)
+end prototypes
+
+global function dec alogten (dec number);dec li_return
+li_return = 10^number
+return li_return
+end function
+

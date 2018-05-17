@@ -1,0 +1,11 @@
+﻿$PBExportHeader$mpa2psi.srf
+global type mpa2psi from function_object
+end type
+
+forward prototypes
+global function double mpa2psi (double ldb_mpa)
+end prototypes
+
+global function double mpa2psi (double ldb_mpa);RETURN  ldb_mpa * 1.450377E+2
+end function
+

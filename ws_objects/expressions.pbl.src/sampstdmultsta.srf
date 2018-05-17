@@ -1,0 +1,11 @@
+﻿$PBExportHeader$sampstdmultsta.srf
+global type sampstdmultsta from function_object
+end type
+
+forward prototypes
+global function string sampstdmultsta (string ls_station_list)
+end prototypes
+
+global function string sampstdmultsta (string ls_station_list);RETURN genmultsta(ls_station_list,'SAMPSTD')
+end function
+

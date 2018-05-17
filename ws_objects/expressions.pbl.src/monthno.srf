@@ -1,0 +1,19 @@
+﻿$PBExportHeader$monthno.srf
+global type monthno from function_object
+end type
+
+forward prototypes
+global function integer monthno (string ls_date)
+end prototypes
+
+global function integer monthno (string ls_date);string ls_Month
+integer li_Month
+
+ls_Month = MID(ls_Date, 1, 2)
+li_Month = Integer(ls_Month)
+
+RETURN li_Month
+// 2009-02-26 - RPR
+//RETURN Month(Date(Mid(ls_date,1,10)))
+end function
+

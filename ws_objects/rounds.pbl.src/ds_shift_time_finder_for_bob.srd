@@ -1,0 +1,41 @@
+﻿$PBExportHeader$ds_shift_time_finder_for_bob.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=1 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no grid.lines=0 )
+header(height=60 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=64 color="536870912" )
+table(column=(type=datetime updatewhereclause=yes name=shift_date dbname="compute_0001" )
+ column=(type=long updatewhereclause=yes name=shift_no dbname="shift_time.shift_no" )
+ column=(type=char(15) updatewhereclause=yes name=shift_desc dbname="shift_time.shift_desc" )
+ column=(type=char(5) updatewhereclause=yes name=normal_start_time dbname="shift_time.normal_start_time" )
+ column=(type=long updatewhereclause=yes name=normal_start_day dbname="shift_time.normal_start_day" values="Previous Day	-1/Current Day	0/Next Day	1/" )
+ retrieve="SELECT dateadd (DAY, -1, CURRENT DATE), shift_no, shift_desc, normal_start_time,
+       normal_start_day
+  FROM shift_time
+ WHERE tour = :li_Tour AND rev_no = :li_Rev_No
+UNION
+SELECT CURRENT DATE, shift_no, shift_desc, normal_start_time, normal_start_day
+  FROM shift_time
+ WHERE tour = :li_Tour AND rev_no = :li_Rev_No
+UNION
+SELECT dateadd (DAY, 1, CURRENT DATE), shift_no, shift_desc, normal_start_time,
+       normal_start_day
+  FROM shift_time
+ WHERE tour = :li_Tour AND rev_no = :li_Rev_No
+" arguments=(("li_tour", number),("li_rev_no", number))  sort="shift_date A shift_no A " )
+text(band=header alignment="2" text="Shift No" border="0" color="33554432" x="846" y="4" height="56" width="251" html.valueishtml="0"  name=shift_no_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Shift Desc" border="0" color="33554432" x="1106" y="4" height="56" width="361" html.valueishtml="0"  name=shift_desc_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Normal Start Time" border="0" color="33554432" x="1477" y="4" height="56" width="443" html.valueishtml="0"  name=normal_start_time_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Normal Start Day" border="0" color="33554432" x="1929" y="4" height="56" width="421" html.valueishtml="0"  name=normal_start_day_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Search Date" border="0" color="33554432" x="352" y="4" height="56" width="485" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Shift Date" border="0" color="33554432" x="9" y="4" height="56" width="334" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="9" y="4" height="56" width="334" format="[shortdate]" html.valueishtml="0"  name=shift_date visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes   font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="2" tabsequence=32766 border="0" color="33554432" x="846" y="4" height="56" width="251" format="[general]" html.valueishtml="0"  name=shift_no visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes   font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="1106" y="4" height="56" width="361" format="[general]" html.valueishtml="0"  name=shift_desc visible="1" edit.limit=15 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes   font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="1477" y="4" height="56" width="443" format="[general]" html.valueishtml="0"  name=normal_start_time visible="1" edit.limit=5 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes   font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="2" tabsequence=32766 border="0" color="33554432" x="1929" y="4" height="56" width="421" format="[general]" html.valueishtml="0"  name=normal_start_day visible="1" ddlb.limit=0 ddlb.allowedit=no ddlb.case=any   font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression=" DateTime(relativedate( shift_date , normal_start_day ), Time(normal_start_time) ) "border="0" color="0" x="352" y="4" height="56" width="485" format="[SHORTDATE] [TIME]" html.valueishtml="0"  name=search_date_shift visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" netscapelayers="0" )
+ 

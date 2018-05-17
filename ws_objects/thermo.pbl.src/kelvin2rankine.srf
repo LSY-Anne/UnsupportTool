@@ -1,0 +1,11 @@
+﻿$PBExportHeader$kelvin2rankine.srf
+global type kelvin2rankine from function_object
+end type
+
+forward prototypes
+global function double kelvin2rankine (double ldb_deg_kelvin)
+end prototypes
+
+global function double kelvin2rankine (double ldb_deg_kelvin);RETURN (ldb_deg_kelvin * 1.8)
+end function
+

@@ -1,0 +1,263 @@
+﻿$PBExportHeader$f_ml_create_subscriptions.srf
+global type f_ml_create_subscriptions from function_object
+end type
+
+forward prototypes
+global subroutine f_ml_create_subscriptions (string ls_serialnumber)
+end prototypes
+
+global subroutine f_ml_create_subscriptions (string ls_serialnumber);string ls_Sql
+
+ls_Sql = " &
+CREATE SYNCHRONIZATION USER " + ls_SerialNumber
+
+EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+
+//COMMON
+ls_Sql = " &
+CREATE SYNCHRONIZATION SUBSCRIPTION &
+	TO common &
+	FOR " + ls_SerialNumber + " &
+	TYPE 'tcpip' &
+	OPTION scn='on', sv='default', ds='on'  "
+
+EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+
+ls_Sql = " &
+ALTER SYNCHRONIZATION SUBSCRIPTION &
+	TO common &
+	FOR " + ls_SerialNumber + " &
+	TYPE 'tcpip' &
+	OPTION scn='on', sv='default', ds='on'  "
+
+EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+
+CHOOSE CASE gs_Module_Id
+	CASE 'NPTS'
+		//ROUNDS
+		ls_Sql = " &
+		CREATE SYNCHRONIZATION SUBSCRIPTION &
+			TO rounds &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default' "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		ALTER SYNCHRONIZATION SUBSCRIPTION &
+			TO rounds &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default' "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		CREATE SYNCHRONIZATION SUBSCRIPTION &
+			TO rounds_common &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default', ds='on'  "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		ALTER SYNCHRONIZATION SUBSCRIPTION &
+			TO rounds_common &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default', ds='on'  "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		CREATE SYNCHRONIZATION SUBSCRIPTION &
+			TO ml_rounds &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default' "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		ALTER SYNCHRONIZATION SUBSCRIPTION &
+			TO ml_rounds &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default' "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+	CASE 'NLOGS'
+		//LOGS
+		ls_Sql = " &
+		CREATE SYNCHRONIZATION SUBSCRIPTION &
+			TO logs &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default' "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		ALTER SYNCHRONIZATION SUBSCRIPTION &
+			TO logs &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default' "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		CREATE SYNCHRONIZATION SUBSCRIPTION &
+			TO logs_common &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default', ds='on'  "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		ALTER SYNCHRONIZATION SUBSCRIPTION &
+			TO logs_common &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default', ds='on'  "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		CREATE SYNCHRONIZATION SUBSCRIPTION &
+			TO ml_logs &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default' "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		ALTER SYNCHRONIZATION SUBSCRIPTION &
+			TO ml_logs &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default' "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+	CASE 'NCCS'
+		//Config
+		ls_Sql = " &
+		CREATE SYNCHRONIZATION SUBSCRIPTION &
+			TO config &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default' "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		ALTER SYNCHRONIZATION SUBSCRIPTION &
+			TO config &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default' "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		CREATE SYNCHRONIZATION SUBSCRIPTION &
+			TO config_common &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default', ds='on'  "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		ALTER SYNCHRONIZATION SUBSCRIPTION &
+			TO config_common &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default', ds='on'  "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		CREATE SYNCHRONIZATION SUBSCRIPTION &
+			TO ml_config &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default' "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		ALTER SYNCHRONIZATION SUBSCRIPTION &
+			TO ml_config &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default' "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+
+	CASE 'NCS'
+		//Clearances
+		ls_Sql = " &
+		CREATE SYNCHRONIZATION SUBSCRIPTION &
+			TO clearances &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default' "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		ALTER SYNCHRONIZATION SUBSCRIPTION &
+			TO clearances &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default' "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		CREATE SYNCHRONIZATION SUBSCRIPTION &
+			TO clearances_common &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default', ds='on'  "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		ALTER SYNCHRONIZATION SUBSCRIPTION &
+			TO clearances_common &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default', ds='on'  "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		CREATE SYNCHRONIZATION SUBSCRIPTION &
+			TO ml_clearances &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default' "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+		ls_Sql = " &
+		ALTER SYNCHRONIZATION SUBSCRIPTION &
+			TO ml_clearances &
+			FOR " + ls_SerialNumber + " &
+			TYPE 'tcpip' &
+			OPTION scn='on', sv='default' "
+		
+		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+		
+END CHOOSE
+
+COMMIT USING SQLCA ;
+end subroutine
+

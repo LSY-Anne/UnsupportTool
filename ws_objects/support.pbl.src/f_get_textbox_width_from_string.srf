@@ -1,0 +1,99 @@
+﻿$PBExportHeader$f_get_textbox_width_from_string.srf
+global type f_get_textbox_width_from_string from function_object
+end type
+
+forward prototypes
+global function long f_get_textbox_width_from_string (string as_value, integer ai_col_width_in_pixels, boolean ab_bold)
+end prototypes
+
+global function long f_get_textbox_width_from_string (string as_value, integer ai_col_width_in_pixels, boolean ab_bold);//RETURN as_Value
+ULong lul_Handle, lul_hDC, lul_hFont
+Integer li_maxwidth, li_rc, li_size
+String ls_modify
+Boolean lb_Return
+integer li_Fit
+string ls_Ellipsis_String
+integer li_Num_Characters_To_Remove
+integer li_Null
+StaticText lst_text
+os_size lstr_Size
+
+li_Fit = 0
+SetNull(li_Null)
+li_rc = w_main.OpenUserObject(lst_text)
+If li_rc = 1 Then
+	// give static text same font properties as column
+	lst_text.FaceName = 'Tahoma'
+	lst_text.TextSize = 9//15//Integer(gs_Font_Height_In_Pixels)
+	IF ab_Bold THEN
+		lst_text.Weight = 700
+	ELSE
+		lst_text.Weight = 400
+	END IF
+	lst_text.Italic = False
+	lst_text.FontCharSet = Ansi!
+	lst_text.FontFamily = Swiss!
+	lst_text.FontPitch = Variable!
+	
+	// create device context for statictext
+	lul_Handle = Handle(lst_text)
+	If gb_Platform_Is_CE Then
+		lul_hDC = GetDC_CE(lul_Handle)
+	Else
+		lul_hDC = GetDC_NT(lul_Handle)
+	End If
+	// get handle to the font used by statictext
+	lul_hFont = Send(lul_Handle, WM_GETFONT, 0, 0)
+	// Select it into the device context
+	If gb_Platform_Is_CE Then
+		SelectObject_CE(lul_hDC, lul_hFont)
+	Else
+		SelectObject_NT(lul_hDC, lul_hFont)
+	End If
+		
+	li_Num_Characters_To_Remove = 0
+	IF gb_Is_VGA THEN
+		li_maxwidth = ai_col_width_in_pixels /// 2 //PixelsToUnits(ai_col_width_in_pixels, XPixelsToUnits!)
+	ELSE
+		li_maxwidth = ai_col_width_in_pixels //PixelsToUnits(ai_col_width_in_pixels, XPixelsToUnits!)
+	END IF
+//f_debug('li_maxwidth - ' + String(li_maxwidth))
+	ls_Ellipsis_String = as_Value
+	IF NOT Empty(as_Value) THEN
+		// determine text width
+		If gb_Platform_Is_CE Then
+			lb_Return = GetTextExtentExPoint_CE(lul_hDC, as_Value, Len(ls_Ellipsis_String), 0, li_Null, li_Null, lstr_Size)
+		Else
+			lb_Return = GetTextExtentExPoint_NT(lul_hDC, as_Value, Len(ls_Ellipsis_String), 0, 0, 0, lstr_Size)
+		End If
+		If Not lb_Return Then
+			If gb_Platform_Is_CE Then
+				ReleaseDC_CE(lul_Handle, lul_hDC)
+			Else
+				ReleaseDC_NT(lul_Handle, lul_hDC)
+			End If
+			w_main.CloseUserObject(lst_text)
+			li_Size = 0
+		ELSE
+			// convert length in pixels to PBUnits
+			li_size = PixelsToUnits(lstr_Size.cx, XPixelsToUnits!)
+//f_debug('li_size - ' + String(li_size))
+//f_debug('lstr_Size.cx - ' + String(lstr_Size.cx))
+			If ( li_size > li_maxwidth ) Then
+				li_size = li_MaxWidth
+			End If
+		End If
+	END IF
+END IF
+// release the device context
+If gb_Platform_Is_CE Then
+	ReleaseDC_CE(lul_Handle, lul_hDC)
+Else
+	ReleaseDC_NT(lul_Handle, lul_hDC)
+End If
+// destroy statictext
+w_main.CloseUserObject(lst_text)
+
+Return li_Size
+end function
+

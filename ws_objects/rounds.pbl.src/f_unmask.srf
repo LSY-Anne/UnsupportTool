@@ -1,0 +1,39 @@
+﻿$PBExportHeader$f_unmask.srf
+global type f_unmask from function_object
+end type
+
+forward prototypes
+global function string f_unmask (string ls_text, string ls_mask, string ls_maskdatatype)
+end prototypes
+
+global function string f_unmask (string ls_text, string ls_mask, string ls_maskdatatype);CHOOSE CASE UPPER(ls_MaskDataType)
+	CASE 'DATE'
+		w_tour.tab_tour.tabpage_readings.em_2.SetMask(DateMask!, ls_Mask)
+	CASE 'DATETIME'
+		w_tour.tab_tour.tabpage_readings.em_2.SetMask(DateTimeMask!, ls_Mask)
+	CASE 'DECIMAL'
+		w_tour.tab_tour.tabpage_readings.em_2.SetMask(DecimalMask!, ls_Mask)
+	CASE 'NUMERIC'
+		w_tour.tab_tour.tabpage_readings.em_2.SetMask(NumericMask!, ls_Mask)
+	CASE 'STRING'
+		w_tour.tab_tour.tabpage_readings.em_2.SetMask(StringMask!, ls_Mask)
+	CASE 'TIME'
+		w_tour.tab_tour.tabpage_readings.em_2.SetMask(TimeMask!, ls_Mask)
+	CASE ELSE
+		RETURN ''
+END CHOOSE
+w_tour.tab_tour.tabpage_readings.em_2.SelectText(1, 40)
+w_tour.tab_tour.tabpage_readings.em_2.ReplaceText(ls_Text)
+w_tour.tab_tour.tabpage_readings.em_2.GetData(ls_Text)
+
+//long ll_pos
+//
+//DO WHILE Pos( ls_mask, "." ) > 0
+//	ll_pos	= Pos( ls_mask, "." )
+//	ls_mask	= Mid( ls_mask, 1, ll_pos - 1 ) + Mid( ls_mask, ll_pos + 1 )
+//	ls_text	= Mid( ls_text, 1, ll_pos - 1 ) + Mid( ls_text, ll_pos + 1 )
+//LOOP
+
+RETURN ls_text
+end function
+

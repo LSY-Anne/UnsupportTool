@@ -1,0 +1,49 @@
+﻿$PBExportHeader$gascon.srf
+global type gascon from function_object
+end type
+
+forward prototypes
+global function double gascon ()
+end prototypes
+
+global function double gascon ();//  function gascon ( )
+//
+//
+//// GASCON returns the value of the specific gas constant.
+//
+//
+//  Note:
+//
+//    The specific gas constant R is related to the universal gas
+//    constant R-bar = 8.31441 J/(mol degrees Kelvin) by the molar mass 
+//    M = 18.0152 g/mol:
+//
+//      R = R-bar / M.
+//
+//  Reference:
+//
+//    Lester Haar, John Gallagher and George Kell,
+//    NBS/NRC Steam Tables:
+//    Thermodynamic and Transport Properties and Computer Programs
+//      for Vapor and Liquid States of Water in SI Units,
+//    Hemisphere Publishing Corporation, Washington, 1984,
+//    TJ270.H3
+//
+//    C A Meyer, R B McClintock, G J Silvestri, R C Spencer,
+//    ASME Steam Tables: Thermodynamic and Transport Properties of Steam,
+//    American Society of Mechanical Engineers, 1967.
+//
+//  Parameters:
+//
+//    Output, double GASCON, the value of the specific gas 
+//    constant, in J/(g degrees Kelvin).
+//
+//
+//  double gascon
+//
+//  gascon = 0.461526 
+ 
+  return 0.461522E+00
+
+end function
+

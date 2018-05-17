@@ -1,0 +1,10 @@
+﻿$PBExportHeader$s_equip_detail.srs
+global type s_equip_detail from structure
+	string		coltype
+	string		column
+	string		header
+	string		label
+	string		title
+	boolean		visible
+end type
+

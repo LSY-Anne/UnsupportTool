@@ -1,0 +1,56 @@
+﻿$PBExportHeader$gf_esoms_configure_sync.srf
+global type gf_esoms_configure_sync from function_object
+end type
+
+forward prototypes
+global function long gf_esoms_configure_sync ()
+end prototypes
+
+global function long gf_esoms_configure_sync ();//  gf_esoms_configure_sync
+//
+//  This function calls w_esoms_sync_options which prompts the user
+//  to verify and possibly alter MobiLink client options at runtime.
+//  If the user chooses OK, the synchronization request is issued.
+//  Otherwise, the request is cancelled.  OK also writes the latest
+//  options to the windows registry for use next time the syncoptions
+//  window is constructed.  CANCEL does not change any registry 
+//  settings.
+//
+//  Return values:  0=Success  -1=Error  100=Cancel 
+//-----------------------------------------------------------------
+nvo_esoms_mlsync	l_uosync
+long			rc
+double			dRC
+SyncParm		parms
+
+l_uosync = CREATE nvo_esoms_mlsync
+if IsValid(l_uosync) and l_uosync.TypeOf() = MlSync! then
+	// If you are using the MLToolkit functions to save passwords in the remote DB,
+	// uncomment the two lines below and gf_save_syncsettings...:    
+	// gf_get_syncsettings_from_db(sqlca, l_uosync.syncregistrykey, parms)
+	// l_uosync.SetParm(parms)  
+	OpenWithParm(w_esoms_sync_options, l_uosync)
+	parms = Message.PowerObjectParm
+	if parms.returncode = 0 then
+		//  gf_save_syncsettings(sqlca, l_uosync.syncregistrykey, parms)
+l_uosync.usewindow = TRUE
+l_uosync.progresswindowname = "w_esoms_syncprogress"
+		if l_uosync.usewindow then			
+			//  This runs dbmlsync and displays progress in the feedback window
+			OpenWithParm(w_esoms_syncprogress, l_uosync)
+			dRC = Message.DoubleParm
+			rc = dRC
+		else
+			//  To run dbmlsync quietly
+			rc = l_uosync.Synchronize()	
+		end if
+	end if 
+	destroy l_uosync
+else
+	messagebox("Usage Error", "nvo_esoms_mlsync was not instantiated correctly.")	
+	rc = -1
+end if 
+return rc
+
+end function
+

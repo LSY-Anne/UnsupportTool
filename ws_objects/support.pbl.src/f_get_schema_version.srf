@@ -1,0 +1,29 @@
+﻿$PBExportHeader$f_get_schema_version.srf
+global type f_get_schema_version from function_object
+end type
+
+forward prototypes
+global subroutine f_get_schema_version (ref string as_schema_version)
+end prototypes
+
+global subroutine f_get_schema_version (ref string as_schema_version);string ls_Notes
+datetime ldt_Script_Date
+string ls_Filename
+
+SELECT database_version, 
+		 script_date, 
+		 file_name, 
+		 notes 
+  INTO :as_Schema_Version, 
+       :ldt_Script_Date, 
+		 :ls_Filename, 
+       :ls_Notes 
+  FROM esoms_database_version 
+ WHERE ( database_version = 
+       ( SELECT MAX(a.database_version) 
+           FROM esoms_database_version a ) ) 
+ USING SQLCA ;
+
+
+end subroutine
+

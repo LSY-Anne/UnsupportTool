@@ -1,0 +1,221 @@
+﻿$PBExportHeader$mnu_documents.srm
+forward
+global type mnu_documents from menu
+end type
+type m_edit from menu within mnu_documents
+end type
+type m_copy from menu within mnu_documents
+end type
+type m_delete from menu within mnu_documents
+end type
+type m_open from menu within mnu_documents
+end type
+global type mnu_documents from menu
+m_edit m_edit
+m_copy m_copy
+m_delete m_delete
+m_open m_open
+end type
+end forward
+
+global type mnu_documents from menu
+m_edit m_edit
+m_copy m_copy
+m_delete m_delete
+m_open m_open
+end type
+global mnu_documents mnu_documents
+
+forward prototypes
+public subroutine mf_display ()
+end prototypes
+
+public subroutine mf_display ();boolean lb_Visible
+
+lb_Visible = ( guo_user.Is_Granted('OR' + f_PadL(String(gsu_tour_parameters[gi_Current_Tour].Tour_Number), 3, '0'), 22) > 0 )
+
+m_edit.Visible = ( This.Tag = 'PERF' ) AND lb_Visible
+m_copy.Visible = ( This.Tag = 'PERF' ) AND lb_Visible
+m_delete.Visible = ( This.Tag = 'PERF' ) AND lb_Visible
+m_open.Visible = TRUE
+end subroutine
+
+on mnu_documents.create
+mnu_documents=this
+call super::create
+this.text = "mnu_documents"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_edit=create m_edit
+this.m_copy=create m_copy
+this.m_delete=create m_delete
+this.m_open=create m_open
+this.Item[UpperBound(this.Item)+1]=this.m_edit
+this.Item[UpperBound(this.Item)+1]=this.m_copy
+this.Item[UpperBound(this.Item)+1]=this.m_delete
+this.Item[UpperBound(this.Item)+1]=this.m_open
+end on
+
+on mnu_documents.destroy
+call super::destroy
+destroy(this.m_edit)
+destroy(this.m_copy)
+destroy(this.m_delete)
+destroy(this.m_open)
+end on
+
+type m_edit from menu within mnu_documents
+end type
+
+event clicked;//IF NOT IsSIPVisible() THEN
+//	SetSIPPreferredState(Handle(w_tour), SIPup!)
+//END IF
+//SetSIPPreferredState(Handle(w_tour), SIPdown!)
+OpenWithParm(w_documents, 'EDIT_' + This.Tag)
+w_tour.tab_tour.tabpage_documents.dw_perf_docs.EVENT ue_Retrieve()
+
+end event
+
+on m_edit.create
+call super::create
+this.text = "Edit"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_edit.destroy
+call super::destroy
+end on
+
+type m_copy from menu within mnu_documents
+end type
+
+event clicked;//IF NOT IsSIPVisible() THEN
+//	SetSIPPreferredState(Handle(w_tour), SIPup!)
+//END IF
+//SetSIPPreferredState(Handle(w_tour), SIPdown!)
+OpenWithParm(w_documents, 'COPY_' + This.Tag)
+w_tour.tab_tour.tabpage_documents.dw_perf_docs.EVENT ue_Retrieve()
+
+end event
+
+on m_copy.create
+call super::create
+this.text = "Copy"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_copy.destroy
+call super::destroy
+end on
+
+type m_delete from menu within mnu_documents
+end type
+
+event clicked;integer li_Return
+
+li_Return = MessageBox(f_LanguageString('DELETE_PERFORMANCE_DOCUMENT?', 'Delete Performance Document?'), f_LanguageString('ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_PERFORMANCE_DOCUMENT?', 'Are you sure you want to delete this performance document?'), Question!, YesNo!)
+
+IF ( li_return = 1 ) THEN
+	w_tour.tab_tour.tabpage_documents.dw_perf_docs.EVENT ue_Delete_Document()
+END IF
+end event
+
+on m_delete.create
+call super::create
+this.text = "Delete"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_delete.destroy
+call super::destroy
+end on
+
+type m_open from menu within mnu_documents
+end type
+
+on m_open.create
+call super::create
+this.text = "Open"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_open.destroy
+call super::destroy
+end on
+
+event clicked;IF ( Parent.Tag = 'PERF' ) THEN
+	w_tour.tab_tour.tabpage_documents.dw_perf_docs.EVENT ue_Extract_Document(TRUE)
+ELSE
+	w_tour.tab_tour.tabpage_documents.dw_ref_docs.EVENT ue_Extract_Document()
+END IF
+end event
+

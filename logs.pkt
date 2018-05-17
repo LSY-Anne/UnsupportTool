@@ -1,0 +1,9 @@
+Save Format v3.0(19990112)
+@begin Projects
+ 0 "1&logs_exe&..\\..\\Deleteme\\2010-07-27\\logs.pkl";
+ 1 "1&logs_exe&logs.pkl";
+@end;
+LibList "logs.pkl;support.pkl;mobilink_nl.pkl;mobilink_common.pkl";
+applib "logs.pkl";
+type "pb";
+appname "logs";

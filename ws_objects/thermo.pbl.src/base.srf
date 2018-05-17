@@ -1,0 +1,242 @@
+﻿$PBExportHeader$base.srf
+global type base from function_object
+end type
+
+forward prototypes
+global subroutine base (double t, double rho, ref double ab, ref double cvb, ref double dpdrb, ref double dpdtb, ref double gb, ref double hb, ref double pb, ref double sb, ref double ub)
+end prototypes
+
+global subroutine base (double t, double rho, ref double ab, ref double cvb, ref double dpdrb, ref double dpdtb, ref double gb, ref double hb, ref double pb, ref double sb, ref double ub);// base ( t, rho, ab, cvb, dpdrb, dpdtb, gb, hb, pb, sb, ub )
+//
+//
+//// BASE calculates quantities associated with the base Helmholtz function.
+//
+//
+//  Discussion:
+//
+//    The equation for the base Helmholtz function AB(T,RHO) is:
+//
+//      AB(T,RHO) = R * T * (
+//        - ln ( 1 - y ) 
+//        - ( beta - 1 ) / ( 1 - y ) 
+//        + ( alpha + beta + 1 ) / ( 2 * ( 1 - y )^2 )
+//        + 4 * y * ( ( Bbar / b ) - gamma ) 
+//        - 0.5 * ( alpha - beta + 3 ) 
+//        + ln ( RHO * R * T / P0 ) )
+//                                                      (Equation 2)
+//   where 
+//
+//     y = b * rho / 4, 
+//     alpha = 11,
+//     beta = 133/3, 
+//     gamma = 7/2, 
+//     P0 = 0.101325 MegaPascals = 1 atm
+//
+//   and
+//
+//     b(T) = b1 * ln(T/T0) + sum(j=0,1,3,5) b(j)*(T0/T)^j  (Equation 3)
+//
+//     Bbar(T) = sum(j=0,1,2,4) B(j)*(T0/T)^j               (Equation 4).
+//
+//   where 
+//
+//     T0=647.073 K and the coefficients b(j) and B(j) are
+//    
+//     j    b(j)                         B(j)
+//    --    -----------                  ----------
+//     0    0.7478629                    1.1278334
+//     1   -0.3540782                   -0.5944001
+//     2    0                           -5.010996
+//     3    0.007159876                  0
+//     4    0                            0.63684256
+//     5   -0.003528426                  0
+//
+//  For the derived quantities, the following relations are used:
+//
+//    Pressure:                  PB      = RHO^2 * dAB/dRHO
+//    Density derivative:        DPDRB   = 2*PB/RHO + RHO^2 * d2AB/dRHO2
+//    Temperature derivative:    DPDTB   = RHO^2 * d2AB/(dRHO dT)
+//    Specific entropy:          SB      = ( UB - AB ) / T
+//    Specific internal energy:  UB      = AB + T * SB
+//    Specific enthalpy:         HB      = UB + PB / RHO
+//    Specific heat capacity
+//      at constant volume:      CVB     = - T * d2AB/dT2
+//    Specific Gibbs function:   GB      = AB + PB / RHO
+//
+//  Reference:
+//
+//    Lester Haar, John Gallagher and George Kell,
+//    NBS/NRC Steam Tables:
+//    Thermodynamic and Transport Properties and Computer Programs
+//      for Vapor and Liquid States of Water in SI Units,
+//    Hemisphere Publishing Corporation, Washington, 1984,
+//    TJ270.H3
+//
+//    C A Meyer, R B McClintock, G J Silvestri, R C Spencer,
+//    ASME Steam Tables: Thermodynamic and Transport Properties of Steam,
+//    American Society of Mechanical Engineers, 1967.
+//
+//  Modified:
+//
+//    03 February 2002
+//
+//  Parameters:
+//
+//    Input, double T, the temperature, in degrees Kelvin.
+//
+//    Input, double RHO, the density, in G/CM3.
+//
+//    Output, double AB, the base value of the Helmholtz function,
+//    in KJ/kg.
+//
+//    Output, double CVB, the base value of the isochoric (constant 
+//    volume) heat capacity, in KJ/(kg degrees Kelvin).
+//
+//    Output, double DPDRB, the base value of the partial
+//    derivative dP(T,RHO)/dRHO, with T held fixed, in (MegaPascals CM3)/G.
+//
+//    Output, double DPDTB, the base value of the partial
+//    derivative dP(T,RHO)/dT, with RHO held fixed, in 
+//    MegaPascals/degrees Kelvin.
+//
+//    Output, double GB, the base value of the Gibbs free energy,
+//    in KJ/kg.
+//
+//    Output, double HB, the base value of enthalpy, in KJ/kg.
+//
+//    Output, double PB, the base pressure, in MegaPascals.
+//
+//    Output, double SB, the base value of entropy, 
+//    in KJ/(kg degrees Kelvin).
+//
+//    Output, double UB, the base value of internal energy, 
+//    in KJ/kg.
+//
+//
+  double alpha = 11.0E+00
+  double b1
+  double b1t
+  double b1tt
+  double b2
+  double b2t
+  double b2tt
+  double beta = 44.333333333333E+00
+  double dz
+  double dz0
+  double gamma = 3.5E+00
+//  double gascon
+  double p_zero = 0.101325E+00
+  double x
+  double y
+  double z
+  double z0
+  string ls_MB_String
+  string ls_MB_String_2
+//
+//  Refuse to handle zero or negative temperatures.
+//
+  if ( t <= 0.0 ) then
+	ls_MB_String = f_LanguageString('###_-_FATAL_ERROR', '### - Fatal Error')
+	ls_MB_String = StrTran(ls_MB_String, '###', 'BASE')
+	ls_MB_String_2 = f_LanguageString('THE_INPUT_DENSITY_T_MUST_BE_POSITIVE.__INPUT_VALUE_WAS_T_=_###', 'The input density T must be positive.  Input value was T = ###')
+	ls_MB_String_2 = StrTran(ls_MB_String_2, '###', String(t))
+	MessageBox(ls_MB_String, ls_MB_String_2)
+//	MessageBox('BASE - Fatal error','  The input temperature T must be positive.  Input value was T = '+string( t))
+/*    write ( *, '(a)' ) ' '
+    write ( *, '(a)' ) 'BASE - Fatal error//'
+    write ( *, '(a)' ) '  The input temperature T must be positive.'
+    write ( *, '(a,g14.6)' ) '  Input value was T = ', t
+    stop*/
+	 return
+  end if
+//
+//  Refuse to handle zero or negative density.
+//
+  if ( rho <= 0.0E+00 ) then
+	ls_MB_String = f_LanguageString('###_-_FATAL_ERROR', '### - Fatal Error')
+	ls_MB_String = StrTran(ls_MB_String, '###', 'BASE')
+	ls_MB_String_2 = f_LanguageString('THE_INPUT_DENSITY_RHO_MUST_BE_POSITIVE.__INPUT_VALUE_WAS_RHO_=_###', 'The input density RHO must be positive.  Input value was RHO = ###')
+	ls_MB_String_2 = StrTran(ls_MB_String_2, '###', String(rho))
+//	MessageBox('BASE - Fatal error','  The input density RHO must be positive.  Input value was RHO = '+string(rho))
+	MessageBox(ls_MB_String, ls_MB_String_2)
+/*    write ( *, '(a)' ) ' '
+    write ( *, '(a)' ) 'BASE - Fatal error//'
+    write ( *, '(a)' ) '  The input density RHO must be positive.'
+    write ( *, '(a,g14.6)' ) '  Input value was RHO = ', rho
+    stop*/
+	 return
+  end if
+//
+//  Compute auxilliary quantities for Equation 2.
+//
+  bb ( t, b1, b2, b1t, b2t, b1tt, b2tt )
+
+ y = 0.25E+00 * b1 * rho
+
+  x = 1.0E+00 - y
+//
+//  Evaluate Equation 2.
+//
+  ab =   - log ( 1.0E+00 - y ) &
+         - ( beta - 1.0E+00 ) / ( 1.0E+00 - y ) &
+         + ( alpha + beta + 1.0E+00 ) / ( 2.0E+00 * ( 1.0E+00 - y )^2.0 ) &
+         + 4.0E+00 * y * ( ( b2 / b1 ) - gamma ) &
+         - 0.5E+00 * ( alpha - beta + 3.0E+00 ) &
+         + log ( rho * gascon() * t / p_zero )
+//
+//  Determine quantities defined in terms of AB.
+//
+  pb = ( 1.0E+00 + alpha * y + beta * y^2.0 ) / ( 1.0E+00 - y )^3.0 &
+    + 4.0E+00 * y * ( b2 / b1 - gamma )
+
+  z0 = ( 1.0E+00 + alpha * y + beta * y^2.0 ) / ( 1.0E+00 - y )^3.0
+
+  z = z0 + 4.0E+00 * y * ( b2 / b1 - gamma )
+
+  dz0 = ( alpha + 2.0E+00 * beta * y ) / ( 1.0E+00 - y )^3.0 &
+    + 3.0E+00 * ( 1.0E+00 + alpha * y + beta * y^2.0 ) / ( 1.0E+00 - y )^4.0
+
+  dz = dz0 + 4.0E+00 * ( b2 / b1 - gamma )
+
+  gb = ab + pb
+
+  ub = - t * b1t * ( pb - 1.0E+00 - rho * b2 ) / b1 - rho * t * b2t
+
+  hb = pb + ub //original
+//  hb = pb + ub/rho
+//  HB      = UB + PB / RHO
+//
+//  An incorrect version of this equation began:
+//
+//    cvb = 2.0E+00 * ub + ( pb - 1.0E+00 ) &
+//
+//  and caused me no end of trouble.  My fault, JVB, 03 February 2002
+//
+  cvb = 2.0E+00 * ub + ( z0 - 1.0E+00 ) &
+    * ( ( t * b1t / b1 )^2.0 - t^2.0 * b1tt / b1 ) &
+    - rho * t^2.0 * ( b2tt - gamma * b1tt ) - ( t * b1t / b1 )^2.0 * y * dz0
+
+  dpdtb = pb / t + rho * ( 0.25E+00 * ( dz0 + 4.0E+00 * ( b2 / b1 - gamma ) ) &
+    * b1t + b2t - b2 / b1 * b1t )
+
+  sb = ub - ab
+
+  dpdrb = pb + y * ( dz0 + 4.0E+00 * ( b2 / b1 - gamma ) )
+//
+//  Assign dimensions.
+//
+  ab =    gascon() * t       * ab
+  cvb =   gascon()           * cvb
+  dpdrb = gascon() * t       * dpdrb
+  dpdtb = gascon() * t * rho * dpdtb
+  gb =    gascon() * t       * gb
+  hb =    gascon() * t       * hb
+  pb =    gascon() * t * rho * pb
+  sb =    gascon()           * sb
+  ub =    gascon() * t       * ub
+
+
+
+
+end subroutine
+

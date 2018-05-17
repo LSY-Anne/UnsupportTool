@@ -1,0 +1,132 @@
+﻿$PBExportHeader$f_upload_scratchpad.srf
+global type f_upload_scratchpad from function_object
+end type
+
+forward prototypes
+global function integer f_upload_scratchpad ()
+end prototypes
+
+global function integer f_upload_scratchpad ();integer li_Reading_Id
+integer li_Tour
+string ls_Sql
+integer li_Return
+integer li_Station
+integer li_Rev_No
+date ld_Shift_Date
+integer li_Shift_No
+string ls_Description
+string ls_Filename
+integer li_Document_Number
+integer li_Document_Order
+integer li_Count
+integer li_Num_Rows
+integer li_Count_2
+integer li_Num_Rows_2
+integer i
+datastore lds_temp
+datastore lds_temp_2
+pointer l_pointer
+
+ls_Description = 'Scratch Pad Document'
+l_pointer = SetPointer(HourGlass!)
+ls_Sql = " &
+	SELECT DISTINCT tour &
+	  FROM tour "
+lds_temp_2 = CREATE datastore
+li_Num_Rows_2 = f_Datastore_From_Sql(ls_Sql, lds_temp_2)
+FOR i = 1 TO 2
+	IF ( i = 1 ) THEN
+		ls_Filename = MID(gs_Scratchpad_File, 1, POS(gs_Scratchpad_File, '.') - 1)
+		ls_Filename = GetCurrentDirectory() + "\" + ls_Filename + ".pwi"
+	ELSE
+		ls_Filename = GetCurrentDirectory() + "\" + gs_Scratchpad_File
+	END IF
+	IF NOT FileExists(ls_FileName) THEN
+		li_Return = -1
+	ELSE
+		FOR li_Count_2 = 1 TO li_Num_Rows_2
+			li_Tour = lds_temp_2.GetItemNumber(li_Count_2, 1)
+
+			ls_Sql = " &
+				SELECT TOP 1 a.rev_no, &
+						 a.shift_no, &
+						 a.dt, &
+						 a.sta, &
+						 a.reading_id &
+				  FROM history a, &
+						 station z &
+				 WHERE ( a.tour = " + String(li_Tour) + " ) &
+					AND ( a.tour = z.tour ) &
+					AND ( a.rev_no = z.rev_no ) &
+					AND ( a.sta = z.sta ) &
+			 ORDER BY a.dt DESC, a.shift_no DESC, z.seq ASC"
+	
+			lds_temp = CREATE datastore
+			li_Num_Rows = f_Datastore_From_Sql(ls_Sql, lds_temp)
+			FOR li_Count = 1 TO li_Num_Rows
+				li_Rev_No = lds_temp.GetItemNumber(li_Count, 1)
+				li_Shift_No = lds_temp.GetItemNumber(li_Count, 2)
+				ld_Shift_Date = DATE(lds_temp.GetItemDateTime(li_Count, 3))
+				li_Station = lds_temp.GetItemNumber(li_Count, 4)
+				li_Reading_Id = lds_temp.GetItemNumber(li_Count, 5)
+				
+				SELECT ISNULL(MAX(document_number), 0) + 1 
+				  INTO :li_Document_Number 
+				  FROM tour_documents 
+				 WHERE ( dt = :ld_Shift_Date ) 
+					AND ( tour = :li_Tour ) 
+					AND ( sta = :li_Station ) 
+					AND ( shift_no = :li_Shift_No ) 
+					AND ( reading_id = :li_Reading_Id ) 
+				 USING SQLCA ;
+					
+				li_Document_Order = li_Document_Number
+			
+				INSERT INTO tour_documents 
+						 ( tour, 
+							rev_no, 
+							dt, 
+							sta, 
+							shift_no, 
+							reading_id, 
+							document_number, 
+							document_order, 
+							document_type, 
+							document_description, 
+							document_filename ) 
+				VALUES ( :li_tour, 
+							:li_Rev_No, 
+							:ld_Shift_Date, 
+							:li_Station, 
+							:li_Shift_No, 
+							:li_Reading_Id, 
+							:li_Document_Number, 
+							:li_Document_Order, 
+							1, 
+							:ls_Description, 
+							:ls_Filename ) 
+				USING SQLCA ;
+					
+				IF ( SQLCA.SQLCode = 0 ) THEN
+					li_Return = f_File_To_Blob_Scratchpad(ls_FileName, li_Tour, ld_Shift_Date, li_Shift_No, 0, li_Document_Number, li_Station)
+					IF ( li_Return = 1 ) THEN
+						COMMIT ;
+					ELSE
+						ROLLBACK ;
+					END IF
+				ELSE
+			//		MessageBox('ERROR', 'There was a problem adding the scratchpad document to the database, please try again.~n~r' + SQLCA.SQLErrText)
+					ROLLBACK ;
+				END IF
+			NEXT
+		NEXT
+	END IF
+//	FileDelete(ls_Filename)
+NEXT
+DESTROY lds_temp
+DESTROY lds_temp_2
+SetPointer(l_pointer)
+
+RETURN li_Return
+end function
+

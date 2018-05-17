@@ -1,0 +1,32 @@
+﻿$PBExportHeader$gf_esoms_sync.srf
+global type gf_esoms_sync from function_object
+end type
+
+forward prototypes
+global function long gf_esoms_sync (syncparm parms)
+end prototypes
+
+global function long gf_esoms_sync (syncparm parms);nvo_esoms_mlsync  l_uosync
+long		rc
+double		dRC
+
+l_uosync = CREATE nvo_esoms_mlsync
+if IsValid(l_uosync) then
+	l_uosync.SetParm(parms)
+	if l_uosync.usewindow then
+		//  This runs dbmlsync and displays progress in the feedback window
+		OpenWithParm(w_esoms_syncprogress, l_uosync)
+		dRC = Message.DoubleParm
+		rc = dRC
+	else
+		//  To run dbmlsync quietly
+		rc = l_uosync.Synchronize()	
+	end if
+	destroy l_uosync
+else
+	messagebox("Usage Error", "nvo_esoms_mlsync was not instantiated correctly.")
+	rc = -1
+end if
+return rc
+end function
+

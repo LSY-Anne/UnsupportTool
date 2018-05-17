@@ -1,0 +1,30 @@
+﻿$PBExportHeader$f_tour_already_open.srf
+global type f_tour_already_open from function_object
+end type
+
+forward prototypes
+global function integer f_tour_already_open (integer ai_tour_number, integer ai_rev_no)
+end prototypes
+
+global function integer f_tour_already_open (integer ai_tour_number, integer ai_rev_no);integer li_Count
+integer li_Return
+
+// Searches for the tour number in the structure array
+// IF FOUND: Returns array element number
+// IF NOT FOUND: Returns 0 if no empty positions are available
+// IF NOT FOUND: Returns negative value of first empty position
+
+li_Return = 0
+FOR li_Count = 1 TO 7
+	IF ( gsu_tour_parameters[li_Count].tour_number = ai_Tour_Number ) AND ( gsu_tour_parameters[li_Count].rev_no = ai_Rev_No ) THEN
+		li_Return = li_Count
+		EXIT
+	ELSEIF ( gsu_tour_parameters[li_Count].tour_number = -1 ) THEN
+		li_Return = -li_Count
+		EXIT
+	END IF
+NEXT
+
+RETURN li_Return
+end function
+

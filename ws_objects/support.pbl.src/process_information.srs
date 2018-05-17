@@ -1,0 +1,8 @@
+﻿$PBExportHeader$process_information.srs
+global type process_information from structure
+	unsignedlong		hprocess
+	unsignedlong		hthread
+	unsignedlong		dwprocessid
+	unsignedlong		dwthreadid
+end type
+

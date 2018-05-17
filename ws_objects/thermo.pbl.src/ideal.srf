@@ -1,0 +1,127 @@
+﻿$PBExportHeader$ideal.srf
+global type ideal from function_object
+end type
+
+forward prototypes
+global subroutine ideal (double t, ref double ai, ref double cpi, ref double cvi, ref double gi, ref double hi, ref double si, ref double ui)
+end prototypes
+
+global subroutine ideal (double t, ref double ai, ref double cpi, ref double cvi, ref double gi, ref double hi, ref double si, ref double ui);//subroutine ideal ( t, ai, cpi, cvi, gi, hi, si, ui )
+//
+//
+//
+//// IDEAL computes ideal gas thermodynamic properties of water.
+//
+//
+//  Discussion:
+//
+//    Values for thermodynamic properties of water in the ideal
+//    gas state were reported by Woolley.  The formula for the ideal gas
+//    term of the Helmholtz function approximates a term by term summation of 
+//    contributions from each of the rotation and vibration states.  
+//    The formula, equation #6 in the reference, is:
+//   
+//    A(ideal)(T) = -R * T * ( 1 + ( C(1)/Tr + C(2) ) * ln(Tr)
+//      + Sum ( 3 <= I <= 18) C(I) * Tr^(I-6)
+//   
+//    where Tr=T/100 K.  The C(i) are tabulated coefficients.  Equation
+//    6 can be used for temperatures below 3000 K, and is accurate to
+//    within the tolerance of the gas constant for 50<=T<=2000 K.
+//     
+//  Reference:
+//
+//    Lester Haar, John Gallagher and George Kell,
+//    NBS/NRC Steam Tables:
+//    Thermodynamic and Transport Properties and Computer Programs
+//      for Vapor and Liquid States of Water in SI Units,
+//    Hemisphere Publishing Corporation, Washington, 1984,
+//    TJ270.H3
+//
+//  Parameters:
+//
+//    Input, double T, the temperature, in degrees Kelvin.
+//
+//    Output, double AI, the Helmholtz function, in KJ/kg.
+//
+//    Output, double CPI, the heat capacity at constant pressure,
+//    in KJ/(kg degrees Kelvin).
+//
+//    Output, double CVI, the heat capacity at constant volume,
+//    in KJ/(kg degrees Kelvin).
+//
+//    Output, double GI, the Gibbs free energy, in KJ/kg.
+//
+//    Output, double HI, the enthalpy, in KJ/kg.
+//
+//    Output, double SI, the entropy, in KJ/(kg degrees Kelvin).
+//
+//    Output, double UI, the internal energy, in KJ/kg.
+//
+//
+
+  double c[] = { &
+   19.730271018E+00,      20.9662681977E+00,     -0.483429455355E+00, &
+    6.05743189245E+00,    22.56023885E+00,       -9.87532442E+00, &
+   -4.3135538513E+00,      0.458155781E+00,      -0.047754901883E+00, &
+    0.0041238460633E+00,  -0.00027929052852E+00,  0.14481695261E-04, &
+   -0.56473658748E-06,     0.16200446E-07,       -0.3303822796E-09, &
+    0.451916067368E-11,   -0.370734122708E-13,    0.137546068238E-15 }
+  integer i
+  double temp
+  double tt
+  string ls_MB_String
+  string ls_MB_String_2
+//
+//  Refuse to handle zero or negative temperatures.
+//
+  if ( t <= 0.0E+00 ) then
+	ls_MB_String = f_LanguageString('###_-_FATAL_ERROR', '### - Fatal Error')
+	ls_MB_String = StrTran(ls_MB_String, '###', 'IDEAL')
+	ls_MB_String_2 = f_LanguageString('THE_INPUT_TEMPERATURE_T_MUST_BE_POSITIVE.__INPUT_VALUE_WAS_T_=_###', 'The input temperature T must be positive.  Input value was T = ###')
+	ls_MB_String_2 = StrTran(ls_MB_String_2, '###', String(t))
+	MessageBox(ls_MB_String, ls_MB_String_2)
+//	MessageBox('IDEAL - Fatal error','The input temperature T must be positive.  Input value was T = '+String(t))
+	RETURN
+/*    write ( *, '(a)' ) ' '
+    write ( *, '(a)' ) 'IDEAL - Fatal error//'
+    write ( *, '(a)' ) '  The input temperature T must be positive.'
+    write ( *, '(a,g14.6)' ) '  Input value was T = ', t
+    stop*/
+  end if
+
+  tt = t / 100.0E+00
+
+  gi = - ( c[1] / tt + c[2] ) * log ( tt )
+  FOR i = 3 TO 18
+    gi = gi - c[i] * tt^(i - 6)
+  NEXT
+
+  hi = c[2] + c[1] * ( 1.0E+00 - log ( tt ) ) / tt
+  FOR i = 3 TO 18
+    hi = hi + double ( i - 6 ) * c[i] * tt^(i - 6)
+  NEXT
+
+  cpi = c[2] - c[1] / tt
+  for i = 3 to 18
+    cpi = cpi + double ( ( i - 6 ) * ( i - 5 ) ) * c[i] * tt^(i - 6)
+  next
+
+  ai = gi - 1.0E+00
+  ui = hi - 1.0E+00
+  cvi = cpi - 1.0E+00
+  si = hi - gi
+//
+//  Assign dimensions.
+//
+  ai =  gascon() * t * ai
+  cpi = gascon()     * cpi
+  cvi = gascon()     * cvi
+  gi =  gascon() * t * gi
+  hi =  gascon() * t * hi
+  si =  gascon()     * si
+  ui =  gascon() * t * ui
+
+  return
+
+end subroutine
+

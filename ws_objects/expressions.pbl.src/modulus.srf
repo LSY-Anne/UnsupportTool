@@ -1,0 +1,19 @@
+﻿$PBExportHeader$modulus.srf
+global type modulus from function_object
+end type
+
+forward prototypes
+global function dec modulus (dec x, dec y)
+end prototypes
+
+global function dec modulus (dec x, dec y);dec ldb_null
+
+SetNull(ldb_null)
+
+IF y = 0 THEN
+	RETURN ldb_null
+END IF
+
+RETURN Mod ( x, y ) 
+end function
+

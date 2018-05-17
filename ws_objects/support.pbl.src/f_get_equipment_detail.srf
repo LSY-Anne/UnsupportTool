@@ -1,0 +1,376 @@
+﻿$PBExportHeader$f_get_equipment_detail.srf
+global type f_get_equipment_detail from function_object
+end type
+
+forward prototypes
+global function string f_get_equipment_detail (string as_equip_operator_id)
+end prototypes
+
+global function string f_get_equipment_detail (string as_equip_operator_id);string ls_MB_String
+string ls_Return
+string ls_Sql
+string ls_Errors
+string CRLF
+string ls_Where
+string ls_Last
+string ls_Error
+long I
+integer li_Count
+string ls_Column_Data
+string ls_Column_Title
+long ll_Num_Rows
+
+CRLF	= CHAR(13) + CHAR(10)
+
+IF NOT IsValid(gds_equip_detail) THEN
+	gds_equip_detail = CREATE datastore ;
+//	ll_Num_Rows = f_DataStore_From_Sql(ls_Sql, gds_equip_detail)
+	gds_equip_detail.dataobject = 'ds_equip_detail_for_pocket_pc'
+	gds_equip_detail.SetTransObject(SQLCA)
+END IF
+ll_Num_Rows = gds_equip_detail.Retrieve(as_Equip_Operator_Id)
+IF ( ll_Num_Rows < 1 ) THEN
+	ls_MB_String = f_LanguageString('EQUIPMENT_###_NOT_FOUND', "Equipment '###' not found")
+	ls_MB_String = StrTran(ls_MB_String, '###', TRIM(as_Equip_Operator_Id))
+	Messagebox(f_LanguageString('ERROR', 'Error'), ls_MB_String)
+	gds_equip_detail.Reset()
+	DESTROY gds_equip_detail
+	RETURN ''
+END IF
+
+IF ( NOT UpperBound(gsu_equip_detail, 1) >= 1 ) THEN
+	li_Count = 1
+	gsu_equip_detail[li_Count].column	= 'equip_operator_id'
+	gsu_equip_detail[li_Count].label = 'EquipmentOperatorID'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= TRUE
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 2
+	gsu_equip_detail[li_Count].column	= 'equip_description'
+	gsu_equip_detail[li_Count].label = 'EquipmentDescription'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 3
+	gsu_equip_detail[li_Count].column	= 'equip_location'
+	gsu_equip_detail[li_Count].label = 'EquipmentLocation'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 4
+	gsu_equip_detail[li_Count].column	= 'unit_id'
+	gsu_equip_detail[li_Count].label	= 'Unit'
+	gsu_equip_detail[li_Count].title	= 'unit_desc'
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 5
+	gsu_equip_detail[li_Count].column	= 'plant_id'
+	gsu_equip_detail[li_Count].label	= 'Plant'
+	gsu_equip_detail[li_Count].title	= 'plant_desc'
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 6
+	gsu_equip_detail[li_Count].column	= 'system_id'
+	gsu_equip_detail[li_Count].label	= 'System'
+	gsu_equip_detail[li_Count].title	= 'system_desc'
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 7
+	gsu_equip_detail[li_Count].column	= 'type_id'
+	gsu_equip_detail[li_Count].label	= 'Type'
+	gsu_equip_detail[li_Count].title	= 'type_desc'
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 8
+	gsu_equip_detail[li_Count].column	= 'component_id'
+	gsu_equip_detail[li_Count].label = 'Component'
+	gsu_equip_detail[li_Count].title	= 'component_desc'
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 9
+	gsu_equip_detail[li_Count].column	= 'building_id'
+	gsu_equip_detail[li_Count].label = 'Building'
+	gsu_equip_detail[li_Count].title	= 'building_desc'
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 10
+	gsu_equip_detail[li_Count].column	= 'freeform_id'
+	gsu_equip_detail[li_Count].label = 'FreeformID'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 11
+	gsu_equip_detail[li_Count].column	= 'equip_alternate_id'
+	gsu_equip_detail[li_Count].label = 'AlternateID'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 12
+	gsu_equip_detail[li_Count].column	= 'room_id'
+	gsu_equip_detail[li_Count].label = 'Room'
+	gsu_equip_detail[li_Count].title	= 'room_desc'
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 13
+	gsu_equip_detail[li_Count].column	= 'freeform_loc'
+	gsu_equip_detail[li_Count].label = 'FreeformLocation'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 14
+	gsu_equip_detail[li_Count].column	= 'elevation_id'
+	gsu_equip_detail[li_Count].label = 'Elevation'
+	gsu_equip_detail[li_Count].title	= 'elevation_desc'
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 15
+	gsu_equip_detail[li_Count].column	= 'train_id'
+	gsu_equip_detail[li_Count].label = 'Train'
+	gsu_equip_detail[li_Count].title	= 'train_desc'
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 16
+	gsu_equip_detail[li_Count].column	= 'column_id'
+	gsu_equip_detail[li_Count].label = 'Column'
+	gsu_equip_detail[li_Count].title	= 'column_desc'
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 17
+	gsu_equip_detail[li_Count].column	= 'equip_location_unit_id'
+	gsu_equip_detail[li_Count].label = 'UnitLocation'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 18
+	gsu_equip_detail[li_Count].column	= 'equip_fuse'
+	gsu_equip_detail[li_Count].label = 'Fuse'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 19
+	gsu_equip_detail[li_Count].column	= 'tag_size'
+	gsu_equip_detail[li_Count].label = 'TagSize'
+	gsu_equip_detail[li_Count].title	= 'tag_size_description'
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 20
+	gsu_equip_detail[li_Count].column	= 'verification_id'
+	gsu_equip_detail[li_Count].label = 'VerificationRequirements'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 21
+	gsu_equip_detail[li_Count].column	= 'config'
+	gsu_equip_detail[li_Count].label = 'Configuration'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 22
+	gsu_equip_detail[li_Count].column	= 'tagged_config'
+	gsu_equip_detail[li_Count].label = 'TaggedConfiguration'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 23
+	gsu_equip_detail[li_Count].column	= 'required_config'
+	gsu_equip_detail[li_Count].label = 'NormalConfiguration'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 24
+	gsu_equip_detail[li_Count].column	= 'equip_attribute_01'
+	gsu_equip_detail[li_Count].label = 'EquipmentAttribute01'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 25
+	gsu_equip_detail[li_Count].column	= 'equip_attribute_02'
+	gsu_equip_detail[li_Count].label = 'EquipmentAttribute02'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 26
+	gsu_equip_detail[li_Count].column	= 'equip_attribute_03'
+	gsu_equip_detail[li_Count].label = 'EquipmentAttribute03'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 27
+	gsu_equip_detail[li_Count].column	= 'equip_attribute_04'
+	gsu_equip_detail[li_Count].label = 'EquipmentAttribute04'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 28
+	gsu_equip_detail[li_Count].column	= 'equip_attribute_05'
+	gsu_equip_detail[li_Count].label = 'EquipmentAttribute05'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 29
+	gsu_equip_detail[li_Count].column	= 'equip_attribute_06'
+	gsu_equip_detail[li_Count].label = 'EquipmentAttribute06'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 30
+	gsu_equip_detail[li_Count].column	= 'equip_attribute_07'
+	gsu_equip_detail[li_Count].label = 'EquipmentAttribute07'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 31
+	gsu_equip_detail[li_Count].column	= 'equip_attribute_08'
+	gsu_equip_detail[li_Count].label = 'EquipmentAttribute08'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 32
+	gsu_equip_detail[li_Count].column	= 'equip_attribute_09'
+	gsu_equip_detail[li_Count].label = 'EquipmentAttribute09'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 33
+	gsu_equip_detail[li_Count].column	= 'equip_attribute_10'
+	gsu_equip_detail[li_Count].label = 'EquipmentAttribute10'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 34
+	gsu_equip_detail[li_Count].column	= 'appendix_r_related'
+	gsu_equip_detail[li_Count].label = 'AppendixR'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 35
+	gsu_equip_detail[li_Count].column	= 'penetrates_containment'
+	gsu_equip_detail[li_Count].label = 'ContainmentPenetration'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 36
+	gsu_equip_detail[li_Count].column	= 'maintenance_rule_related'
+	gsu_equip_detail[li_Count].label = 'MaintenanceRule'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+
+	li_Count = 37
+	gsu_equip_detail[li_Count].column	= 'verification_id_restore'
+	gsu_equip_detail[li_Count].label = 'VerificationRequirementsRestore'
+	gsu_equip_detail[li_Count].title	= ''
+	gsu_equip_detail[li_Count].header	= f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Label', gsu_equip_detail[li_Count].label) + CRLF
+	gsu_equip_detail[li_Count].visible	= ( Upper(f_ProfileString('NEDBS', gsu_equip_detail[li_Count].label + 'Visible', 'Yes')) = "YES" )
+	gsu_equip_detail[li_Count].coltype = gds_equip_detail.Describe(gsu_equip_detail[li_Count].column + ".ColType")
+END IF
+
+ls_Return	= ''
+string ls_Type
+
+FOR I = 1 to UpperBound(gsu_equip_detail)
+	IF gsu_equip_detail[I].visible THEN
+		ls_Type = Left(gsu_equip_detail[I].coltype, 4)
+		IF ( ls_Type = 'char' ) THEN
+			ls_Column_Data = TRIM(gds_equip_detail.GetItemString(1, gsu_equip_detail[I].column))
+			IF NOT Empty(ls_Column_Data) THEN
+				ls_Return	+= gsu_equip_detail[I].header
+				ls_Return	+= ls_Column_Data
+				IF NOT Empty(gsu_equip_detail[I].title) THEN
+					ls_Column_title = TRIM(gds_equip_detail.GetItemString(1, gsu_equip_detail[I].title))
+					IF NOT Empty(ls_Column_title) THEN
+						ls_Return += ' - ' + ls_Column_Title
+					END IF
+				END IF
+				ls_Return += CRLF+CRLF
+			END IF
+		ELSEIF ( ls_Type = 'deci' ) OR ( ls_Type = 'long' ) THEN
+			IF NOT IsNull(gds_equip_detail.GetItemNumber(1, gsu_equip_detail[I].column)) THEN
+				ls_Return	+= gsu_equip_detail[I].header
+				IF ( gds_equip_detail.GetItemNumber(1, gsu_equip_detail[I].column) = 1 ) THEN
+					ls_Return	+= 'Yes'
+				ELSE
+					ls_Return	+= 'No'
+				END IF
+				ls_Return += CRLF+CRLF
+			END IF
+		END IF
+	END IF
+NEXT
+gds_equip_detail.Reset()
+DESTROY gds_equip_detail
+
+RETURN ls_Return
+end function
+

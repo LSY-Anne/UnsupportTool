@@ -1,0 +1,8 @@
+﻿$PBExportHeader$p_test_ejbclientproxy.srj
+$PBExportComments$Generated EJB Proxy Project
+GeneratorID:{1B1DCEE3-E514-11D1-B30A-006008925BD4}GENBC00000000
+
+SERVERINFO:NULL	0	NULL	1	
+EJB:3	a	NULL	aHome
+COMMENT:
+DEPLOYMENT:a.pbl	NULL	0	0

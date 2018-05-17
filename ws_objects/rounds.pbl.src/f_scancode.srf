@@ -1,0 +1,88 @@
+﻿$PBExportHeader$f_scancode.srf
+global type f_scancode from function_object
+end type
+
+forward prototypes
+global function long f_scancode (long currentrow)
+end prototypes
+
+global function long f_scancode (long currentrow);string ls_MB_String
+integer li_Return
+
+IF ( currentrow > 0 ) THEN
+	OpenWithParm(w_scanning, 'FIND|' + String(currentrow))
+ELSE
+	OpenWithParm(w_scanning, 'FIND')
+END IF
+IF NOT IsValid(w_scanning) THEN
+	// ==========================================================
+	string ls_Scancode
+	string ls_Find
+	long ll_Current_Row
+	long ll_Row
+	boolean lb_Exists_In_Filter
+	boolean lb_Exists_But_Not_In_Filter
+	ls_Scancode = Message.StringParm
+	Message.StringParm = ''
+	IF ( ls_ScanCode <> 'CANCEL' ) AND ( ls_ScanCode <> 'SKIP' ) THEN
+		IF gb_Include_Equip_In_Scan THEN
+			ls_Find = " station_scan = '" + ls_Scancode + "' " + " OR station_equip_operator_id = '" + ls_Scancode + "' "
+		ELSE
+			ls_Find = " station_scan = '" + ls_Scancode + "' "
+		END IF
+		ll_Current_Row = w_tour.tab_tour.tabpage_readings.dw_readings.RowCount()
+		ll_Row = w_tour.tab_tour.tabpage_readings.dw_readings.Find(ls_Find, 1, ll_Current_Row + 1)
+			
+		lb_Exists_In_Filter = ( ll_Row > 0 )
+		
+		IF NOT lb_Exists_In_Filter THEN
+				
+		//SCAN TODO
+			IF gb_Include_Equip_In_Scan THEN
+		
+				SELECT COUNT(*) 
+				  INTO :ll_Row 
+				  FROM station 
+				 WHERE ( tour = :gsu_tour_parameters[gi_Current_Tour].Tour_Number ) 
+					AND ( rev_no = :gsu_tour_parameters[gi_Current_Tour].Rev_No ) 
+					AND ( (ISNULL(scan, '') = :ls_Scancode) OR (ISNULL(equip_operator_id, '') = :ls_Scancode) ) ;
+		
+			ELSE
+		
+				SELECT COUNT(*) 
+				  INTO :ll_Row 
+				  FROM station 
+				 WHERE ( tour = :gsu_tour_parameters[gi_Current_Tour].Tour_Number ) 
+					AND ( rev_no = :gsu_tour_parameters[gi_Current_Tour].Rev_No ) 
+					AND (ISNULL(scan, '') = :ls_Scancode) ;
+		
+			END IF
+			lb_Exists_But_Not_In_Filter = ( ll_Row > 0 )
+		END IF
+			
+		IF lb_Exists_In_Filter THEN
+			li_Return = 1
+			gb_Find_By_Scan = TRUE
+			w_tour.is_ScanCode = ls_ScanCode
+			w_tour.il_Row_For_Navigate_To_Row_PostEvent = ll_Row
+			w_tour.tab_tour.tabpage_readings.dw_readings.PostEvent("ue_Navigate_To_Row", 0, ll_Row)
+		ELSEIF lb_Exists_But_Not_In_Filter THEN
+			li_Return = -1
+			ls_MB_String = f_LanguageString('BARCODE_###_NOT_FOUND_UNDER_CURRENT_DATA_VIEW.', "Barcode '###' not found under current data view.")
+			ls_MB_String = StrTran(ls_MB_String, '###', ls_ScanCode)
+			MessageBox(f_LanguageString('NOT_FOUND', 'Not found'), ls_MB_String)
+		ELSE
+			li_Return = -1
+			ls_MB_String = f_LanguageString('BARCODE_###_NOT_FOUND_IN_THIS_TOUR.', "Barcode '###' not found in this tour.")
+			ls_MB_String = StrTran(ls_MB_String, '###', ls_ScanCode)
+			MessageBox(f_LanguageString('NOT_FOUND', 'Not found'), ls_MB_String)
+		END IF
+	ELSE
+		li_Return = 1
+	END IF
+	li_Return = 1
+END IF
+
+RETURN li_Return
+end function
+

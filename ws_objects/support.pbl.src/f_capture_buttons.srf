@@ -1,0 +1,14 @@
+﻿$PBExportHeader$f_capture_buttons.srf
+global type f_capture_buttons from function_object
+end type
+
+forward prototypes
+global subroutine f_capture_buttons (long al_handle, integer button)
+end prototypes
+
+global subroutine f_capture_buttons (long al_handle, integer button);IF gb_Platform_Is_CE THEN
+	f_Release_Buttons()
+	SHSetAppKeyWndAssoc(button, al_Handle)
+END IF
+end subroutine
+

@@ -1,0 +1,15 @@
+﻿$PBExportHeader$iifd.srf
+global type iifd from function_object
+end type
+
+forward prototypes
+global function dec iifd (boolean lb_check, dec ls_true, dec ls_false)
+end prototypes
+
+global function dec iifd (boolean lb_check, dec ls_true, dec ls_false);IF lb_check THEN
+	RETURN ls_true
+ELSE
+	RETURN ls_false
+END IF
+end function
+

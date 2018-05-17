@@ -1,0 +1,16 @@
+﻿$PBExportHeader$padnull.srf
+global type padnull from function_object
+end type
+
+forward prototypes
+global function string padnull (string ls_string, integer li_len)
+end prototypes
+
+global function string padnull (string ls_string, integer li_len);IF IsNull(ls_string) THEN
+	RETURN SPACE(li_len)
+ELSE
+	RETURN Padr(ls_string,li_len)
+END IF
+	
+end function
+

@@ -1,0 +1,60 @@
+﻿$PBExportHeader$f_update_notes.srf
+global type f_update_notes from function_object
+end type
+
+forward prototypes
+global subroutine f_update_notes (integer tour, integer shift_no, date shift_dt, integer sta)
+end prototypes
+
+global subroutine f_update_notes (integer tour, integer shift_no, date shift_dt, integer sta);//integer li_Sta
+//string ls_Note
+//long ll_Num_Rows
+//long ll_Count
+//datastore lds_temp
+//string ls_Sql
+
+//ls_Sql = " &
+//	  SELECT a.sta &
+//       FROM history a &
+//      WHERE ( a.tour = " + String(tour) + " ) &
+//        AND ( a.reading_id = 0 ) &
+//        AND ( a.dt = '" + String(shift_dt, 'yyyy-mm-dd') + "' ) &
+//        AND ( a.shift_no = " + String(shift_no) + " ) &
+//		AND ( a.note_already_copied = 0 ) &
+//   ORDER BY a.sta "
+//
+//lds_temp = CREATE datastore
+//ll_Num_Rows = f_Datastore_From_Sql(ls_Sql, lds_temp)
+//
+//FOR ll_Count = 1 TO ll_Num_Rows
+//	li_Sta = lds_temp.GetItemNumber(ll_Count, 1)
+
+	 UPDATE history b 
+        SET b.notes = 
+            ( SELECT TOP 1 a.notes 
+                FROM history a 
+               WHERE ( a.tour = b.tour ) 
+                 AND ( a.sta = b.sta ) 
+                 AND ( a.reading_id = 0 ) 
+                 AND ( ( a.dt < :shift_dt ) OR ( ( a.dt = :shift_dt ) AND ( a.shift_no < b.shift_no ) ) ) 
+                 AND ( a.rd IS NOT NULL ) 
+                 AND ( TRIM(a.rd) <> '' ) 
+            ORDER BY a.dt DESC, a.shift_no DESC ), 
+            b.note_already_copied = 1 
+      WHERE ( b.tour = :tour ) 
+        AND ( b.reading_id = 0 ) 
+        AND ( b.dt = :shift_dt ) 
+        AND ( b.shift_no = :shift_no ) 
+        AND ( b.sta = :Sta ) 
+        AND ( ( b.notes IS NULL ) OR ( TRIM(b.notes) = '' ) ) 
+        AND ( b.note_already_copied = 0 ) USING SQLCA ;
+
+//NEXT
+//
+//DESTROY lds_temp
+
+COMMIT USING SQLCA ;
+
+
+end subroutine
+

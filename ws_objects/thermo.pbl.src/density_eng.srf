@@ -1,0 +1,24 @@
+﻿$PBExportHeader$density_eng.srf
+global type density_eng from function_object
+end type
+
+forward prototypes
+global function double density_eng (double t, double p)
+end prototypes
+
+global function double density_eng (double t, double p);double rho, a, cjth, cjtt, cp, cv, dpdr, dpdt, g, h, s, u , rho_start
+
+IF t = 0 OR p = 0 THEN
+	SetNull(rho)
+	RETURN rho
+END IF
+
+rho_start	= .01
+t	= fahr2kelvin(t)
+p	= psi2mpa(p)
+
+dense( p , t , rho_start , rho , dpdr )
+
+RETURN gramspercc2lbpercft(rho)
+end function
+

@@ -1,0 +1,29 @@
+﻿$PBExportHeader$f_determine_asa_reg_path.srf
+global type f_determine_asa_reg_path from function_object
+end type
+
+forward prototypes
+global function string f_determine_asa_reg_path ()
+end prototypes
+
+global function string f_determine_asa_reg_path ();string ls_Path
+int		rc
+string	ls_regkey
+string	ls_work
+constant string ASA9_REGPATH = "HKEY_LOCAL_MACHINE\Software\TechAssist\Mobile eSOMS\"
+
+rc = RegistryGet(ASA9_REGPATH, "ASAFolder", RegString!, ls_work)
+if rc = 1 then
+	ls_Path = ls_work
+else
+	ls_Path = ''
+	rc = -1
+end if
+
+IF NOT gb_Platform_Is_CE THEN
+	ls_path += '\win32'
+END IF
+
+return ls_Path
+end function
+

@@ -1,0 +1,100 @@
+﻿$PBExportHeader$psat_est.srf
+global type psat_est from function_object
+end type
+
+forward prototypes
+global subroutine psat_est (double t, ref double p)
+end prototypes
+
+global subroutine psat_est (double t, ref double p);//subroutine psat_est ( t, p )
+//
+//
+//// PSAT_EST makes a rough estimate of the vapor pressure.
+//
+//
+//  Discussion:
+//
+//    The calculation agrees with tabulated data to within
+//    0.02% for temperature to within a degree or so of the critical
+//    temperature.  The approximate vapor pressure can be refined
+//    by imposing the condition that the Gibbs functions of the vapor
+//    and liquid phases be equal.
+//
+//  Modified:
+//
+//    21 November 1998
+//
+//  Reference:
+//
+//    Lester Haar, John Gallagher and George Kell,
+//    NBS/NRC Steam Tables:
+//    Thermodynamic and Transport Properties and Computer Programs
+//      for Vapor and Liquid States of Water in SI Units,
+//    Hemisphere Publishing Corporation, Washington, 1984,
+//    TJ270.H3
+//
+//    C A Meyer, R B McClintock, G J Silvestri, R C Spencer,
+//    ASME Steam Tables: Thermodynamic and Transport Properties of Steam,
+//    American Society of Mechanical Engineers, 1967.
+//
+//  Parameters:
+//
+//    Input, double T, the temperature, in degrees Kelvin.
+//
+//    Output, double P, the vapor pressure, in MegaPascals.
+//
+//
+  double a[] = { &
+    -7.8889166E+00,   2.5514255E+00,   -6.716169E+00, 33.239495E+00, &
+    -105.38479E+00,   174.35319E+00,  -148.39348E+00, 48.631602E+00 }
+  double b
+  integer i
+  double q
+  double t_ref = 647.25E+00
+  double v
+  double w
+  double z
+  string ls_MB_String
+  string ls_MB_String_2
+//
+//  Refuse to handle zero or negative temperatures.
+//
+  if ( t <= 0.0E+00 ) then
+	ls_MB_String = f_LanguageString('###_-_FATAL_ERROR', '### - Fatal Error')
+	ls_MB_String = StrTran(ls_MB_String, '###', 'PSAT')
+	ls_MB_String_2 = f_LanguageString('THE_INPUT_TEMPERATURE_T_MUST_BE_POSITIVE.__INPUT_VALUE_WAS_T_=_###', 'The input temperature T must be positive.  Input value was T = ###')
+	ls_MB_String_2 = StrTran(ls_MB_String_2, '###', String(t))
+	MessageBox(ls_MB_String, ls_MB_String_2)
+//	MessageBox('PSAT_EST - Fatal error','The input temperature T must be positive.  Input value was T = '+string( t))
+	return
+/*	
+    write ( *, '(a)' ) ' '
+    write ( *, '(a)' ) 'PSAT_EST - Fatal error//'
+    write ( *, '(a)' ) '  The input temperature T must be positive.'
+    write ( *, '(a,g14.6)' ) '  Input value was T = ', t
+    stop*/
+  end if
+
+  if ( t <= 314.0E+00 ) then
+
+    p = 0.1E+00 * exp ( 6.3573118E+00 - 8858.843E+00 / t &
+      + 607.56335E+00 * t^( -0.6E+00 ) )
+
+  else
+
+    v = t / t_ref
+    w = abs ( 1.0E+00 - v )
+    b = 0.0E+00
+    for i = 1 to 8
+      z = i
+      b = b + a[i] * w^( ( z + 1.0E+00 ) / 2.0E+00 )
+	 next
+
+    q = b / v
+    p = 22.093E+00 * exp ( q )
+
+  end if
+
+  return
+end subroutine
+

@@ -1,0 +1,11 @@
+﻿$PBExportHeader$specvol_si.srf
+global type specvol_si from function_object
+end type
+
+forward prototypes
+global function double specvol_si (double t, double p)
+end prototypes
+
+global function double specvol_si (double t, double p);return 1/density_si(t,p)
+end function
+

@@ -1,0 +1,11 @@
+﻿$PBExportHeader$f_display_hidden_records.srf
+global type f_Display_Hidden_Records from function_object
+end type
+
+forward prototypes
+global function boolean f_display_hidden_records ()
+end prototypes
+
+global function boolean f_display_hidden_records ();RETURN gb_Display_Hidden_Records
+end function
+

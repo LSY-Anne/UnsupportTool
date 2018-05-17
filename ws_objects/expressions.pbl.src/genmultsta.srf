@@ -1,0 +1,249 @@
+﻿$PBExportHeader$genmultsta.srf
+global type genmultsta from function_object
+end type
+
+forward prototypes
+global function string genmultsta (string ls_station_list, string return_type)
+end prototypes
+
+global function string genmultsta (string ls_station_list, string return_type);integer ll_row , ll_tour , ll_sequence,ll_sta , ll_shift_no,ll_shift_start,ll_shift_end,ll_shift
+string ls_user_name,ls_reading,ls_app_name,ls_sql,ls_sta
+datetime ldt_date
+dec ldb_reading,ldb_count,ldb_min,ldb_max,ldb_range,ldb_sum,ldb_average
+dec ldb_r2_sum,ldb_std,ldb_sampstd
+DataStore ds_multsta
+long ll_count,ll_retrieved,ll_pos,ll_find
+integer li_Return
+
+ll_shift_no		= gsu_Tour_Parameters[gi_Current_Tour].shift_no//**
+ll_tour			= gsu_Tour_Parameters[gi_Current_Tour].tour_number//**
+ldt_date 		= DateTime(gsu_Tour_Parameters[gi_Current_Tour].tour_date)//**
+ll_sta			= gsu_Tour_Parameters[gi_Current_Tour].station//**
+//**IF w_tour.ids_evaluate.RowCount() > 0 THEN
+//**	ll_tour		= w_tour.ids_evaluate.object.tour[1]
+//**	ll_sta		= w_tour.ids_evaluate.object.sta[1]
+//**	ldt_date 	= w_tour.ids_evaluate.object.dt[1]
+//**	ll_shift_no	= w_tour.ids_evaluate.object.shift_no[1]
+//**ELSE
+//**	RETURN 'Error Getting Data'
+//**END IF
+
+ldb_reading	= 0
+ldb_count	= 0
+ldb_sum		= 0
+ldb_r2_sum	= 0
+ldb_max		= dec("-1E18")
+ldb_min		= dec("1E18")
+ll_count		= 1
+
+//ds_multsta.DataObject = 'ds_multi_station'
+//li_Return = ds_multsta.SetTransObject( SQLCA )
+//ll_retrieved = ds_multsta.Retrieve(ll_tour,ldt_date,ll_shift_no)
+
+ds_multsta = CREATE datastore
+
+ls_Sql = " &
+  SELECT sta, &
+         rd &
+    FROM history &
+   WHERE ( tour = " + String(ll_tour) + " ) AND &
+         ( dt = '" + String(ldt_date, 'yyyy/mm/dd') + "' ) AND &
+         ( shift_no = " + String(ll_shift_no) + " ) AND &
+         ( reading_id = 0 ) &
+ORDER BY sta ASC "
+
+ll_retrieved = f_Datastore_From_Sql(ls_Sql, ds_multsta)
+IF ( ll_Retrieved > 0 ) THEN
+	DO WHILE NOT Empty(ls_station_list)
+		ll_pos = Pos(ls_station_list,',')
+		IF ll_pos > 0 THEN
+			ls_sta = Mid(ls_station_list,1,ll_pos - 1)
+			ll_sta = Long(ls_sta)
+			ls_station_list = Mid(ls_station_list,ll_pos + 1)
+		ELSE
+			ls_sta = ls_station_list
+			ll_sta = Long(ls_sta)
+			ls_station_list = ''
+		END IF
+		
+		ll_find	= ds_multsta.Find('sta = '+String(ll_sta),1,ll_retrieved)
+		
+		IF ll_find > 0 THEN
+			ls_reading = ds_multsta.object.rd[ll_find]
+		ELSE
+			ls_reading = 'Not Found'
+		END IF
+	
+		IF IsNumber(ls_reading) THEN
+			ldb_count	= ldb_count + 1
+			ldb_reading = N(ls_reading)
+			ldb_sum		= ldb_sum + ldb_reading
+			ldb_min		= Min(ldb_min,ldb_reading)
+			ldb_max		= Max(ldb_max,ldb_reading)
+			ldb_r2_sum	= ldb_r2_sum + ldb_reading ^ 2
+		END IF
+	LOOP
+END IF
+
+ds_multsta.Reset()
+
+DESTROY ds_multsta ;
+
+//SQLError()
+
+IF ldb_count = 0 THEN
+	ls_reading	= "Readings Not Found"
+ELSEIF return_type = "MIN" THEN
+	ls_reading	= String(ldb_min)
+ELSEIF return_type = "MAX" THEN
+	ls_reading	= String(ldb_max)
+ELSEIF return_type = "COUNT" THEN
+	ls_reading	= String(ldb_count)
+ELSEIF return_type = "SUM" THEN
+	ls_reading	= String(ldb_sum)
+ELSEIF return_type = "AVERAGE"  OR return_type = "AVE" THEN
+	ldb_average	= ldb_sum/ldb_count
+	ls_reading	= String(ldb_average)
+ELSEIF return_type = "RANGE" THEN
+	ldb_range	= ldb_max - ldb_min
+	ls_reading	= String(ldb_range)
+ELSEIF return_type = "STD" OR return_type = "VAR" THEN
+	IF (ldb_count - ldb_average^2) <> 0 THEN
+		ldb_average	= ldb_sum/ldb_count
+		ldb_std		= Sqrt(ldb_r2_sum / ldb_count - ldb_average^2 )
+		IF return_type = "STD" THEN
+			ls_reading	= String(ldb_std)
+		ELSE
+			ls_reading	= String(ldb_std^2)
+		END IF
+	ELSE
+		ls_reading	= "Insufficient Data"
+	END IF
+ELSEIF return_type = "SAMPSTD" OR return_type = "SAMPVAR" THEN
+	IF ldb_count > 1 THEN
+		ldb_average	= ldb_sum/ldb_count
+		ldb_sampstd	= Sqrt( (ldb_r2_sum - ldb_sum^2/ldb_count) / (ldb_count - 1) )
+		IF  return_type = "SAMPSTD" THEN
+			ls_reading	= String(ldb_sampstd)
+		ELSE
+			ls_reading	= String(ldb_sampstd^2)
+		END IF
+	ELSE
+		ls_reading	= "Insufficient Data"
+	END IF
+ELSE
+	ls_reading	= "Invalid Type"
+END IF
+
+RETURN Upper(ls_reading)
+
+//integer li_tour , li_sequence,li_sta , li_shift_no,li_shift_start,li_shift_end,li_shift
+//string ls_user_name,ls_reading,ls_app_name,ls_sql,ls_sta
+//datetime ld_date
+//dec ldb_reading,ldb_count,ldb_min,ldb_max,ldb_range,ldb_sum,ldb_average
+//dec ldb_r2_sum,ldb_std,ldb_sampstd
+//DataStore ds_multsta
+//long ll_count,ll_retrieved,ll_pos,ll_sta,ll_find, ll_Row_Count
+//integer li_rev_no
+//
+//li_tour		= gsu_Tour_Parameters[gi_Current_Tour].tour_number
+//li_rev_no	= gsu_Tour_Parameters[gi_Current_Tour].rev_no
+//li_shift_no	= gsu_Tour_Parameters[gi_Current_Tour].shift_no
+//ld_date		= DateTime(gsu_Tour_Parameters[gi_Current_Tour].tour_date)
+//ldb_reading	= 0
+//ldb_count	= 0
+//ldb_sum		= 0
+//ldb_r2_sum	= 0
+//ldb_max		= dec("-1E308")
+//ldb_min		= dec("1E308")
+//ll_count		= 1
+//
+//ds_multsta = CREATE datastore
+//ds_multsta.DataObject = 'ds_multi_station'
+//ds_multsta.SetTransObject( SQLCA )
+//
+//ll_retrieved = ds_multsta.Retrieve(li_tour,li_rev_no,ld_date,li_shift_no)
+//
+//DO WHILE NOT Empty(ls_station_list)
+//	ll_pos = Pos(ls_station_list,',')
+//	IF ll_pos > 0 THEN
+//		ls_sta = Mid(ls_station_list,1,ll_pos - 1)
+//		ll_sta = Long(ls_sta)
+//		ls_station_list = Mid(ls_station_list,ll_pos + 1)
+//	ELSE
+//		ls_sta = ls_station_list
+//		ll_sta = Long(ls_sta)
+//		ls_station_list = ''
+//	END IF
+//	
+//	ll_find	= ds_multsta.Find('sta = '+String(ll_sta),1,ll_retrieved)
+//	
+//	IF ll_find > 0 THEN
+//		ls_reading = ds_multsta.object.rd[ll_find]
+//	ELSE
+//		ls_reading = 'Not Found'
+//	END IF
+//
+//	IF IsNumber(ls_reading) THEN
+//		ldb_count	= ldb_count + 1
+//		ldb_reading = N(ls_reading)
+//		ldb_sum		= ldb_sum + ldb_reading
+//		ldb_min		= Min(ldb_min,ldb_reading)
+//		ldb_max		= Max(ldb_max,ldb_reading)
+//		ldb_r2_sum	= ldb_r2_sum + ldb_reading ^ 2
+//	END IF
+//LOOP
+//
+//ds_multsta.Reset()
+//
+//DESTROY ds_multsta ;
+//
+////SQLError()
+//
+//IF ldb_count = 0 THEN
+//	ls_reading	= "Rd Not Found"
+//ELSEIF return_type = "MIN" THEN
+//	ls_reading	= String(ldb_min)
+//ELSEIF return_type = "MAX" THEN
+//	ls_reading	= String(ldb_max)
+//ELSEIF return_type = "COUNT" THEN
+//	ls_reading	= String(ldb_count)
+//ELSEIF return_type = "SUM" THEN
+//	ls_reading	= String(ldb_sum)
+//ELSEIF return_type = "AVERAGE"  OR return_type = "AVE" THEN
+//	ldb_average	= ldb_sum/ldb_count
+//	ls_reading	= String(ldb_average)
+//ELSEIF return_type = "RANGE" THEN
+//	ldb_range	= ldb_max - ldb_min
+//	ls_reading	= String(ldb_range)
+//ELSEIF return_type = "STD" OR return_type = "VAR" THEN
+//	IF (ldb_count - ldb_average^2) <> 0 THEN
+//		ldb_average	= ldb_sum/ldb_count
+//		ldb_std		= Sqrt(ldb_r2_sum / ldb_count - ldb_average^2 )
+//		IF return_type = "STD" THEN
+//			ls_reading	= String(ldb_std)
+//		ELSE
+//			ls_reading	= String(ldb_std^2)
+//		END IF
+//	ELSE
+//		ls_reading	= "Insuff. Data"
+//	END IF
+//ELSEIF return_type = "SAMPSTD" OR return_type = "SAMPVAR" THEN
+//	IF ldb_count > 1 THEN
+//		ldb_average	= ldb_sum/ldb_count
+//		ldb_sampstd	= Sqrt( (ldb_r2_sum - ldb_sum^2/ldb_count) / (ldb_count - 1) )
+//		IF  return_type = "SAMPSTD" THEN
+//			ls_reading	= String(ldb_sampstd)
+//		ELSE
+//			ls_reading	= String(ldb_sampstd^2)
+//		END IF
+//	ELSE
+//		ls_reading	= "Insuff. Data"
+//	END IF
+//ELSE
+//	ls_reading	= "Invalid Type"
+//END IF
+//
+//return ls_reading
+end function
+

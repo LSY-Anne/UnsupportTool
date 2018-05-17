@@ -1,0 +1,42 @@
+﻿$PBExportHeader$enthalpy.srf
+global type enthalpy from function_object
+end type
+
+forward prototypes
+global function double enthalpy (double ldb_temp_fahr, double ldb_press_psi)
+end prototypes
+
+global function double enthalpy (double ldb_temp_fahr, double ldb_press_psi);double ldb_temp_kelvin
+double ldb_press_mpa
+double ldb_rho
+double ldb_rho_start
+double ldb_dpdr
+double ldb_return
+double ldb_ab
+double ldb_cvb
+double ldb_dpdrb
+double ldb_dpdtb
+double ldb_gb
+double ldb_hb
+double ldb_pb
+double ldb_sb
+double ldb_ub 
+
+ldb_temp_kelvin	= fahr2kelvin(ldb_temp_fahr)
+ldb_press_mpa		= psi2mpa(ldb_press_psi)
+ldb_rho_start		= 2
+
+dense( ldb_press_mpa , ldb_temp_kelvin , ldb_rho_start , ldb_rho , ldb_dpdr )
+
+//MessageBox(string(ldb_rho),string(ldb_temp_kelvin))
+//
+//MessageBox('v cu ft per lb',string(1/gramspercc2lbpercft(ldb_rho)))
+
+base( ldb_temp_kelvin , ldb_rho , ldb_ab, ldb_cvb, ldb_dpdrb, ldb_dpdtb, ldb_gb, ldb_hb, ldb_pb, ldb_sb, ldb_ub )
+
+
+ldb_return = 0.4299 * ldb_hb
+
+return ldb_return
+end function
+

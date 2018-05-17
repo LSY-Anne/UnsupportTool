@@ -1,0 +1,19 @@
+﻿$PBExportHeader$f_getipaddress.srf
+global type f_getipaddress from function_object
+end type
+
+forward prototypes
+global function string f_getipaddress ()
+end prototypes
+
+global function string f_getipaddress ();string ls_IP_Address
+
+// This is required for the second call to return properly
+fnGetIPAddress()
+
+ls_IP_Address = fnGetIPAddress()
+RegistrySet("HKEY_LOCAL_MACHINE\Software\TechAssist\Mobile eSOMS", "IPAddress", RegString!, ls_IP_Address)
+
+RETURN ls_IP_Address
+end function
+

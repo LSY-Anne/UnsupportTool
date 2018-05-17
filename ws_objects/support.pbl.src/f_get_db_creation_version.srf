@@ -1,0 +1,17 @@
+﻿$PBExportHeader$f_get_db_creation_version.srf
+global type f_get_db_creation_version from function_object
+end type
+
+forward prototypes
+global subroutine f_get_db_creation_version (ref string as_db_creation_version)
+end prototypes
+
+global subroutine f_get_db_creation_version (ref string as_db_creation_version);SELECT version 
+  INTO :as_DB_Creation_Version 
+  FROM sys.syshistory 
+ WHERE ( operation = 'INIT' ) 
+USING SQLCA ;
+
+
+end subroutine
+

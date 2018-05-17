@@ -1,0 +1,44 @@
+﻿$PBExportHeader$fit.srf
+global type fit from function_object
+end type
+
+forward prototypes
+global function string fit (string ls_expr)
+end prototypes
+
+global function string fit (string ls_expr);string ls_return,ls_temp
+dec ldb_expr, li_temp_1,li_temp_2
+boolean lb_negative
+ldb_expr = dec(ls_expr)
+
+IF ldb_expr = 0 THEN
+   ls_return = "0"
+ELSEIF Abs(LogTen(Abs(ldb_expr))) >= 15 THEN
+   lb_negative = ldb_expr < 0
+   ldb_expr     = Abs(ldb_expr)
+   li_temp_2 = Int(LogTen(ldb_expr))
+   IF li_temp_2 < 0 THEN
+      li_temp_2 = li_temp_2 - 1
+   END IF
+	IF 10.0E1^li_temp_2 = 0 THEN
+		RETURN "Error"
+	END IF
+   li_temp_1 = ldb_expr/10.0E1^li_temp_2
+   ls_temp = Trim(String(li_temp_2))
+	IF lb_negative THEN
+	   ls_return = Left("-"+Trim(String(li_temp_1)),15 - Len(ls_temp)-1) + "E" + ls_temp
+	ELSE
+	   ls_return = Left(Trim(String(li_temp_1)),15 - Len(ls_temp)-1) + "E" + ls_temp
+	END IF
+ELSE
+   ls_return = Left(Trim(String(ldb_expr)),15)
+   DO WHILE Right(ls_return,1) = "0" AND Pos(ls_return,'.') > 0
+      ls_return = Left(ls_return,LEN(ls_return)-1)
+   LOOP
+   IF Right(ls_return,1) = "." THEN
+      ls_return = Left(ls_return,LEN(ls_return)-1)
+   END IF
+END IF
+RETURN ls_return
+end function
+

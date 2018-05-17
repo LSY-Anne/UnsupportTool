@@ -1,0 +1,38 @@
+﻿$PBExportHeader$f_format_date_mask.srf
+global type f_format_date_mask from function_object
+end type
+
+forward prototypes
+global subroutine f_format_date_mask ()
+end prototypes
+
+global subroutine f_format_date_mask ();integer li_M
+integer li_d
+integer li_y
+integer li_Returned_Length
+integer li_Length
+integer li_Seperator
+Constant long LOCALE_SSHORTDATE = 31
+
+Date_Format = Space(255)
+li_Returned_Length = GetLocaleInfo(GetUserDefaultLCID(), LOCALE_SSHORTDATE, Date_Format, 255)
+li_Returned_Length = LEN(Date_Format)
+
+li_M = StringCount('M', Date_Format)
+li_d = StringCount('d', Date_Format)
+li_y = StringCount('y', Date_Format)
+li_Seperator = 2
+
+li_Length = li_M + li_d + li_y + li_Seperator
+IF ( li_Returned_Length > li_Length ) THEN
+	Date_Format = MID(Date_Format, 1, li_Returned_Length - ( li_Returned_Length - li_Length ))
+END IF
+
+IF ( li_M <= 2 ) THEN
+	Date_Format = Replace(Date_Format, POS(Date_Format, 'M'), li_M, 'MM')
+END IF
+Date_Format = Replace(Date_Format, POS(Date_Format, 'd'), li_d, 'dd')
+//Date_Format = Replace(Date_Format, POS(Date_Format, 'y'), li_y, 'yyyy')
+
+end subroutine
+

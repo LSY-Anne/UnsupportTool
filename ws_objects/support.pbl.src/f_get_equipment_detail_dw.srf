@@ -1,0 +1,80 @@
+﻿$PBExportHeader$f_get_equipment_detail_dw.srf
+global type f_get_equipment_detail_dw from function_object
+end type
+
+forward prototypes
+global function boolean f_get_equipment_detail_dw (datawindow dw_passed, string as_equip_operator_id)
+end prototypes
+
+global function boolean f_get_equipment_detail_dw (datawindow dw_passed, string as_equip_operator_id);string ls_Return
+string ls_Sql
+string ls_Errors
+string CRLF
+string ls_Where
+string ls_Last
+string ls_Error
+long I
+integer li_Count
+string ls_Column_Data
+string ls_Column_Title
+long ll_Num_Rows
+
+CRLF	= ''
+
+f_Initialize_Equip_Detail(CRLF)
+
+ll_Num_Rows = gds_equip_detail.Retrieve(as_Equip_Operator_Id)
+IF ( ll_Num_Rows < 1 ) THEN
+//	MessageBox('Error', 'Equipment "' + TRIM(as_Equip_Operator_Id) + '" not found')
+	gds_equip_detail.Reset()
+	DESTROY gds_equip_detail
+	RETURN FALSE
+ELSE
+	ls_Return	= ''
+	string ls_Type
+	integer li_Row
+	
+	dw_passed.SetRedraw(FALSE)
+	dw_passed.Reset()
+	FOR I = 1 to UpperBound(gsu_equip_detail)
+		CHOOSE CASE I
+			CASE 23, 34, 35, 37
+				I = I
+		END CHOOSE
+		IF gsu_equip_detail[I].visible THEN
+			ls_Type = Left(gsu_equip_detail[I].coltype, 4)
+			IF ( ls_Type = 'char' ) THEN
+				ls_Column_Data = TRIM(gds_equip_detail.GetItemString(1, gsu_equip_detail[I].column))
+				IF NOT Empty(ls_Column_Data) THEN
+					li_Row = dw_passed.InsertRow(0)
+					dw_passed.Object.header[li_Row] = gsu_equip_detail[I].header
+					dw_passed.Object.text[li_Row] = ls_Column_Data
+					IF NOT Empty(gsu_equip_detail[I].title) THEN
+						ls_Column_title = TRIM(gds_equip_detail.GetItemString(1, gsu_equip_detail[I].title))
+						IF NOT Empty(ls_Column_title) THEN
+							dw_passed.Object.text[li_Row] = dw_passed.Object.text[li_Row] + ' - ' + ls_Column_Title
+						END IF
+					END IF
+				END IF
+			ELSEIF ( ls_Type = 'deci' ) OR ( ls_Type = 'long' ) THEN
+				IF NOT IsNull(gds_equip_detail.GetItemNumber(1, gsu_equip_detail[I].column)) THEN
+					li_Row = dw_passed.InsertRow(0)
+					dw_passed.Object.header[li_Row] = gsu_equip_detail[I].header
+					IF ( gds_equip_detail.GetItemNumber(1, gsu_equip_detail[I].column) = 1 ) THEN
+						dw_passed.Object.text[li_Row] = 'Yes'
+					ELSE
+						dw_passed.Object.text[li_Row] = 'No'
+					END IF
+				END IF
+			END IF
+		END IF
+	NEXT
+	gds_equip_detail.Reset()
+	DESTROY gds_equip_detail
+	
+	dw_passed.SetRedraw(TRUE)
+	RETURN TRUE
+END IF
+
+end function
+

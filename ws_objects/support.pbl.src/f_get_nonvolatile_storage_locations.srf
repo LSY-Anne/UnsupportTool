@@ -1,0 +1,41 @@
+﻿$PBExportHeader$f_get_nonvolatile_storage_locations.srf
+global type f_get_nonvolatile_storage_locations from function_object
+end type
+
+forward prototypes
+global function string f_get_nonvolatile_storage_locations ()
+end prototypes
+
+global function string f_get_nonvolatile_storage_locations ();// Implemented by Berndt Hamboeck
+// Contact: office@pocketpb.com
+
+char lblb_data[560], lblb_data_empty[560]
+ulong lul_retVal
+
+string ls_data
+long ll_from
+
+lul_retVal = FindFirstFlashCard( lblb_data)
+FOR ll_from= 15 to 560
+	ls_data += String(lblb_data[ll_from])
+NEXT
+
+IF ( lul_retVal < 1 ) THEN
+	MessageBox("Sorry", "No Flash card installed on the system")
+ELSE
+	lblb_data = lblb_data_empty
+	lul_retVal = FindNextFlashCard(lul_retVal, lblb_data)
+	DO WHILE lul_retVal > 0
+		ls_data += "~r~n"
+		FOR ll_from= 15 to 560
+			ls_data += String(lblb_data[ll_from])
+		NEXT
+		lul_retVal = FindNextFlashCard(lul_retVal, lblb_data)
+		lblb_data = lblb_data_empty
+	LOOP
+	MessageBox("Available Flash cards", ls_data)
+END IF
+
+RETURN ls_Data
+end function
+

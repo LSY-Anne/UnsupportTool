@@ -1,0 +1,8 @@
+Save Format v3.0(19990112)
+@begin Projects
+ 0 "1&config&config.pkl";
+@end;
+LibList "config.pkl;support.pkl;mobilink_cc.pkl;mobilink_common.pkl";
+applib "config.pkl";
+type "pb";
+appname "config";

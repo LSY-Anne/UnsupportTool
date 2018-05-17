@@ -1,0 +1,22 @@
+﻿$PBExportHeader$f_convert_path.srf
+global type f_convert_path from function_object
+end type
+
+forward prototypes
+global function string f_convert_path (string as_path_to_convert)
+end prototypes
+
+global function string f_convert_path (string as_path_to_convert);string ls_Path
+
+// The path for Win32 uses backslashes and
+// the path for WinCE uses forward slashes, whata pain in the @$$!!
+
+IF gb_Platform_Is_CE THEN
+	ls_Path = StrTran(as_Path_To_Convert, "\", "/")
+ELSE
+	ls_Path = as_Path_To_Convert
+END IF
+
+RETURN ls_Path
+end function
+

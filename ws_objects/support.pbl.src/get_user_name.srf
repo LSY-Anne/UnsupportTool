@@ -1,0 +1,15 @@
+﻿$PBExportHeader$get_user_name.srf
+global type get_user_name from function_object
+end type
+
+forward prototypes
+global function string get_user_name (string ls_user_id)
+end prototypes
+
+global function string get_user_name (string ls_user_id);string ls_user_name
+
+SELECT name INTO :ls_user_name FROM userlog WHERE user_id = :ls_user_id ;
+
+RETURN Trim(ls_user_name)
+end function
+

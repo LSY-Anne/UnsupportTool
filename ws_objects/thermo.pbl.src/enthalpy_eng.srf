@@ -1,0 +1,27 @@
+﻿$PBExportHeader$enthalpy_eng.srf
+global type enthalpy_eng from function_object
+end type
+
+forward prototypes
+global function double enthalpy_eng (double t, double p)
+end prototypes
+
+global function double enthalpy_eng (double t, double p);double rho, a, cjth, cjtt, cp, cv, dpdr, dpdt, g, h, s, u , rho_start
+
+
+IF t = 0 OR p = 0 THEN
+	SetNull(rho)
+	RETURN rho
+END IF
+
+t 				= fahr2kelvin(t)
+rho_start	= .01
+p				= psi2mpa(p)
+
+dense( p , t , rho_start , rho , dpdr )
+
+therm(t, rho, a, cjth, cjtt, cp, cv, dpdr, dpdt, g, h, p, s, u)
+
+RETURN kj_kg2btu_lb(h)
+end function
+

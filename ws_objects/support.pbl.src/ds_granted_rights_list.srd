@@ -1,0 +1,21 @@
+﻿$PBExportHeader$ds_granted_rights_list.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=1 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no grid.lines=0 )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=92 color="536870912" )
+table(column=(type=decimal(0) updatewhereclause=yes name=lnum dbname="lnum" )
+ column=(type=char(10) updatewhereclause=yes name=appl dbname="appl" )
+ column=(type=char(12) updatewhereclause=yes name=user_id dbname="user_id" )
+ retrieve="  SELECT lnum,   
+         appl,   
+         user_id  
+    FROM user_levels 
+   WHERE ( RTRIM(user_id) = RTRIM(:as_User_Id) )   
+" arguments=(("as_User_Id", string)) )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="9" y="0" height="76" width="1367" format="[general]" html.valueishtml="0"  name=lnum visible="1" edit.limit=0 edit.case=any  edit.autoselect=yes   font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="1385" y="0" height="76" width="311" format="[general]" html.valueishtml="0"  name=appl visible="1" edit.limit=0 edit.case=any  edit.autoselect=yes   font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="1705" y="0" height="76" width="279" format="[general]" html.valueishtml="0"  name=user_id visible="1" edit.limit=0 edit.case=any  edit.autoselect=yes   font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" netscapelayers="0" )
+ 

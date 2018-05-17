@@ -1,0 +1,41 @@
+﻿$PBExportHeader$ds_user_settings.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=1 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no grid.lines=0 )
+header(height=76 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=96 color="536870912" )
+table(column=(type=char(10) update=yes updatewhereclause=yes key=yes name=module_id dbname="soms_user_settings.module_id" )
+ column=(type=char(255) update=yes updatewhereclause=yes key=yes name=key_id dbname="soms_user_settings.key_id" )
+ column=(type=char(255) update=yes updatewhereclause=yes name=value_id dbname="soms_user_settings.value_id" )
+ column=(type=char(2000) updatewhereclause=yes name=description dbname="soms_user_settings.description" )
+ column=(type=char(4000) updatewhereclause=yes name=preference_list dbname="soms_user_settings.preference_list" )
+ column=(type=decimal(0) updatewhereclause=yes name=preference_type dbname="soms_user_settings.preference_type" )
+ column=(type=char(1000) updatewhereclause=yes name=default_value dbname="soms_user_settings.default_value" )
+ retrieve="  SELECT module_id, 
+         key_id, 
+         value_id, 
+         description, 
+			preference_list, 
+			preference_type, 
+         default_value 
+    FROM soms_user_settings 
+   WHERE ( module_id = :as_Module_Id ) 
+     AND ( key_id = :as_Key_Id ) " update="soms_user_settings" updatewhere=0 updatekeyinplace=yes arguments=(("as_Module_Id", string),("as_Key_Id", string)) )
+text(band=header alignment="2" text="Module Id" border="0" color="0" x="9" y="8" height="64" width="302" html.valueishtml="0"  name=module_id_t visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Key Id" border="0" color="0" x="320" y="8" height="64" width="837" html.valueishtml="0"  name=key_id_t visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=10 border="0" color="0" x="9" y="8" height="76" width="302" format="[general]" html.valueishtml="0"  name=module_id visible="1" edit.limit=10 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes   font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=20 border="0" color="0" x="320" y="8" height="76" width="837" format="[general]" html.valueishtml="0"  name=key_id visible="1" edit.limit=255 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes   font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=30 border="0" color="0" x="1166" y="8" height="76" width="512" format="[general]" html.valueishtml="0"  name=value_id visible="1" edit.limit=255 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes   font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=0 border="0" color="0" x="1691" y="8" height="76" width="512" html.valueishtml="0"  name=description visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=0 border="0" color="0" x="6085" y="8" height="76" width="512" html.valueishtml="0"  name=preference_list visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="0" tabsequence=0 border="0" color="0" x="10478" y="8" height="76" width="512" html.valueishtml="0"  name=preference_type visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="0" tabsequence=0 border="0" color="0" x="11643" y="8" height="76" width="512" html.valueishtml="0"  name=default_value visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Value Id" border="0" color="0" x="1166" y="8" height="64" width="512" html.valueishtml="0"  name=value_id_t visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Description" border="0" color="33554432" x="1687" y="8" height="64" width="512" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+text(band=header alignment="0" text="Preference List" border="0" color="33554432" x="6080" y="8" height="64" width="512" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+text(band=header alignment="0" text="Preference Type" border="0" color="33554432" x="10473" y="8" height="64" width="512" html.valueishtml="0"  name=t_3 visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+text(band=header alignment="0" text="Default Value" border="0" color="33554432" x="11639" y="8" height="64" width="512" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+htmltable(border="0" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" netscapelayers="0" )
+ 

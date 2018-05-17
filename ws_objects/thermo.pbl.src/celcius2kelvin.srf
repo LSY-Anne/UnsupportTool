@@ -1,0 +1,11 @@
+﻿$PBExportHeader$celcius2kelvin.srf
+global type celcius2kelvin from function_object
+end type
+
+forward prototypes
+global function double celcius2kelvin (double ldb_deg_celcius)
+end prototypes
+
+global function double celcius2kelvin (double ldb_deg_celcius);RETURN (ldb_deg_celcius + 273.15)
+end function
+

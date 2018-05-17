@@ -1,0 +1,19 @@
+﻿$PBExportHeader$f_create_ini_file.srf
+global type f_create_ini_file from function_object
+end type
+
+forward prototypes
+global subroutine f_create_ini_file ()
+end prototypes
+
+global subroutine f_create_ini_file ();integer li_Return
+integer li_File
+
+IF NOT FileExists(gs_INI_File) THEN
+	li_File = FileOpen(gs_INI_FILE, LineMode!, Write!, LockReadWrite!, Append!)
+	li_Return = FileWrite(li_File, " ")
+	li_Return = FileClose(li_File)
+END IF
+
+end subroutine
+

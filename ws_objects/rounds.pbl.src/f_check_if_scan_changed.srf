@@ -1,0 +1,67 @@
+﻿$PBExportHeader$f_check_if_scan_changed.srf
+global type f_check_if_scan_changed from function_object
+end type
+
+forward prototypes
+global function boolean f_check_if_scan_changed (long al_row_passed, integer li_scanned_passed)
+end prototypes
+
+global function boolean f_check_if_scan_changed (long al_row_passed, integer li_scanned_passed);integer li_Previous_Scan
+string ls_Scan_Required
+boolean lb_Return
+
+IF TRUE THEN
+	ls_Scan_Required = w_tour.tab_tour.tabpage_readings.dw_readings.Object.station_scan[al_Row_Passed]
+	IF Empty(ls_Scan_Required) THEN
+		ls_Scan_Required = ''
+	END IF
+	li_Previous_Scan = w_tour.tab_tour.tabpage_readings.dw_readings.Object.previous_scan[al_Row_Passed]
+	IF IsNull(li_Previous_Scan) THEN
+		li_Previous_Scan = 0
+	END IF
+	IF ( li_Previous_Scan <> li_Scanned_Passed ) AND ( NOT Empty(ls_Scan_Required) ) THEN
+		lb_Return = TRUE
+	ELSE
+		lb_Return = FALSE
+	END IF
+	
+	RETURN lb_Return
+ELSE
+	integer li_Tour
+	integer li_Rev_No
+	integer li_Sta
+	datetime ld_Tour_Date
+	integer li_Shift_No
+	
+	li_Tour = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_tour[al_Row_Passed]
+	li_Rev_No = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_rev_no[al_Row_Passed]
+	li_Sta = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_sta[al_Row_Passed]
+	ld_Tour_Date = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_dt[al_Row_Passed]
+	li_Shift_No = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_shift_no[al_Row_Passed]
+	
+		SELECT ISNULL(a.scan, 0), 
+				 ISNULL(b.scan, '')
+		  INTO :li_Previous_Scan, 
+				 :ls_Scan_Required
+		  FROM history a, 
+				 station b 
+		 WHERE ( a.tour = :li_Tour ) 
+			AND ( a.rev_no = :li_Rev_No ) 
+			AND ( a.dt = :ld_Tour_Date ) 
+			AND ( a.sta = :li_Sta ) 
+			AND ( a.shift_no = :li_Shift_No ) 
+			AND ( a.reading_id = 0 ) 
+			AND ( a.tour = b.tour ) 
+			AND ( a.rev_no = b.rev_no ) 
+			AND ( a.sta = b.sta ) ;
+		
+	IF ( li_Previous_Scan <> li_Scanned_Passed ) AND ( NOT Empty(ls_Scan_Required) ) THEN
+		lb_Return = TRUE
+	ELSE
+		lb_Return = FALSE
+	END IF
+	
+	RETURN lb_Return
+END IF
+end function
+

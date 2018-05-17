@@ -1,0 +1,110 @@
+﻿$PBExportHeader$test.srf
+global type test from function_object
+end type
+
+forward prototypes
+global function string test (string as_hour)
+end prototypes
+
+global function string test (string as_hour);integer li_Element
+string ls_Shift_Date
+string ls_Temp
+datawindowchild ldwc_temp
+string ls_Current_Hour
+integer li_Num_Shifts
+integer li_Count
+string ls_Possible_Shifts[]
+string str_Largest_Shift_Hour
+string ls_Shifts[]
+string ls_Shift_Descriptions[]
+integer li_Shift_Numbers[]
+
+ls_Shifts[1] = '00:00'
+ls_Shifts[2] = '07:00'
+ls_Shifts[3] = '11:00'
+ls_Shifts[4] = '15:00'
+ls_Shifts[5] = '19:00'
+ls_Shifts[6] = '22:00'
+
+ls_Shift_Descriptions[1] = '00:00 Shift'
+ls_Shift_Descriptions[2] = '07:00 Shift'
+ls_Shift_Descriptions[3] = '11:00 Shift'
+ls_Shift_Descriptions[4] = '15:00 Shift'
+ls_Shift_Descriptions[5] = '19:00 Shift'
+ls_Shift_Descriptions[6] = '22:00 Shift'
+
+li_Shift_Numbers[1] = 1
+li_Shift_Numbers[2] = 2
+li_Shift_Numbers[3] = 3
+li_Shift_Numbers[4] = 4
+li_Shift_Numbers[5] = 5
+li_Shift_Numbers[6] = 6
+
+// Make the current hour two digits
+ls_Current_Hour = as_Hour//String(Hour(Now()))
+IF ( LEN(ls_Current_Hour) = 1 ) THEN
+	ls_Current_Hour = "0" + ls_Current_Hour
+END IF
+
+li_Num_Shifts = UpperBound(ls_Shifts)
+IF ( li_Num_Shifts = 1 ) THEN
+//	dw_shift_list.Object.shift_desc[1] = ls_Shift_Descriptions[li_Count]
+//	ls_Shift_Date = wf_Update_Shift_Date(li_Shift_Numbers[li_Count], ldwc_temp, 0)
+	ls_Shift_Date = ls_Shift_Descriptions[1]
+ELSE		
+	FOR li_Count = 1 TO li_Num_Shifts
+		IF IsTime(ls_Shifts[li_Count]) THEN
+			ls_Temp = MID(ls_Shifts[li_Count], 1, 2)
+			IF ( ls_Temp < ls_Current_Hour ) THEN
+				ls_Possible_Shifts[UpperBound(ls_Possible_Shifts) + 1] = ls_Shifts[li_Count]
+			ELSEIF ( ls_Temp = ls_Current_Hour ) THEN
+//				dw_shift_list.Object.shift_desc[1] = ls_Shift_Descriptions[li_Count]
+//				ls_Shift_Date = wf_Update_Shift_Date(li_Shift_Numbers[li_Count], ldwc_temp, 0)
+				ls_Shift_Date = ls_Shift_Descriptions[li_Count]
+				RETURN ls_Shift_Date
+			END IF
+		END IF
+	NEXT
+	IF ( UpperBound(ls_Possible_Shifts) = 0 ) THEN
+		FOR li_Count = 1 TO li_Num_Shifts
+			IF IsTime(ls_Shifts[li_Count]) THEN
+				ls_Temp = MID(ls_Shifts[li_Count], 1, 2)
+				IF ( ls_Temp > ls_Current_Hour ) THEN
+					ls_Possible_Shifts[UpperBound(ls_Possible_Shifts) + 1] = ls_Shifts[li_Count]
+				END IF
+			END IF
+		NEXT
+	END IF
+	IF ( UpperBound(ls_Possible_Shifts) > 0 ) THEN
+		// Find the largest shift in the list, this should be the shift to select
+		str_Largest_Shift_Hour = "00"
+		FOR li_Count = 1 TO UpperBound(ls_Possible_Shifts)
+			ls_Temp = MID(ls_Possible_Shifts[li_Count], 1, 2)
+			IF ( ls_Temp >= str_Largest_Shift_Hour ) THEN
+				str_Largest_Shift_Hour = ls_Temp
+				li_Element = li_Count
+			END IF
+		NEXT
+	ELSE
+		// No shifts satisfy - should not get to here
+	END IF
+	FOR li_Count = 1 TO UpperBound(ls_Shifts)
+		IF ( ls_Possible_Shifts[li_Element] = ls_Shifts[li_Count] ) THEN
+			EXIT
+		END IF
+	NEXT
+	ls_Temp = MID(ls_Shifts[li_Count], 1, 2)
+//	dw_shift_list.Object.shift_desc[1] = ls_Shift_Descriptions[li_Count]
+//	IF ( ls_Temp > ls_Current_Hour ) THEN
+//		// What to do with the shift that is from the previous day?
+////		ls_Shift_Date = wf_Update_Shift_Date(li_Shift_Numbers[li_Count], ldwc_temp, 0)
+//	ELSE
+//		ls_Shift_Date = wf_Update_Shift_Date(li_Shift_Numbers[li_Count], ldwc_temp, 0)
+//	END IF
+	ls_Shift_Date = ls_Shift_Descriptions[li_Count]
+END IF
+
+RETURN ls_Shift_Date
+
+end function
+

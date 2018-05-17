@@ -1,0 +1,11 @@
+﻿$PBExportHeader$f_get_date_separator.srf
+global type f_get_date_separator from function_object
+end type
+
+forward prototypes
+global function string f_get_date_separator ()
+end prototypes
+
+global function string f_get_date_separator ();RETURN guo_date_format.is_DATE_SEPARATOR
+end function
+

@@ -1,0 +1,11 @@
+﻿$PBExportHeader$kj_kgk2btu_lbr.srf
+global type kj_kgk2btu_lbr from function_object
+end type
+
+forward prototypes
+global function double kj_kgk2btu_lbr (double ldb_kjkgr)
+end prototypes
+
+global function double kj_kgk2btu_lbr (double ldb_kjkgr);return ldb_kjkgr * 0.238845897
+end function
+

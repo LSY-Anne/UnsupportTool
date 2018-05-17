@@ -1,0 +1,23 @@
+﻿$PBExportHeader$f_get_os_environment_variable.srf
+global type f_get_os_environment_variable from function_object
+end type
+
+forward prototypes
+global function string f_get_os_environment_variable (string as_env_var_to_get)
+end prototypes
+
+global function string f_get_os_environment_variable (string as_env_var_to_get);contextkeyword lcxk_base
+string ls_Return_Value
+string ls_values[]
+
+GetContextService("Keyword", lcxk_base)
+lcxk_base.GetContextKeywords(as_Env_Var_To_Get, ls_values)
+IF Upperbound(ls_values) > 0 THEN
+	ls_Return_Value = ls_values[1]
+ELSE
+	ls_Return_Value = ""
+END IF
+
+RETURN ls_Return_Value
+end function
+

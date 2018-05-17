@@ -1,0 +1,15 @@
+﻿$PBExportHeader$f_get_date_mm_dd.srf
+global type f_get_date_mm_dd from function_object
+end type
+
+forward prototypes
+global function string f_get_date_mm_dd ()
+end prototypes
+
+global function string f_get_date_mm_dd ();string ls_Return
+
+ls_Return = MID(guo_date_format.is_M_D, 1, 1) + MID(guo_date_format.is_M_D, 1, 1) + guo_date_format.is_DATE_SEPARATOR + MID(guo_date_format.is_M_D, 3, 1) + MID(guo_date_format.is_M_D, 3, 1)
+
+RETURN ls_Return
+end function
+

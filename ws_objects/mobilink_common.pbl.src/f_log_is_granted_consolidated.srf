@@ -1,0 +1,22 @@
+﻿$PBExportHeader$f_log_is_granted_consolidated.srf
+global type f_log_is_granted_consolidated from function_object
+end type
+
+forward prototypes
+global function boolean f_log_is_granted_consolidated (integer log_id, integer level)
+end prototypes
+
+global function boolean f_log_is_granted_consolidated (integer log_id, integer level);string ls_Log_Id
+boolean lb_Return
+
+//IF gb_Logs_Greater_Than_99_Mod_Consolidated THEN
+	ls_Log_Id = STRING(log_id, '000')
+//ELSE
+//	ls_Log_Id = STRING(log_id, '00')
+//END IF
+
+lb_Return = ( w_select_from_asa.uo_user_ml.Is_Granted('LOG' + ls_Log_Id, level) > 0 )
+
+RETURN lb_Return
+end function
+

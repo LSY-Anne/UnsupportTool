@@ -1,0 +1,7 @@
+﻿$PBExportHeader$str_copydata.srs
+global type str_copydata from structure
+	long		dwdata
+	long		cbdata
+	long		lpdata
+end type
+

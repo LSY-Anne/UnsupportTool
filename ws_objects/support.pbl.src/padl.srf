@@ -1,0 +1,16 @@
+﻿$PBExportHeader$padl.srf
+global type padl from function_object
+end type
+
+forward prototypes
+global function string padl (string ls_string, integer li_len)
+end prototypes
+
+global function string padl (string ls_string, integer li_len);string ls_return
+IF IsNull(ls_string) THEN
+	ls_string = ''
+END IF
+ls_return = right(space(li_len)+ls_string,li_len)
+RETURN ls_return
+end function
+

@@ -1,0 +1,20 @@
+﻿$PBExportHeader$f_format_expression.srf
+global type f_Format_Expression from function_object
+end type
+
+forward prototypes
+global function string f_format_expression (string as_expression)
+end prototypes
+
+global function string f_format_expression (string as_expression);string ls_Expression
+
+IF Empty(as_Expression) THEN
+	ls_Expression = ''
+ELSE
+	ls_Expression = StrTran(as_Expression, "'", '"')
+	ls_Expression = f_Purge_Spaces(as_Expression)
+END IF
+
+RETURN ls_Expression
+end function
+

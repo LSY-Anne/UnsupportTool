@@ -1,0 +1,160 @@
+﻿$PBExportHeader$ds_equip_detail_for_pocket_pc.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=1 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no grid.lines=0 )
+summary(height=4 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=64 color="536870912" )
+table(column=(type=char(150) updatewhereclause=yes name=equip_operator_id dbname="equip.equip_operator_id" )
+ column=(type=char(100) updatewhereclause=yes name=equip_alternate_id dbname="equip.equip_alternate_id" )
+ column=(type=char(150) updatewhereclause=yes name=equip_description dbname="equip.equip_description" )
+ column=(type=char(3) updatewhereclause=yes name=plant_id dbname="equip.plant_id" )
+ column=(type=char(40) updatewhereclause=yes name=plant_desc dbname="plant_type.plant_desc" )
+ column=(type=char(6) updatewhereclause=yes name=unit_id dbname="equip.unit_id" )
+ column=(type=char(40) updatewhereclause=yes name=unit_desc dbname="unit_type.unit_desc" )
+ column=(type=char(3) updatewhereclause=yes name=train_id dbname="equip.train_id" )
+ column=(type=char(40) updatewhereclause=yes name=train_desc dbname="train_type.train_desc" )
+ column=(type=char(10) updatewhereclause=yes name=system_id dbname="equip.system_id" )
+ column=(type=char(40) updatewhereclause=yes name=system_desc dbname="system_type.system_desc" )
+ column=(type=char(20) updatewhereclause=yes name=component_id dbname="equip.component_id" )
+ column=(type=char(40) updatewhereclause=yes name=component_desc dbname="component_type.component_desc" )
+ column=(type=char(150) updatewhereclause=yes name=freeform_id dbname="equip.freeform_id" )
+ column=(type=char(150) updatewhereclause=yes name=equip_location dbname="equip.equip_location" )
+ column=(type=char(6) updatewhereclause=yes name=equip_location_unit_id dbname="equip.equip_location_unit_id" )
+ column=(type=char(10) updatewhereclause=yes name=building_id dbname="equip.building_id" )
+ column=(type=char(40) updatewhereclause=yes name=building_desc dbname="building_type.building_desc" )
+ column=(type=char(20) updatewhereclause=yes name=room_id dbname="equip.room_id" )
+ column=(type=char(40) updatewhereclause=yes name=room_desc dbname="room_type.room_desc" )
+ column=(type=char(5) updatewhereclause=yes name=elevation_id dbname="equip.elevation_id" )
+ column=(type=char(40) updatewhereclause=yes name=elevation_desc dbname="elevation_type.elevation_desc" )
+ column=(type=char(10) updatewhereclause=yes name=column_id dbname="equip.column_id" )
+ column=(type=char(40) updatewhereclause=yes name=column_desc dbname="column_type.column_desc" )
+ column=(type=char(150) updatewhereclause=yes name=freeform_loc dbname="equip.freeform_loc" )
+ column=(type=char(20) updatewhereclause=yes name=type_id dbname="equip.type_id" )
+ column=(type=char(40) updatewhereclause=yes name=type_desc dbname="config_type.type_desc" )
+ column=(type=char(40) updatewhereclause=yes name=config dbname="equip.config" )
+ column=(type=char(40) updatewhereclause=yes name=tagged_config dbname="equip.tagged_config" )
+ column=(type=char(20) updatewhereclause=yes name=equip_fuse dbname="equip.equip_fuse" )
+ column=(type=char(1) updatewhereclause=yes name=tag_size dbname="equip.tag_size" )
+ column=(type=char(40) updatewhereclause=yes name=tag_size_description dbname="tag_sizes.tag_size_description" )
+ column=(type=char(2) updatewhereclause=yes name=verification_id dbname="equip.verification_id" )
+ column=(type=char(32766) updatewhereclause=no name=equip_annotations dbname="equip.equip_annotations" )
+ column=(type=long updatewhereclause=yes name=appendix_r_related dbname="equip.appendix_r_related" )
+ column=(type=long updatewhereclause=yes name=penetrates_containment dbname="equip.penetrates_containment" )
+ column=(type=long updatewhereclause=yes name=maintenance_rule_related dbname="equip.maintenance_rule_related" )
+ column=(type=long updatewhereclause=yes name=disabled dbname="equip.disabled" )
+ column=(type=char(40) updatewhereclause=yes name=required_config dbname="equip.required_config" )
+ column=(type=char(150) updatewhereclause=yes name=equip_attribute_01 dbname="equip_attribute_01" )
+ column=(type=char(150) updatewhereclause=yes name=equip_attribute_02 dbname="equip_attribute_02" )
+ column=(type=char(150) updatewhereclause=yes name=equip_attribute_03 dbname="equip_attribute_03" )
+ column=(type=char(150) updatewhereclause=yes name=equip_attribute_04 dbname="equip_attribute_04" )
+ column=(type=char(150) updatewhereclause=yes name=equip_attribute_05 dbname="equip_attribute_05" )
+ column=(type=char(150) updatewhereclause=yes name=equip_attribute_06 dbname="equip_attribute_06" )
+ column=(type=char(150) updatewhereclause=yes name=equip_attribute_07 dbname="equip_attribute_07" )
+ column=(type=char(150) updatewhereclause=yes name=equip_attribute_08 dbname="equip_attribute_08" )
+ column=(type=char(150) updatewhereclause=yes name=equip_attribute_09 dbname="equip_attribute_09" )
+ column=(type=char(150) updatewhereclause=yes name=equip_attribute_10 dbname="equip_attribute_10" )
+ column=(type=char(2) updatewhereclause=yes name=verification_id_restore dbname="equip.verification_id_restore" )
+ retrieve="	  SELECT equip.equip_operator_id equip_operator_id, 
+			 equip.equip_alternate_id equip_alternate_id, 
+			 equip.equip_description equip_description, 
+			 equip.plant_id plant_id, 
+			 ( SELECT plant_type.plant_desc FROM plant_type WHERE ( plant_type.plant_id = equip.plant_id ) ) AS plant_desc, 
+			 equip.unit_id unit_id, 
+			 ( SELECT unit_type.unit_desc FROM unit_type WHERE ( unit_type.unit_id = equip.unit_id ) ) AS unit_desc, 
+			 equip.train_id train_id, 
+			 ( SELECT train_type.train_desc FROM train_type WHERE ( train_type.train_id = equip.train_id ) ) AS train_desc, 
+			 equip.system_id system_id, 
+			 ( SELECT system_type.system_desc FROM system_type WHERE ( system_type.system_id = equip.system_id ) ) AS system_desc, 
+			 equip.component_id component_id, 
+			 ( SELECT component_type.component_desc FROM component_type WHERE ( component_type.component_id = equip.component_id ) ) AS component_desc, 
+			 equip.freeform_id freeform_id, 
+			 equip.equip_location equip_location, 
+			 equip.equip_location_unit_id equip_location_unit_id, 
+			 equip.building_id building_id, 
+			 ( SELECT building_type.building_desc FROM building_type WHERE ( building_type.building_id = equip.building_id ) ) AS building_desc, 
+			 equip.room_id room_id, 
+			 ( SELECT room_type.room_desc FROM room_type WHERE ( room_type.room_id = equip.room_id ) ) AS room_desc, 
+			 equip.elevation_id elevation_id, 
+			 ( SELECT elevation_type.elevation_desc FROM elevation_type WHERE ( elevation_type.elevation_id = equip.elevation_id ) ) AS elevation_desc, 
+			 equip.column_id column_id, 
+			 ( SELECT column_type.column_desc FROM column_type WHERE ( column_type.column_id = equip.column_id ) ) AS column_desc, 
+			 equip.freeform_loc freeform_loc, 
+			 equip.type_id type_id, 
+			 ( SELECT config_type.type_desc FROM config_type WHERE ( config_type.type_id = equip.type_id ) ) AS type_desc, 
+			 equip.config config, 
+			 equip.tagged_config tagged_config, 
+			 equip.equip_fuse equip_fuse, 
+			 equip.tag_size tag_size, 
+			 ( SELECT tag_sizes.tag_size_description FROM tag_sizes WHERE ( tag_sizes.tag_size = equip.tag_size ) ) AS tag_size_description, 
+			 equip.verification_id verification_id, 
+			 equip.equip_annotations equip_annotations, 
+			 equip.appendix_r_related appendix_r_related, 
+			 equip.penetrates_containment penetrates_containment, 
+			 equip.maintenance_rule_related maintenance_rule_related, 
+			 equip.disabled disabled, 
+			 equip.required_config required_config, 
+			 equip.equip_attribute_01 equip_attribute_01, 
+			 equip.equip_attribute_02 equip_attribute_02, 
+			 equip.equip_attribute_03 equip_attribute_03, 
+			 equip.equip_attribute_04 equip_attribute_04, 
+			 equip.equip_attribute_05 equip_attribute_05, 
+			 equip.equip_attribute_06 equip_attribute_06, 
+			 equip.equip_attribute_07 equip_attribute_07, 
+			 equip.equip_attribute_08 equip_attribute_08, 
+			 equip.equip_attribute_09 equip_attribute_09, 
+			 equip.equip_attribute_10 equip_attribute_10, 
+			 equip.verification_id_restore verification_id_restore 
+     FROM equip 
+	 WHERE equip.equip_operator_id = :as_Equip_Operator_Id" arguments=(("as_equip_operator_id", string)) )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="9" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_operator_id visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="617" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_alternate_id visible="1" edit.limit=40 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="1225" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_description visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="1833" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=plant_id visible="1" edit.limit=3 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="33554432" x="2441" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=unit_id visible="1" edit.limit=3 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="33554432" x="3049" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=train_id visible="1" edit.limit=3 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="33554432" x="3657" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=system_id visible="1" edit.limit=10 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=12 alignment="0" tabsequence=32766 border="0" color="33554432" x="4265" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=component_id visible="1" edit.limit=20 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=14 alignment="0" tabsequence=32766 border="0" color="33554432" x="4873" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=freeform_id visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=15 alignment="0" tabsequence=32766 border="0" color="33554432" x="5481" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_location visible="1" edit.limit=60 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=16 alignment="0" tabsequence=32766 border="0" color="33554432" x="6089" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_location_unit_id visible="1" edit.limit=3 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=17 alignment="0" tabsequence=32766 border="0" color="33554432" x="6697" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=building_id visible="1" edit.limit=10 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=19 alignment="0" tabsequence=32766 border="0" color="33554432" x="7305" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=room_id visible="1" edit.limit=20 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=21 alignment="0" tabsequence=32766 border="0" color="33554432" x="7913" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=elevation_id visible="1" edit.limit=5 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=23 alignment="0" tabsequence=32766 border="0" color="33554432" x="8521" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=column_id visible="1" edit.limit=10 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=25 alignment="0" tabsequence=32766 border="0" color="33554432" x="9129" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=freeform_loc visible="1" edit.limit=60 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=26 alignment="0" tabsequence=32766 border="0" color="33554432" x="9737" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=type_id visible="1" edit.limit=20 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=27 alignment="0" tabsequence=32766 border="0" color="33554432" x="10345" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=type_desc visible="1" edit.limit=40 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=28 alignment="0" tabsequence=32766 border="0" color="33554432" x="10953" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=config visible="1" edit.limit=40 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=29 alignment="0" tabsequence=32766 border="0" color="33554432" x="11561" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=tagged_config visible="1" edit.limit=40 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=30 alignment="0" tabsequence=32766 border="0" color="33554432" x="12169" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_fuse visible="1" edit.limit=20 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=31 alignment="0" tabsequence=32766 border="0" color="33554432" x="12777" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=tag_size visible="1" edit.limit=1 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=33 alignment="0" tabsequence=32766 border="0" color="33554432" x="13385" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=verification_id visible="1" edit.limit=2 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=34 alignment="0" tabsequence=32766 border="0" color="33554432" x="13993" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_annotations visible="1" edit.limit=32000 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=35 alignment="1" tabsequence=32766 border="0" color="33554432" x="14601" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=appendix_r_related visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=36 alignment="1" tabsequence=32766 border="0" color="33554432" x="15209" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=penetrates_containment visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=37 alignment="1" tabsequence=32766 border="0" color="33554432" x="15817" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=maintenance_rule_related visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=38 alignment="1" tabsequence=32766 border="0" color="33554432" x="16425" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=disabled visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=39 alignment="0" tabsequence=32766 border="0" color="33554432" x="17033" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=required_config visible="1" edit.limit=40 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=40 alignment="0" tabsequence=32766 border="0" color="33554432" x="17641" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_attribute_01 visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=41 alignment="0" tabsequence=32766 border="0" color="33554432" x="18249" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_attribute_02 visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=42 alignment="0" tabsequence=32766 border="0" color="33554432" x="18857" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_attribute_03 visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=43 alignment="0" tabsequence=32766 border="0" color="33554432" x="19465" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_attribute_04 visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=44 alignment="0" tabsequence=32766 border="0" color="33554432" x="20073" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_attribute_05 visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=45 alignment="0" tabsequence=32766 border="0" color="33554432" x="20681" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_attribute_06 visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=46 alignment="0" tabsequence=32766 border="0" color="33554432" x="21289" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_attribute_07 visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=47 alignment="0" tabsequence=32766 border="0" color="33554432" x="21897" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_attribute_08 visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=48 alignment="0" tabsequence=32766 border="0" color="33554432" x="22505" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_attribute_09 visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=49 alignment="0" tabsequence=32766 border="0" color="33554432" x="23113" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=equip_attribute_10 visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=50 alignment="0" tabsequence=32766 border="0" color="33554432" x="23721" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=verification_id_restore visible="1" edit.limit=0 edit.case=any  edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="33554432" x="24329" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=plant_desc visible="1" edit.limit=0 edit.case=any  edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="33554432" x="24937" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=unit_desc visible="1" edit.limit=0 edit.case=any  edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="33554432" x="25545" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=train_desc visible="1" edit.limit=0 edit.case=any  edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=11 alignment="0" tabsequence=32766 border="0" color="33554432" x="26153" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=system_desc visible="1" edit.limit=0 edit.case=any  edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=13 alignment="0" tabsequence=32766 border="0" color="33554432" x="26761" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=component_desc visible="1" edit.limit=0 edit.case=any  edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=18 alignment="0" tabsequence=32766 border="0" color="33554432" x="27369" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=building_desc visible="1" edit.limit=0 edit.case=any  edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=20 alignment="0" tabsequence=32766 border="0" color="33554432" x="27977" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=room_desc visible="1" edit.limit=0 edit.case=any  edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=22 alignment="0" tabsequence=32766 border="0" color="33554432" x="28585" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=elevation_desc visible="1" edit.limit=0 edit.case=any  edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=24 alignment="0" tabsequence=32766 border="0" color="33554432" x="29193" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=column_desc visible="1" edit.limit=0 edit.case=any  edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=32 alignment="0" tabsequence=32766 border="0" color="33554432" x="29801" y="4" height="56" width="599" format="[general]" html.valueishtml="0"  name=tag_size_description visible="1" edit.limit=0 edit.case=any  edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" netscapelayers="0" )

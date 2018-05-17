@@ -1,0 +1,17 @@
+﻿$PBExportHeader$f_set_system_date_format.srf
+global type f_set_system_date_format from function_object
+end type
+
+forward prototypes
+global subroutine f_set_system_date_format (string as_date_format)
+end prototypes
+
+global subroutine f_set_system_date_format (string as_date_format);integer li_Return
+
+li_Return = SetLocaleInfo(GetUserDefaultLCID(), 31, as_Date_Format)
+IF ( li_Return <> 0 ) THEN
+	f_Format_Date_Mask()
+	Post(HWND_BROADCAST, WM_SETTINGCHANGE, 0, 0)
+END IF
+end subroutine
+

@@ -1,0 +1,11 @@
+﻿$PBExportHeader$contains.srf
+global type contains from function_object
+end type
+
+forward prototypes
+global function boolean contains (string ls_1, string ls_2)
+end prototypes
+
+global function boolean contains (string ls_1, string ls_2);RETURN POS(ls_1,ls_2) > 0
+end function
+

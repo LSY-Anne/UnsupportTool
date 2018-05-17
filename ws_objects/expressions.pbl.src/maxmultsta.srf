@@ -1,0 +1,11 @@
+﻿$PBExportHeader$maxmultsta.srf
+global type maxmultsta from function_object
+end type
+
+forward prototypes
+global function string maxmultsta (string ls_station_list)
+end prototypes
+
+global function string maxmultsta (string ls_station_list);RETURN genmultsta(ls_station_list,'MAX')
+end function
+

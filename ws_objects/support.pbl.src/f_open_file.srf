@@ -1,0 +1,109 @@
+﻿$PBExportHeader$f_open_file.srf
+global type f_open_file from function_object
+end type
+
+forward prototypes
+global subroutine f_open_file (string as_filename)
+end prototypes
+
+global subroutine f_open_file (string as_filename);string ls_MB_String
+integer li_Return
+string ls_Open = 'open'
+string ls_Null = ''
+integer li_ShowCmd = 1
+uint ui_Handle = 0
+uint ui_Return_Code
+string ls_Error_Message
+CONSTANT integer LS_W_SHOWNORMAL = 1
+CONSTANT integer LS_E_ERR_FNF = 2
+CONSTANT integer LS_E_ERR_PNF = 3
+CONSTANT integer LS_E_ERR_ACCESSDENIED = 5
+CONSTANT integer LS_E_ERR_OOM = 8
+CONSTANT integer LS_E_ERR_DLLNOTFOUND = 32
+CONSTANT integer LS_E_ERR_SHARE = 26
+CONSTANT integer LS_E_ERR_ASSOCINCOMPLETE = 27
+CONSTANT integer LS_E_ERR_DDETIMEOUT = 28
+CONSTANT integer LS_E_ERR_DDEFAIL = 29
+CONSTANT integer LS_E_ERR_DDEBUSY = 30
+CONSTANT integer LS_E_ERR_NOASSOC = 31
+CONSTANT integer LS_ERROR_BAD_FORMAT = 11
+CONSTANT integer WM_CLOSE = 16//&H10&
+
+IF FileExists(as_filename) OR ( UPPER(LEFT(as_filename, 5)) = 'HTTP:' ) THEN
+//	IF gb_Platform_Is_CE THEN
+//		IF ( RIGHT(as_filename, 4) = '.sig' ) THEN
+//			OpenWithParm(w_signature, as_filename)
+//		ELSE
+//			RUN("\windows\iexplore.exe " + as_Filename)
+//			Sleep(3)
+//			ulong lul_handle
+//			lul_handle = f_Get_Window_Handle('File Explorer')
+//	//		IF ( lul_handle = 0 ) THEN
+//	//			lul_handle = f_Get_Window_Handle('Internet Explorer')
+//	//		END IF
+//			IF ( lul_handle <> 0 ) THEN
+//				Send(lul_handle, WM_CLOSE, 0, 0)
+//			END IF
+//		END IF
+//	ELSE
+/*		IF ( RIGHT(as_filename, 4) = '.sig' ) THEN
+			OpenWithParm(w_signature, as_filename)
+		ELSE*/
+		IF ( UPPER(LEFT(as_filename, 5)) = 'HTTP:' ) THEN
+			inet inet_base
+			li_Return = GetContextService("Internet", inet_base)
+			IF ( li_Return = 1 ) THEN
+				inet_base.HyperlinkToURL(as_filename)
+			ELSE
+				ls_MB_String = f_LanguageString('UNABLE_TO_GET_REFERENCE_TO_INET_OBJECT_TO_DISPLAY_URL_-_###', 'Unable to get reference to inet object to display URL - ###')
+				ls_MB_String = StrTran(ls_MB_String, '###', as_filename)
+				MessageBox(f_LanguageString('ERROR', 'Error'), ls_MB_String)
+			END IF
+		ELSE
+			RUN('explorer.exe "' + as_Filename + '"')
+////			RUN(as_Filename)
+//			SetNull(ls_Null)
+//			ui_Return_Code = ShellExecuteA(ui_Handle, ls_Open, as_Filename, ls_Null, ls_Null, li_ShowCmd)
+//			IF ( ui_Return_Code <= 32 ) Then
+//				//There was an error
+//				CHOOSE CASE ui_Return_Code
+//					CASE LS_E_ERR_FNF
+//						ls_MB_String = f_LanguageString('LS_E_ERR_FNF', "File '###' not found.")
+//						ls_MB_String = StrTran(ls_MB_String, '###', as_Filename)
+//						ls_Error_Message = ls_MB_String
+//					CASE LS_E_ERR_PNF
+//						ls_Error_Message = f_LanguageString('LS_E_ERR_PNF', 'Path not found.')
+//					CASE LS_E_ERR_ACCESSDENIED
+//						ls_Error_Message = f_LanguageString('LS_E_ERR_ACCESSDENIED', 'Access denied.')
+//					CASE LS_E_ERR_OOM
+//						ls_Error_Message = f_LanguageString('LS_E_ERR_OOM', 'Out of memory.')
+//					CASE LS_E_ERR_DLLNOTFOUND
+//						ls_Error_Message = f_LanguageString('LS_E_ERR_DLLNOTFOUND', 'DLL not found.')
+//					CASE LS_E_ERR_SHARE
+//						ls_Error_Message = f_LanguageString('LS_E_ERR_SHARE', 'A sharing violation occurred.')
+//					CASE LS_E_ERR_ASSOCINCOMPLETE
+//						ls_Error_Message = f_LanguageString('LS_E_ERR_ASSOCINCOMPLETE', 'Incomplete or invalid file association.')
+//					CASE LS_E_ERR_DDETIMEOUT
+//						ls_Error_Message = f_LanguageString('LS_E_ERR_DDETIMEOUT', 'DDE Time out.')
+//					CASE LS_E_ERR_DDEFAIL
+//						ls_Error_Message = f_LanguageString('LS_E_ERR_DDEFAIL', 'DDE transaction failed.')
+//					CASE LS_E_ERR_DDEBUSY
+//						ls_Error_Message = f_LanguageString('LS_E_ERR_DDEBUSY', 'DDE busy.')
+//					CASE LS_E_ERR_NOASSOC
+//						ls_Error_Message = f_LanguageString('LS_E_ERR_NOASSOC', 'No association for file extension.')
+//					CASE LS_ERROR_BAD_FORMAT
+//						ls_Error_Message = f_LanguageString('LS_ERROR_BAD_FORMAT', 'Invalid EXE file or error in EXE image.')
+//					CASE ELSE
+//						ls_Error_Message = f_LanguageString('UNKNOWN_ERROR', 'Unknown error.')
+//				END CHOOSE
+//				MessageBox(f_LanguageString('ERROR', 'Error'), ls_Error_Message, Exclamation!)
+//			END IF
+		END IF
+//	END IF
+ELSE
+	ls_MB_String = f_LanguageString('FILE_###_DOES_NOT_EXIST.', "File '###' does not exist.")
+	ls_MB_String = StrTran(ls_MB_String, '###', as_filename)
+	MessageBox(f_LanguageString('ERROR', 'Error'), ls_MB_String)
+END IF
+end subroutine
+

@@ -1,0 +1,11 @@
+﻿$PBExportHeader$countmultsta.srf
+global type countmultsta from function_object
+end type
+
+forward prototypes
+global function string countmultsta (string ls_station_list)
+end prototypes
+
+global function string countmultsta (string ls_station_list);RETURN genmultsta(ls_station_list,'COUNT')
+end function
+

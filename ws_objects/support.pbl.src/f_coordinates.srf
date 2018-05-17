@@ -1,0 +1,291 @@
+﻿$PBExportHeader$f_coordinates.srf
+global type f_coordinates from function_object
+end type
+
+forward prototypes
+global subroutine f_coordinates (any aw_passed, string as_control_name)
+end prototypes
+
+global subroutine f_coordinates (any aw_passed, string as_control_name);RETURN
+
+userobject my_uo
+graph my_gr
+hprogressbar my_hpb
+picturebutton my_pb
+editmask my_em
+rectangle my_rec
+statictext my_st
+commandbutton my_but
+picture my_pic
+singlelineedit my_sle
+multilineedit my_mle
+dropdownlistbox my_ddlb
+datawindow my_dw
+radiobutton my_rb
+checkbox my_cbx
+tab my_tab
+integer li_Count
+integer li_File
+string ls_File
+string ls_Control_Name
+string ls_Line
+PowerObject lpo_control[]
+graphicobject stp_obj
+tab lt_tab
+window lw_win
+userobject lu_uo
+
+stp_obj = aw_passed
+
+CHOOSE CASE stp_obj.TypeOf()
+	CASE window!
+		lw_win = aw_passed
+		lpo_control = lw_win.Control
+	CASE tab!
+		lt_tab = aw_passed
+		lpo_control = lt_tab.Control
+	CASE userobject!
+		lu_uo = aw_passed
+		lpo_control = lu_uo.Control
+END CHOOSE
+ls_File = "\coordinates.ini"
+li_File = FileOpen(ls_File, LineMode!, Write!, Shared!, Append!)
+IF ( li_File > 0 ) THEN
+	FOR li_Count = 1 TO UpperBound(lpo_control)
+		CHOOSE CASE Typeof(lpo_control[li_Count])
+			CASE graph!
+				my_gr = lpo_control[li_Count]
+				IF Empty(as_Control_Name) THEN
+					ls_Control_Name = stp_obj.ClassName() + '-' + my_gr.ClassName()
+				ELSE
+					ls_Control_Name = as_Control_Name + '-' + my_gr.ClassName()
+				END IF
+				ls_Line = ls_Control_Name + "-X=" + String(my_gr.X)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Y=" + String(my_gr.Y)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Height=" + String(my_gr.Height)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Width=" + String(my_gr.Width)
+				FileWrite(li_File, ls_Line)
+			CASE hprogressbar!
+				my_hpb = lpo_control[li_Count]
+				IF Empty(as_Control_Name) THEN
+					ls_Control_Name = stp_obj.ClassName() + '-' + my_hpb.ClassName()
+				ELSE
+					ls_Control_Name = as_Control_Name + '-' + my_hpb.ClassName()
+				END IF
+				ls_Line = ls_Control_Name + "-X=" + String(my_hpb.X)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Y=" + String(my_hpb.Y)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Height=" + String(my_hpb.Height)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Width=" + String(my_hpb.Width)
+				FileWrite(li_File, ls_Line)
+			CASE picturebutton!
+				my_pb = lpo_control[li_Count]
+				IF Empty(as_Control_Name) THEN
+					ls_Control_Name = stp_obj.ClassName() + '-' + my_pb.ClassName()
+				ELSE
+					ls_Control_Name = as_Control_Name + '-' + my_pb.ClassName()
+				END IF
+				ls_Line = ls_Control_Name + "-X=" + String(my_pb.X)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Y=" + String(my_pb.Y)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Height=" + String(my_pb.Height)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Width=" + String(my_pb.Width)
+				FileWrite(li_File, ls_Line)
+			CASE editmask!
+				my_em = lpo_control[li_Count]
+				IF Empty(as_Control_Name) THEN
+					ls_Control_Name = stp_obj.ClassName() + '-' + my_em.ClassName()
+				ELSE
+					ls_Control_Name = as_Control_Name + '-' + my_em.ClassName()
+				END IF
+				ls_Line = ls_Control_Name + "-X=" + String(my_em.X)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Y=" + String(my_em.Y)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Height=" + String(my_em.Height)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Width=" + String(my_em.Width)
+				FileWrite(li_File, ls_Line)
+			CASE rectangle!
+				my_rec = lpo_control[li_Count]
+				IF Empty(as_Control_Name) THEN
+					ls_Control_Name = stp_obj.ClassName() + '-' + my_rec.ClassName()
+				ELSE
+					ls_Control_Name = as_Control_Name + '-' + my_rec.ClassName()
+				END IF
+				ls_Line = ls_Control_Name + "-X=" + String(my_rec.X)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Y=" + String(my_rec.Y)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Height=" + String(my_rec.Height)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Width=" + String(my_rec.Width)
+				FileWrite(li_File, ls_Line)
+			CASE statictext!
+				my_st = lpo_control[li_Count]
+				IF Empty(as_Control_Name) THEN
+					ls_Control_Name = stp_obj.ClassName() + '-' + my_st.ClassName()
+				ELSE
+					ls_Control_Name = as_Control_Name + '-' + my_st.ClassName()
+				END IF
+				ls_Line = ls_Control_Name + "-X=" + String(my_st.X)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Y=" + String(my_st.Y)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Height=" + String(my_st.Height)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Width=" + String(my_st.Width)
+				FileWrite(li_File, ls_Line)
+			CASE commandbutton!
+				my_but = lpo_control[li_Count]
+				IF Empty(as_Control_Name) THEN
+					ls_Control_Name = stp_obj.ClassName() + '-' + my_but.ClassName()
+				ELSE
+					ls_Control_Name = as_Control_Name + '-' + my_but.ClassName()
+				END IF
+				ls_Line = ls_Control_Name + "-X=" + String(my_but.X)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Y=" + String(my_but.Y)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Height=" + String(my_but.Height)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Width=" + String(my_but.Width)
+				FileWrite(li_File, ls_Line)
+			CASE picture!
+				my_pic = lpo_control[li_Count]
+				IF Empty(as_Control_Name) THEN
+					ls_Control_Name = stp_obj.ClassName() + '-' + my_pic.ClassName()
+				ELSE
+					ls_Control_Name = as_Control_Name + '-' + my_pic.ClassName()
+				END IF
+				ls_Line = ls_Control_Name + "-X=" + String(my_pic.X)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Y=" + String(my_pic.Y)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Height=" + String(my_pic.Height)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Width=" + String(my_pic.Width)
+				FileWrite(li_File, ls_Line)
+			CASE singlelineedit!
+				my_sle = lpo_control[li_Count]
+				IF Empty(as_Control_Name) THEN
+					ls_Control_Name = stp_obj.ClassName() + '-' + my_sle.ClassName()
+				ELSE
+					ls_Control_Name = as_Control_Name + '-' + my_sle.ClassName()
+				END IF
+				ls_Line = ls_Control_Name + "-X=" + String(my_sle.X)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Y=" + String(my_sle.Y)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Height=" + String(my_sle.Height)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Width=" + String(my_sle.Width)
+				FileWrite(li_File, ls_Line)
+			CASE multilineedit!
+				my_mle = lpo_control[li_Count]
+				IF Empty(as_Control_Name) THEN
+					ls_Control_Name = stp_obj.ClassName() + '-' + my_mle.ClassName()
+				ELSE
+					ls_Control_Name = as_Control_Name + '-' + my_mle.ClassName()
+				END IF
+				ls_Line = ls_Control_Name + "-X=" + String(my_mle.X)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Y=" + String(my_mle.Y)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Height=" + String(my_mle.Height)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Width=" + String(my_mle.Width)
+				FileWrite(li_File, ls_Line)
+			CASE dropdownlistbox!
+				my_ddlb = lpo_control[li_Count]
+				IF Empty(as_Control_Name) THEN
+					ls_Control_Name = stp_obj.ClassName() + '-' + my_ddlb.ClassName()
+				ELSE
+					ls_Control_Name = as_Control_Name + '-' + my_ddlb.ClassName()
+				END IF
+				ls_Line = ls_Control_Name + "-X=" + String(my_ddlb.X)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Y=" + String(my_ddlb.Y)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Height=" + String(my_ddlb.Height)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Width=" + String(my_ddlb.Width)
+				FileWrite(li_File, ls_Line)
+			CASE datawindow!
+				my_dw = lpo_control[li_Count]	
+				IF Empty(as_Control_Name) THEN
+					ls_Control_Name = stp_obj.ClassName() + '-' + my_dw.ClassName()
+				ELSE
+					ls_Control_Name = as_Control_Name + '-' + my_dw.ClassName()
+				END IF
+				ls_Line = ls_Control_Name + "-X=" + String(my_dw.X)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Y=" + String(my_dw.Y)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Height=" + String(my_dw.Height)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Width=" + String(my_dw.Width)
+				FileWrite(li_File, ls_Line)
+			CASE radiobutton!
+				my_rb = lpo_control[li_Count]
+				IF Empty(as_Control_Name) THEN
+					ls_Control_Name = stp_obj.ClassName() + '-' + my_rb.ClassName()
+				ELSE
+					ls_Control_Name = as_Control_Name + '-' + my_rb.ClassName()
+				END IF
+				ls_Line = ls_Control_Name + "-X=" + String(my_rb.X)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Y=" + String(my_rb.Y)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Height=" + String(my_rb.Height)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Width=" + String(my_rb.Width)
+				FileWrite(li_File, ls_Line)
+			CASE checkbox!
+				my_cbx = lpo_control[li_Count]
+				IF Empty(as_Control_Name) THEN
+					ls_Control_Name = stp_obj.ClassName() + '-' + my_cbx.ClassName()
+				ELSE
+					ls_Control_Name = as_Control_Name + '-' + my_cbx.ClassName()
+				END IF
+				ls_Line = ls_Control_Name + "-X=" + String(my_cbx.X)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Y=" + String(my_cbx.Y)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Height=" + String(my_cbx.Height)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Width=" + String(my_cbx.Width)
+				FileWrite(li_File, ls_Line)
+			CASE tab!
+				my_tab = lpo_control[li_Count]
+				IF Empty(as_Control_Name) THEN
+					ls_Control_Name = stp_obj.ClassName() + '-' + my_tab.ClassName()
+				ELSE
+					ls_Control_Name = as_Control_Name + '-' + my_tab.ClassName()
+				END IF
+				ls_Line = ls_Control_Name + "-X=" + String(my_tab.X)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Y=" + String(my_tab.Y)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Height=" + String(my_tab.Height)
+				FileWrite(li_File, ls_Line)
+				ls_Line = ls_Control_Name + "-Width=" + String(my_tab.Width)
+				FileWrite(li_File, ls_Line)
+				f_coordinates(my_tab, ls_Control_Name)
+			CASE userobject! // tabpage objects
+				my_uo = lpo_control[li_Count]
+				ls_Control_Name = as_Control_Name + '-' + my_uo.ClassName()
+				f_coordinates(my_uo, ls_Control_Name)
+		END CHOOSE
+	NEXT
+END IF
+FileClose(li_File)
+end subroutine
+

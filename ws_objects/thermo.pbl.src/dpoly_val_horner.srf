@@ -1,0 +1,52 @@
+﻿$PBExportHeader$dpoly_val_horner.srf
+global type dpoly_val_horner from function_object
+end type
+
+forward prototypes
+global subroutine dpoly_val_horner (integer n, double c[], double x, ref double cx)
+end prototypes
+
+global subroutine dpoly_val_horner (integer n, double c[], double x, ref double cx);//
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*
+//
+//// DPOLY_VAL_HORNER evaluates a polynomial using Horner's method.
+//
+//
+//  Modified:
+//
+//    08 August 1999
+//
+//  Author:
+//
+//    John Burkardt
+//
+//  Parameters:
+//
+//    Input, integer N, the dimension of C.
+//
+//    Input, double C(0:N), the polynomial coefficients.
+//    C(I) is the coefficient of X^I.
+//
+//    Input, double X, the point at which the polynomial 
+//    is to be evaluated.
+//
+//    Output, double CX, the value of the polynomial at X.
+//
+//  implicit none
+//
+//  integer n
+//
+//  double c(0:n)
+//  double cx
+  integer i
+//  double x
+//
+  cx = c[n]
+  FOR i = n TO 1 STEP -1
+    cx = cx * x + c[i]
+  NEXT
+
+  return
+
+end subroutine
+

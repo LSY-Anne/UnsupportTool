@@ -1,0 +1,77 @@
+﻿$PBExportHeader$f_get_textbox_width_from_string_2.srf
+global type f_get_textbox_width_from_string_2 from function_object
+end type
+
+forward prototypes
+global function long f_get_textbox_width_from_string_2 (readonly statictext ast_text)
+end prototypes
+
+global function long f_get_textbox_width_from_string_2 (readonly statictext ast_text);string as_Value
+integer ai_col_width_in_pixels
+ULong lul_Handle, lul_hDC, lul_hFont
+Integer li_maxwidth, li_rc, li_size
+Boolean lb_Return
+integer li_Null
+os_size lstr_Size
+
+ai_col_width_in_pixels = ast_text.Width
+as_Value = ast_text.Text
+
+SetNull(li_Null)
+
+lul_Handle = Handle(ast_text)
+If gb_Platform_Is_CE Then
+	lul_hDC = GetDC_CE(lul_Handle)
+Else
+	lul_hDC = GetDC_NT(lul_Handle)
+End If
+// get handle to the font used by statictext
+lul_hFont = Send(lul_Handle, WM_GETFONT, 0, 0)
+// Select it into the device context
+If gb_Platform_Is_CE Then
+	SelectObject_CE(lul_hDC, lul_hFont)
+Else
+	SelectObject_NT(lul_hDC, lul_hFont)
+End If
+		
+//IF gb_Is_VGA THEN
+	li_maxwidth = ai_col_width_in_pixels /// 2 //PixelsToUnits(ai_col_width_in_pixels, XPixelsToUnits!)
+//ELSE
+//	li_maxwidth = ai_col_width_in_pixels //PixelsToUnits(ai_col_width_in_pixels, XPixelsToUnits!)
+//END IF
+//f_debug('li_maxwidth - ' + String(li_maxwidth))
+IF NOT Empty(as_Value) THEN
+	// determine text width
+	If gb_Platform_Is_CE Then
+		lb_Return = GetTextExtentExPoint_CE(lul_hDC, as_Value, Len(as_Value), 0, li_Null, li_Null, lstr_Size)
+	Else
+		lb_Return = GetTextExtentExPoint_NT(lul_hDC, as_Value, Len(as_Value), 0, 0, 0, lstr_Size)
+	End If
+	If Not lb_Return Then
+		If gb_Platform_Is_CE Then
+			ReleaseDC_CE(lul_Handle, lul_hDC)
+		Else
+			ReleaseDC_NT(lul_Handle, lul_hDC)
+		End If
+		li_Size = 0
+	ELSE
+		// convert length in pixels to PBUnits
+		li_size = PixelsToUnits(lstr_Size.cx, XPixelsToUnits!)
+//f_debug('li_size - ' + String(li_size))
+//f_debug('lstr_Size.cx - ' + String(lstr_Size.cx))
+		If ( li_size > li_maxwidth ) Then
+			li_size = li_MaxWidth
+		End If
+	End If
+END IF
+
+// release the device context
+If gb_Platform_Is_CE Then
+	ReleaseDC_CE(lul_Handle, lul_hDC)
+Else
+	ReleaseDC_NT(lul_Handle, lul_hDC)
+End If
+
+Return li_Size
+end function
+

@@ -1,0 +1,18 @@
+﻿$PBExportHeader$f_disconnect_from_db_main.srf
+global type f_disconnect_from_db_main from function_object
+end type
+
+forward prototypes
+global function integer f_disconnect_from_db_main ()
+end prototypes
+
+global function integer f_disconnect_from_db_main ();string ls_App_Name
+
+ls_App_Name = MID(gs_Window_Title, POS(gs_Window_Title, " ") + 1)
+
+RegistrySet("HKEY_LOCAL_MACHINE\Software\TechAssist\Mobile eSOMS\" + ls_App_Name, "Connected", RegString!, 'FALSE')
+DISCONNECT USING SQLMain ;
+
+RETURN SQLMain.SQLCode
+end function
+

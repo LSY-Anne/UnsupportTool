@@ -1,0 +1,11 @@
+﻿$PBExportHeader$n.srf
+global type n from function_object
+end type
+
+forward prototypes
+global function dec n (any ls_reading)
+end prototypes
+
+global function dec n (any ls_reading);RETURN dec(ls_reading)
+end function
+

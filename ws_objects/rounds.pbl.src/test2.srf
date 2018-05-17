@@ -1,0 +1,57 @@
+﻿$PBExportHeader$test2.srf
+global type test2 from function_object
+end type
+
+forward prototypes
+global function string test2 (string as_hour, integer li_tour, integer li_rev_no)
+end prototypes
+
+global function string test2 (string as_hour, integer li_tour, integer li_rev_no);integer li_Row_Found
+integer li_Num_Rows
+datetime ldt_Temp_DT
+datetime ldt_Current_DT
+integer li_Element
+string ls_Shift_Date
+string ls_Shift_Description
+string ls_Current_Hour
+integer li_Num_Shifts
+integer li_Count
+datastore lds_temp
+
+lds_temp = CREATE datastore
+lds_temp.Dataobject = 'ds_shift_time_finder_for_bob'
+lds_temp.SetTransObject(SQLCA)
+
+// Make the current hour two digits
+ls_Current_Hour = String(Hour(Now()))
+IF ( LEN(ls_Current_Hour) = 1 ) THEN
+	ls_Current_Hour = "0" + ls_Current_Hour
+END IF
+ldt_Current_DT = DateTime(Today(), Time(ls_Current_Hour + ':00'))
+
+li_Num_Rows = lds_temp.Retrieve(li_Tour, li_Rev_No)
+FOR li_Count = 1 TO li_Num_Rows
+	ldt_Temp_DT = lds_temp.Object.search_date_shift[li_Count]
+	IF ( ldt_Temp_DT = ldt_Current_DT ) THEN
+		// Right on
+		li_Row_Found = li_Count
+		EXIT
+	ELSEIF ( ldt_Temp_DT > ldt_Current_DT ) THEN
+		li_Row_Found = li_Count
+	ELSE
+		EXIT
+	END IF
+NEXT
+IF ( li_Row_Found > 0 ) THEN
+	ls_Shift_Description = lds_temp.Object.shift_desc[li_Row_Found]
+	ls_Shift_Date = String(lds_temp.Object.shift_date[li_Row_Found], date_format)
+ELSE
+	ls_Shift_Description = ''
+	ls_Shift_Date = ''
+END IF
+//dw_shift_list.Object.shift_desc[1] = ls_Shift_Description
+
+RETURN ls_Shift_Date
+
+end function
+

@@ -1,0 +1,89 @@
+﻿$PBExportHeader$f_connect_to_db.srf
+global type f_connect_to_db from function_object
+end type
+
+forward prototypes
+global subroutine f_connect_to_db (boolean ab_initial_open)
+end prototypes
+
+global subroutine f_connect_to_db (boolean ab_initial_open);boolean lb_Connected
+string ls_Connection
+integer li_Return
+string ls_App_Name
+pointer oldpointer // Declares a pointer variable
+
+// The below IF - END IF doesn't work because it creates a UNICODE file where
+// the DSN file must be ASCII
+//IF NOT FileExists("\windows\esoms.dsn") THEN
+//	f_Create_DSN_File()
+//END IF
+//IF ( FileExists(GetCurrentDirectory() + "\esoms.db") AND gb_Platform_Is_CE ) OR NOT gb_Platform_Is_CE THEN
+	oldpointer = SetPointer(HourGlass!)
+	
+	SQLCA.DBMS = 'ODBC'
+	SQLCA.AutoCommit = False
+	IF gb_SA11 THEN
+		IF gb_Platform_Is_CE THEN
+//			ls_Connection = "ConnectString='DSN=Mobile eSOMS;UID=dba;PWD=sql'"
+//			ls_Connection = "ConnectString='Driver=dbodbc11.dll;UID=dba;PWD=sql;ENG=eSOMS;DBN=eSOMS',ConnectOption='SQL_DRIVER_CONNECT,SQL_DRIVER_NOPROMPT'" //,DisableBind=1"
+			ls_Connection = "ConnectString='Driver=\Windows\dbodbc11.dll;UID=dba;PWD=sql;ENG=eSOMS;DBN=eSOMS;"
+		ELSE
+			ls_Connection = "ConnectString='Driver=SQL Anywhere 11;UID=dba;PWD=sql;ENG=eSOMS;DBN=eSOMS;commlinks=shmem',ConnectOption='SQL_DRIVER_CONNECT,SQL_DRIVER_NOPROMPT',DisableBind=1"
+		END IF
+	ELSE
+		IF gb_Platform_Is_CE THEN
+			// 12-14-2004 ==> DisableBind=1 at the end of the DBPARM property is because of a bug in ASA 9.0.2.2451
+			ls_Connection = "ConnectString='Driver=dbodbc9.dll;UID=dba;PWD=sql;ENG=eSOMS;DBN=eSOMS',ConnectOption='SQL_DRIVER_CONNECT,SQL_DRIVER_NOPROMPT',DisableBind=1"
+		ELSE
+			ls_Connection = "ConnectString='Driver=Adaptive Server Anywhere 9.0;UID=dba;PWD=sql;ENG=eSOMS;DBN=eSOMS;commlinks=shmem',ConnectOption='SQL_DRIVER_CONNECT,SQL_DRIVER_NOPROMPT',DisableBind=1"
+		END IF
+	END IF
+	SQLCA.DBPARM = ls_Connection
+//	SQLMain.LOCK = 'RC'
+
+	////////////////////////////////Appeon Begin///////////////////////////
+	// Profile eSOMS
+	SQLCA.DBMS = "ODBC"
+	SQLCA.AutoCommit = False
+	SQLCA.DBParm = "ConnectString='DSN=eSOMS;UID=dba;PWD=sql'"
+
+	////////////////////////////////Appeon End///////////////////////////
+	
+
+	CONNECT USING SQLCA;
+
+	lb_Connected = ( SQLCA.SQLCode = 0 )
+	
+	IF NOT lb_Connected THEN
+		MessageBox('Error - Unable to start database', 'Error: ' + String(SQLCA.SQLCode) + '~n~r' + SQLCA.SQLErrText)
+		SetPointer(Arrow!)
+		HALT
+	END IF
+	
+	string ls_SQL
+	ls_SQL = "SET TEMPORARY OPTION CONNECTION_AUTHENTICATION='Company=Ventyx;Application=eSOMS;Signature=000fa55157edb8e14d818eb4fe3db41447146f1571g59565faf413c2f174c22c14a17adeee0bdf212ca'"
+	EXECUTE IMMEDIATE :ls_SQL USING SQLCA ;
+		
+	IF NOT ab_Initial_Open THEN
+		guo_user.uf_Reinitialize()
+		guo_user_settings.uf_Reinitialize()
+	END IF
+
+	ls_App_Name = MID(gs_Window_Title, POS(gs_Window_Title, " ") + 1)
+	IF NOT lb_Connected THEN
+		RegistrySet("HKEY_LOCAL_MACHINE\Software\TechAssist\Mobile eSOMS\" + ls_App_Name, "Connected", RegString!, 'FALSE')
+		MessageBox("Error - Halting", "Could not connect to Mobile eSOMS database.~n~r" + String(SQLCA.SQLErrText), Exclamation!)
+		SetPointer(Arrow!)
+		HALT
+	ELSE
+		RegistrySet("HKEY_LOCAL_MACHINE\Software\TechAssist\Mobile eSOMS\" + ls_App_Name, "Connected", RegString!, 'TRUE')
+	END IF
+	SetPointer(oldpointer)
+//ELSE
+//	RegistrySet("HKEY_LOCAL_MACHINE\Software\TechAssist\Mobile eSOMS\" + ls_App_Name, "Connected", RegString!, 'FALSE')
+//	MessageBox("Error - Halting", "Could not locate the Mobile eSOMS database.~n~r" + String(SQLCA.SQLErrText), Exclamation!)
+//	SetPointer(oldpointer)
+//	HALT
+//END IF
+end subroutine
+

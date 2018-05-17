@@ -1,0 +1,102 @@
+﻿$PBExportHeader$f_backup_database.srf
+global type f_backup_database from function_object
+end type
+
+forward prototypes
+global subroutine f_backup_database ()
+end prototypes
+
+global subroutine f_backup_database ();string ls_MB_String
+string ls_Command
+string ls_Backup_Folder
+string ls_Backup_File
+string ls_File
+long ll_FileSize
+string ls_FileSize
+long ll_Backup_FileSize
+boolean lb_Continue
+string ls_Sql
+pointer l_pointer
+
+IF gb_platform_is_ce THEN
+	ls_Backup_Folder = ProfileString(GetCurrentDirectory() + "\eSOMS.ini", "Common", "BackupFolder", "")
+	IF NOT Empty(ls_Backup_Folder) AND DirectoryExists(ls_Backup_Folder) THEN
+		s_ulongs lpFreeBytesAvailable
+		s_ulongs lpTotalNumberOfBytes
+		s_ulongs lpTotalNumberOfFreeBytes
+		GetDiskFreeSpaceEx(ls_Backup_Folder, lpFreeBytesAvailable, lpTotalNumberOfBytes, lpTotalNumberOfFreeBytes)
+		IF ( lpTotalNumberOfFreeBytes.ul_2 = 0 ) THEN
+			// Get the filesize of the current esoms.db
+			ls_Sql = " SELECT DB_EXTENDED_PROPERTY( 'FileSize' ) "
+	
+			datastore lds_temp
+			lds_temp = CREATE datastore
+			f_Datastore_From_Sql(ls_Sql, lds_temp)
+			ls_FileSize = lds_temp.GetItemString(1, 1)
+			IF IsNumber(ls_FileSize) THEN
+				ll_FileSize = Long(ls_FileSize) * 1024
+			ELSE
+				ll_FileSize = -1
+			END IF
+	
+			DESTROY lds_temp
+			
+			ls_Backup_File = ls_Backup_Folder + '\esoms.db'
+			IF FileExists(ls_Backup_File) THEN
+				ll_Backup_FileSize = FileLength(ls_Backup_File)
+				IF ( ll_FileSize > ( lpTotalNumberOfFreeBytes.ul_1 + ll_Backup_FileSize ) ) THEN
+					ls_MB_String = f_LanguageString('THERE_IS_NOT_ENOUGH_FREE_SPACE_IN_###_FOR_THE_BACKUP_FILE.', "There is not enough free space in '###' for the backup file.")
+					ls_MB_String = StrTran(ls_MB_String, '###', ls_Backup_Folder)
+					MessageBox(f_LanguageString('UNABLE_TO_BACKUP', 'Unable to backup'), ls_MB_String, Exclamation!)
+				ELSE
+					lb_Continue = TRUE
+				END IF
+			ELSE
+				IF ( ll_FileSize > lpTotalNumberOfFreeBytes.ul_1 ) THEN
+					ls_MB_String = f_LanguageString('THERE_IS_NOT_ENOUGH_FREE_SPACE_IN_###_FOR_THE_BACKUP_FILE.', "There is not enough free space in '###' for the backup file.")
+					ls_MB_String = StrTran(ls_MB_String, '###', ls_Backup_Folder)
+					MessageBox(f_LanguageString('UNABLE_TO_BACKUP', 'Unable to backup'), ls_MB_String, Exclamation!)
+				ELSE
+					lb_Continue = TRUE
+				END IF
+			END IF
+		ELSE
+			// Accommodate the ~.ul_2 somehow
+			ls_MB_String = f_LanguageString('THERE_IS_NOT_ENOUGH_FREE_SPACE_IN_###_FOR_THE_BACKUP_FILE.', "There is not enough free space in '###' for the backup file.")
+			ls_MB_String = StrTran(ls_MB_String, '###', ls_Backup_Folder)
+			MessageBox(f_LanguageString('UNABLE_TO_BACKUP', 'Unable to backup'), ls_MB_String, Exclamation!)
+			lb_Continue = FALSE
+		END IF
+		IF	lb_Continue THEN
+			l_pointer = SetPointer(HourGlass!)
+		
+//			// Copy any additional log files over
+//			f_Copy_Log_Files(GetCurrentDirectory(), ls_Backup_Folder)
+			ls_Backup_Folder = StrTran(ls_Backup_Folder, '\', '\\')
+			ls_Command = "call proc_backup('" + ls_Backup_Folder + "')"
+			
+			EXECUTE IMMEDIATE :ls_Command USING SQLCA ;
+	
+			SetPointer(l_pointer)
+		END IF
+	END IF
+ELSE
+	ls_Backup_Folder = "\temp"
+	IF NOT Empty(ls_Backup_Folder) AND DirectoryExists(ls_Backup_Folder) THEN
+		ls_Backup_File = ls_Backup_Folder + '\esoms.db'
+		l_pointer = SetPointer(HourGlass!)
+		
+		ls_Backup_Folder = StrTran(ls_Backup_Folder, '\', '\\')
+		ls_Command = "call proc_backup('" + ls_Backup_Folder + "')"
+			
+		EXECUTE IMMEDIATE :ls_Command USING SQLCA ;
+	
+//		// Copy any additional log files over
+//		ls_Backup_Folder = StrTran(ls_Backup_Folder, '\\', '\')
+//		f_Copy_Log_Files("\NomsV3\esoms.db\NPTS", ls_Backup_Folder)
+		SetPointer(l_pointer)
+	END IF
+END IF
+
+end subroutine
+

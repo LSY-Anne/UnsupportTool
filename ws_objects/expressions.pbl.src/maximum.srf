@@ -1,0 +1,15 @@
+﻿$PBExportHeader$maximum.srf
+global type maximum from function_object
+end type
+
+forward prototypes
+global function dec maximum (dec val1, dec val2)
+end prototypes
+
+global function dec maximum (dec val1, dec val2);IF val1 > val2 THEN
+	RETURN val1
+ELSE
+	RETURN val2
+END IF
+end function
+

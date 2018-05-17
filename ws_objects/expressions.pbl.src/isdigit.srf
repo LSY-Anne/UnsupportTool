@@ -1,0 +1,11 @@
+﻿$PBExportHeader$isdigit.srf
+global type isdigit from function_object
+end type
+
+forward prototypes
+global function boolean isdigit (string ls_text, integer li_pos)
+end prototypes
+
+global function boolean isdigit (string ls_text, integer li_pos);Return Match( Mid(ls_text,li_pos,1) , "^[0-9]" )
+end function
+

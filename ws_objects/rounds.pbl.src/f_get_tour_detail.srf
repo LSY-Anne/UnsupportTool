@@ -1,0 +1,201 @@
+﻿$PBExportHeader$f_get_tour_detail.srf
+global type f_get_tour_detail from function_object
+end type
+
+forward prototypes
+global function string f_get_tour_detail (integer ai_tour, integer ai_rev_no)
+end prototypes
+
+global function string f_get_tour_detail (integer ai_tour, integer ai_rev_no);string ls_Sql
+string ls_Return
+string ls_Shift_List
+string ls_Scan
+string ls_CRLF
+long ll_Num_Rows
+long ll_Num_Rows_2
+long ll_Count
+datastore lds_temp
+datastore lds_temp_2
+
+lds_temp = CREATE datastore
+lds_temp_2 = CREATE datastore
+ls_CRLF	= CHAR(13) + CHAR(10)
+
+ls_Sql = " &
+	SELECT a.tour AS tour, &
+			 ISNULL(a.tour_name, '') AS tour_name, &
+			 ISNULL(a.proc_no, '') AS proc_no, &
+			 ISNULL(a.rev_desc, '') AS revision, &
+			 ISNULL(a.scan, 0) AS scan_required, &
+			 ISNULL(a.down, 0) AS down, &
+			 ISNULL(a.general_tour_notes, '') AS general_tour_notes, &
+			 ISNULL(b.tour_group_name, '') AS tour_group_name, &
+	       ISNULL(a.tour_type_id, '') AS tour_type_id, &
+	       a.rev_no AS rev_no, &
+			 a.last_performance_date, &
+			 a.next_scheduled_date, &
+			 a.periodicity_code, &
+			 ISNULL(a.periodicity_desc, '') AS periodicity_desc &
+	  FROM tour a, tour_group b &
+	 WHERE ( a.tour = " + String(ai_tour) + " ) &
+	   AND ( a.rev_no = " + String(ai_rev_no) + " ) &
+	   AND ( a.tour_group = b.tour_group ) "
+
+ll_Num_Rows = f_Datastore_From_Sql(ls_Sql, lds_temp)
+
+ls_Sql = " &
+	SELECT shift_no, &
+			 shift_desc, &
+          normal_start_time, &
+          normal_start_day, &
+          warn_range_minutes, &
+          warn_text &
+	  FROM shift_time &
+	 WHERE ( tour = " + String(ai_tour) + " ) &
+	   AND ( rev_no = " + String(ai_rev_no) + " ) "
+
+ll_Num_Rows_2 = f_Datastore_From_Sql(ls_Sql, lds_temp_2)
+ls_Shift_List = ""
+
+FOR ll_Count = 1 TO ll_Num_Rows_2
+//	ls_Shift_List = ls_Shift_List + String(lds_temp_2.GetItemNumber(ll_Count, 1)) + '~t' + lds_temp_2.GetItemString(ll_Count, 2) + ls_CRLF
+ ls_Shift_List = ls_Shift_List + f_languageString('SHIFT_NO:_', 'Shift No:') + ' ' + If_Is_Null(String(lds_temp_2.GetItemNumber(ll_Count, 1))) + ls_CRLF
+ ls_Shift_List = ls_Shift_List + f_languageString('SHIFT_DESC:_', 'Shift Desc:') + ' ' + If_Is_Null(String(lds_temp_2.GetItemString(ll_Count, 2))) + ls_CRLF
+ ls_Shift_List = ls_Shift_List + f_languageString('NORMAL_START_TIME:_', 'Normal Start Time:') + ' ' + If_Is_Null(String(lds_temp_2.GetItemString(ll_Count, 3))) + ls_CRLF
+ ls_Shift_List = ls_Shift_List + f_languageString('NORMAL_START_DAY:_', 'Normal Start Day:') + ' ' + If_Is_Null(String(lds_temp_2.GetItemNumber(ll_Count, 4))) + ls_CRLF
+ ls_Shift_List = ls_Shift_List + f_languageString('WARN_RANGE_MINUTES:_', 'Warn Range Minutes:') + ' ' + If_Is_Null(String(lds_temp_2.GetItemNumber(ll_Count, 5))) + ls_CRLF
+ ls_Shift_List = ls_Shift_List + f_languageString('WARN_TEXT:_', 'Warn Text:') + ' ' + If_Is_Null(String(lds_temp_2.GetItemString(ll_Count, 6))) + ls_CRLF + ls_CRLF
+NEXT
+
+DESTROY lds_temp_2
+
+IF ( lds_temp.GetItemNumber(1, 5) = 1 ) AND NOT ISNULL(lds_temp.GetItemNumber(1, 5)) THEN
+	ls_Scan = "Yes"
+ELSE
+	ls_Scan = "No"
+END IF
+
+IF ( ll_Num_Rows > 0 ) THEN
+	ls_Return = f_languageString('TOUR:_', 'Tour:') + ' ' + If_Is_Null(String(lds_temp.GetItemNumber(1, 1))) + ls_CRLF + ls_CRLF
+	ls_Return = ls_Return + f_languageString('REV_NO:_', 'Rev No:') + ' ' + If_Is_Null(String(lds_temp.GetItemNumber(1, 10))) + ls_CRLF + ls_CRLF
+	ls_Return = ls_Return + f_languageString('TOUR_NAME:', 'Tour Name:') + ls_CRLF + If_Is_Null(lds_temp.GetItemString(1, 2)) + ls_CRLF + ls_CRLF
+
+	ls_Return = ls_Return + f_languageString('REVISION:', 'Revision:') + ls_CRLF + If_Is_Null(lds_temp.GetItemString(1, 4)) + ls_CRLF + ls_CRLF
+	ls_Return = ls_Return + f_languageString('TOUR_TYPE:', 'Tour Type:') + ls_CRLF + If_Is_Null(lds_temp.GetItemString(1, 9)) + ls_CRLF + ls_CRLF
+	ls_Return = ls_Return + f_languageString('TOUR_GROUP:', 'Tour Group:') + ls_CRLF + If_Is_Null(lds_temp.GetItemString(1, 8)) + ls_CRLF + ls_CRLF
+	ls_Return = ls_Return + f_languageString('PROCEDURE_NO:', 'Procedure No:') + ls_CRLF + If_Is_Null(lds_temp.GetItemString(1, 3)) + ls_CRLF + ls_CRLF
+	ls_Return = ls_Return + f_languageString('REQUIRE_SCANNING:_', 'Require Scanning:') + ' ' + ls_Scan + ls_CRLF + ls_CRLF
+	ls_Return = ls_Return + f_languageString('HISTORY_TO_DOWNLOAD:_', 'History to Download:') + ' ' + If_Is_Null(String(lds_temp.GetItemNumber(1, 6))) + ' (Days)' + ls_CRLF + ls_CRLF
+	ls_Return = ls_Return + f_languageString('LAST_PERFORMANCE_DATE:', 'Last Performance Date:') + ls_CRLF + If_Is_Null(String(lds_temp.GetItemDatetime(1, 11), date_format)) + ls_CRLF + ls_CRLF
+	ls_Return = ls_Return + f_languageString('NEXT_SCHEDULED_DATE:', 'Next Scheduled Date:') + ls_CRLF + If_Is_Null(String(lds_temp.GetItemDatetime(1, 12), date_format)) + ls_CRLF + ls_CRLF
+	
+	ls_Return = ls_Return + f_languageString('FREQUENCY:', 'Frequency:') + ls_CRLF + If_Is_Null(String(lds_temp.GetItemNumber(1, 13))) + ls_CRLF + ls_CRLF
+
+	ls_Return = ls_Return + f_languageString('FREQUENCY_DESCRIPTION:', 'Frequency Description:') + ls_CRLF + If_Is_Null(lds_temp.GetItemString(1, 14)) + ls_CRLF + ls_CRLF
+	ls_Return = ls_Return + f_languageString('SHIFT_SETUP:', 'Shift Setup:') + ls_CRLF + ls_Shift_List + ls_CRLF
+	ls_Return = ls_Return + f_languageString('GENERAL_TOUR_NOTES:', 'General Tour Notes:') + ls_CRLF + If_Is_Null(lds_temp.GetItemString(1, 7))
+END IF
+
+DESTROY lds_temp
+DESTROY lds_temp_2
+
+RETURN ls_Return
+//string ls_Sql
+//string ls_Return
+//string ls_Shift_List
+//string ls_Scan
+//string ls_CRLF
+//long ll_Num_Rows
+//long ll_Num_Rows_2
+//long ll_Count
+//datastore lds_temp
+//datastore lds_temp_2
+//
+//lds_temp = CREATE datastore
+//lds_temp_2 = CREATE datastore
+//ls_CRLF	= CHAR(13) + CHAR(10)
+//
+//ls_Sql = " &
+//	SELECT a.tour AS tour, &
+//			 ISNULL(a.tour_name, '') AS tour_name, &
+//			 ISNULL(a.proc_no, '') AS proc_no, &
+//			 ISNULL(a.rev_desc, '') AS revision, &
+//			 ISNULL(a.scan, 0) AS scan_required, &
+//			 ISNULL(a.down, 0) AS down, &
+//			 ISNULL(a.general_tour_notes, '') AS general_tour_notes, &
+//			 ISNULL(b.tour_group_name, '') AS tour_group_name, &
+//	       ISNULL(a.tour_type_id, '') AS tour_type_id, &
+//	       a.rev_no AS rev_no, &
+//			 a.last_performance_date, &
+//			 a.next_scheduled_date, &
+//			 a.periodicity_code, &
+//			 ISNULL(a.periodicity_desc, '') AS periodicity_desc &
+//	  FROM tour a, tour_group b &
+//	 WHERE ( a.tour = " + String(ai_tour) + " ) &
+//	   AND ( a.rev_no = " + String(ai_rev_no) + " ) &
+//	   AND ( a.tour_group = b.tour_group ) "
+//
+//ll_Num_Rows = f_Datastore_From_Sql(ls_Sql, lds_temp)
+//
+//ls_Sql = " &
+//	SELECT shift_no, &
+//			 shift_desc, &
+//          normal_start_time, &
+//          normal_start_day, &
+//          warn_range_minutes, &
+//          warn_text &
+//	  FROM shift_time &
+//	 WHERE ( tour = " + String(ai_tour) + " ) &
+//	   AND ( rev_no = " + String(ai_rev_no) + " ) "
+//
+//ll_Num_Rows_2 = f_Datastore_From_Sql(ls_Sql, lds_temp_2)
+//ls_Shift_List = ""
+//FOR ll_Count = 1 TO ll_Num_Rows_2
+////	ls_Shift_List = ls_Shift_List + String(lds_temp_2.GetItemNumber(ll_Count, 1)) + '~t' + lds_temp_2.GetItemString(ll_Count, 2) + ls_CRLF
+// ls_Shift_List = ls_Shift_List + 'Shift No: ' + String(lds_temp_2.GetItemNumber(ll_Count, 1)) + ls_CRLF
+// ls_Shift_List = ls_Shift_List + 'Shift Desc: ' + String(lds_temp_2.GetItemString(ll_Count, 2)) + ls_CRLF
+// ls_Shift_List = ls_Shift_List + 'Normal Start Time: ' + String(lds_temp_2.GetItemString(ll_Count, 3)) + ls_CRLF
+// ls_Shift_List = ls_Shift_List + 'Normal Start Day: ' + String(lds_temp_2.GetItemNumber(ll_Count, 4)) + ls_CRLF
+// ls_Shift_List = ls_Shift_List + 'Warn Range Minutes: ' + String(lds_temp_2.GetItemNumber(ll_Count, 5)) + ls_CRLF
+// ls_Shift_List = ls_Shift_List + 'Warn Text: ' + String(lds_temp_2.GetItemString(ll_Count, 6)) + ls_CRLF + ls_CRLF
+//NEXT
+//
+//DESTROY lds_temp_2
+//
+//IF ( lds_temp.GetItemNumber(1, 5) = 1 ) THEN
+//	ls_Scan = "Yes"
+//ELSE
+//	ls_Scan = "No"
+//END IF
+//
+//IF ( ll_Num_Rows > 0 ) THEN
+//	ls_Return = 'Tour: ' + String(lds_temp.GetItemNumber(1, 1)) + ls_CRLF + ls_CRLF
+//	ls_Return = ls_Return + 'Rev No: ' + String(lds_temp.GetItemNumber(1, 10)) + ls_CRLF + ls_CRLF
+//	ls_Return = ls_Return + 'Tour Name:' + ls_CRLF + lds_temp.GetItemString(1, 2) + ls_CRLF + ls_CRLF
+//
+//	ls_Return = ls_Return + 'Revision:' + ls_CRLF + lds_temp.GetItemString(1, 4) + ls_CRLF + ls_CRLF
+//	ls_Return = ls_Return + 'Tour Type:' + ls_CRLF + lds_temp.GetItemString(1, 9) + ls_CRLF + ls_CRLF
+//	ls_Return = ls_Return + 'Tour Group:' + ls_CRLF + lds_temp.GetItemString(1, 8) + ls_CRLF + ls_CRLF
+//	ls_Return = ls_Return + 'Procedure No:' + ls_CRLF + lds_temp.GetItemString(1, 3) + ls_CRLF + ls_CRLF
+//	ls_Return = ls_Return + 'Require Scanning: ' + ls_Scan + ls_CRLF + ls_CRLF
+//	ls_Return = ls_Return + 'History to Download: ' + String(lds_temp.GetItemNumber(1, 6)) + ' (Days)' + ls_CRLF + ls_CRLF
+//	ls_Return = ls_Return + 'Last Performance Date:' + ls_CRLF + String(lds_temp.GetItemDatetime(1, 11), date_format) + ls_CRLF + ls_CRLF
+//	ls_Return = ls_Return + 'Next Scheduled Date:' + ls_CRLF + String(lds_temp.GetItemDatetime(1, 12), date_format) + ls_CRLF + ls_CRLF
+//	
+//	IF ISNULL(lds_temp.GetItemNumber(1, 13)) THEN
+//		ls_Return = ls_Return + 'Frequency:' + ls_CRLF + ls_CRLF
+//	ELSE
+//		ls_Return = ls_Return + 'Frequency:' + ls_CRLF + String(lds_temp.GetItemNumber(1, 13)) + ls_CRLF + ls_CRLF
+//	END IF
+//
+//	ls_Return = ls_Return + 'Frequency Description:' + ls_CRLF + lds_temp.GetItemString(1, 14) + ls_CRLF + ls_CRLF
+//	ls_Return = ls_Return + 'Shift Setup:' + ls_CRLF + ls_Shift_List + ls_CRLF
+//	ls_Return = ls_Return + 'General Tour Notes:' + ls_CRLF + lds_temp.GetItemString(1, 7)
+//END IF
+//
+//DESTROY lds_temp
+//DESTROY lds_temp_2
+//
+//RETURN ls_Return
+end function
+

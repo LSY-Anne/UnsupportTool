@@ -1,0 +1,51 @@
+﻿$PBExportHeader$f_check_equip_status_entries.srf
+global type f_check_equip_status_entries from function_object
+end type
+
+forward prototypes
+global function long f_check_equip_status_entries (string ls_equip, string ls_position, transaction db_trans)
+end prototypes
+
+global function long f_check_equip_status_entries (string ls_equip, string ls_position, transaction db_trans);string ls_event,ls_module,ls_name,ls_date,ls_config,ls_instruction,ls_message
+datetime ldt_date
+long ll_return
+
+SELECT event_desc,
+       module_desc,
+       name,
+       equip_status_event_dt,
+       equip_status_config,
+       equip_status_instruction
+  INTO :ls_event,:ls_module,:ls_name,:ldt_date,:ls_config,:ls_instruction
+  FROM equip_status,
+       module_type,
+       userlog,
+       event_type
+ WHERE equip_status_config IS NOT NULL AND
+       equip_status.module_id = module_type.module_id AND
+       equip_status.user_id = userlog.user_id AND
+       equip_status.module_id = event_type.module_id AND
+       equip_status.event_id = event_type.event_id AND
+       equip_operator_id = :ls_equip AND
+       equip_status_config <> :ls_position AND
+       equip_status_event_dt = (SELECT MAX (equip_status_event_dt)
+                                  FROM equip_status
+                                 WHERE equip_status_config IS NOT NULL AND
+                                       equip_operator_id = :ls_equip AND
+                                       equip_status_config <> :ls_position) 
+  USING db_trans ;
+
+IF NOT Empty(ls_name) THEN
+	ls_message	=  "The specified configuration ("+ls_position+") for "+ls_equip+" conflicts with this Equipment Status Item:~n~n"
+	ls_message	+= ls_event+' / '+ls_module+' / '+ls_name+' / '+String(ldt_date,'mm/dd/yyyy hh:mm')+' / '+ls_config+' / '+ls_instruction+'~n~n'
+	ls_message	+= 'and may conflict with other entries as well, are you sure you want to continue?'
+	ll_return	= MessageBox('Configuration Conflict',ls_message,Exclamation!,YesNoCancel!)
+	RETURN ll_return
+ELSE
+	ll_return	= MessageBox( "Confirm Manual Configuration", "Set " + ls_equip + " Configuration to " + ls_position + " ?", Question!, YesNoCancel!, 1 )
+	RETURN ll_return
+END IF
+
+RETURN 1
+end function
+

@@ -1,0 +1,11 @@
+﻿$PBExportHeader$normstartdttm.srf
+global type normstartdttm from function_object
+end type
+
+forward prototypes
+global function string normstartdttm (long ll_sta, long ll_back)
+end prototypes
+
+global function string normstartdttm (long ll_sta, long ll_back);RETURN RdInfo(ll_sta,ll_back,'ND')
+end function
+

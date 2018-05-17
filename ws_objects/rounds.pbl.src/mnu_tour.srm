@@ -1,0 +1,1574 @@
+﻿$PBExportHeader$mnu_tour.srm
+forward
+global type mnu_tour from menu
+end type
+type m_file from menu within mnu_tour
+end type
+type m_main1 from menu within m_file
+end type
+type m_-3 from menu within m_file
+end type
+type m_close from menu within m_file
+end type
+type m_- from menu within m_file
+end type
+type m_preferences from menu within m_file
+end type
+type m_testexpression from menu within m_file
+end type
+type m_scratchpad from menu within m_file
+end type
+type m_-0 from menu within m_file
+end type
+type m_help from menu within m_file
+end type
+type m_file from menu within mnu_tour
+m_main1 m_main1
+m_-3 m_-3
+m_close m_close
+m_- m_-
+m_preferences m_preferences
+m_testexpression m_testexpression
+m_scratchpad m_scratchpad
+m_-0 m_-0
+m_help m_help
+end type
+type m_data from menu within mnu_tour
+end type
+type m_filter from menu within m_data
+end type
+type m_-1 from menu within m_data
+end type
+type m_tourparameters from menu within m_data
+end type
+type m_allreadings from menu within m_data
+end type
+type m_abnormalreadings from menu within m_data
+end type
+type m_missedreadings from menu within m_data
+end type
+type m_requiredreadings from menu within m_data
+end type
+type m_unscannedreadings from menu within m_data
+end type
+type m_-2 from menu within m_data
+end type
+type m_scancode from menu within m_data
+end type
+type m_gotofirst from menu within m_data
+end type
+type m_gotolast from menu within m_data
+end type
+type m_-4 from menu within m_data
+end type
+type m_abnormalequipment from menu within m_data
+end type
+type m_data from menu within mnu_tour
+m_filter m_filter
+m_-1 m_-1
+m_tourparameters m_tourparameters
+m_allreadings m_allreadings
+m_abnormalreadings m_abnormalreadings
+m_missedreadings m_missedreadings
+m_requiredreadings m_requiredreadings
+m_unscannedreadings m_unscannedreadings
+m_-2 m_-2
+m_scancode m_scancode
+m_gotofirst m_gotofirst
+m_gotolast m_gotolast
+m_-4 m_-4
+m_abnormalequipment m_abnormalequipment
+end type
+global type mnu_tour from menu
+m_file m_file
+m_data m_data
+end type
+end forward
+
+global type mnu_tour from menu
+m_file m_file
+m_data m_data
+end type
+global mnu_tour mnu_tour
+
+on mnu_tour.create
+mnu_tour=this
+call super::create
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_file=create m_file
+this.m_data=create m_data
+this.Item[UpperBound(this.Item)+1]=this.m_file
+this.Item[UpperBound(this.Item)+1]=this.m_data
+end on
+
+on mnu_tour.destroy
+call super::destroy
+destroy(this.m_file)
+destroy(this.m_data)
+end on
+
+type m_file from menu within mnu_tour
+m_main1 m_main1
+m_-3 m_-3
+m_close m_close
+m_- m_-
+m_preferences m_preferences
+m_testexpression m_testexpression
+m_scratchpad m_scratchpad
+m_-0 m_-0
+m_help m_help
+end type
+
+on m_file.create
+call super::create
+this.text = "Tools"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_main1=create m_main1
+this.m_-3=create m_-3
+this.m_close=create m_close
+this.m_-=create m_-
+this.m_preferences=create m_preferences
+this.m_testexpression=create m_testexpression
+this.m_scratchpad=create m_scratchpad
+this.m_-0=create m_-0
+this.m_help=create m_help
+this.Item[UpperBound(this.Item)+1]=this.m_main1
+this.Item[UpperBound(this.Item)+1]=this.m_-3
+this.Item[UpperBound(this.Item)+1]=this.m_close
+this.Item[UpperBound(this.Item)+1]=this.m_-
+this.Item[UpperBound(this.Item)+1]=this.m_preferences
+this.Item[UpperBound(this.Item)+1]=this.m_testexpression
+this.Item[UpperBound(this.Item)+1]=this.m_scratchpad
+this.Item[UpperBound(this.Item)+1]=this.m_-0
+this.Item[UpperBound(this.Item)+1]=this.m_help
+end on
+
+on m_file.destroy
+call super::destroy
+destroy(this.m_main1)
+destroy(this.m_-3)
+destroy(this.m_close)
+destroy(this.m_-)
+destroy(this.m_preferences)
+destroy(this.m_testexpression)
+destroy(this.m_scratchpad)
+destroy(this.m_-0)
+destroy(this.m_help)
+end on
+
+type m_main1 from menu within m_file
+event clicked ( )
+end type
+
+event clicked;// ***************************
+// The below code is duplicated among all submenu items
+// of Tools and Data on mnu_tour and is a segment of code
+// taken directly from w_tour.tab_tour.EVENT SelectionChanging()
+long currentrow
+boolean lb_Modified
+integer li_Return
+integer oldindex
+
+li_Return = 0
+oldindex = w_tour.tab_tour.SelectedTab
+IF ( oldindex = 1 ) THEN
+	currentrow = w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()
+	// Don't go through this if the current station is calculated because
+	// the user went through this navigating to the station
+	IF Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.station_erd[currentrow]) THEN
+		li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.AcceptText()
+		lb_Modified = f_Check_If_Reading_Changed(currentrow)
+		IF lb_Modified THEN
+			li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Show_Warnings(CurrentRow, TRUE, TRUE, lb_Modified)
+		ELSE
+			li_Return = 0
+		END IF
+		IF ( li_Return = 2 ) OR ( li_Return = 20 ) THEN
+			RETURN
+		ELSE
+			w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Row_2(currentrow)
+			IF ( li_Return = 1 ) AND w_tour.ib_Auto_Display_Notes_On_OOS THEN
+				w_tour.tab_tour.SelectedTab = 4
+				RETURN
+			END IF
+		END IF
+	END IF
+ELSEIF ( oldindex = 4 ) THEN
+	w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Note()
+END IF
+// ***************************
+gsu_tour_parameters[gi_Current_Tour].SelectedTab = w_tour.tab_tour.SelectedTab
+w_main.Visible = TRUE
+w_tour.Visible = FALSE
+end event
+
+on m_main1.create
+call super::create
+this.text = "Main"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_main1.destroy
+call super::destroy
+end on
+
+type m_-3 from menu within m_file
+end type
+
+on m_-3.create
+call super::create
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_-3.destroy
+call super::destroy
+end on
+
+type m_close from menu within m_file
+end type
+
+on m_close.create
+call super::create
+this.text = "Close"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_close.destroy
+call super::destroy
+end on
+
+event clicked;// ***************************
+// The below code is duplicated among all submenu items
+// of Tools and Data on mnu_tour and is a segment of code
+// taken directly from w_tour.tab_tour.EVENT SelectionChanging()
+string ls_MB_String
+string ls_MB_String_2
+long currentrow
+boolean lb_Modified
+integer li_Return
+integer oldindex
+boolean lb_Abnormal
+
+li_Return = 0
+oldindex = w_tour.tab_tour.SelectedTab
+IF ( oldindex = 1 ) THEN
+	currentrow = w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()
+	// Don't go through this if the current station is calculated because
+	// the user went through this navigating to the station
+	IF Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.station_erd[currentrow]) THEN
+		li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.AcceptText()
+		lb_Modified = f_Check_If_Reading_Changed(currentrow)
+		IF lb_Modified THEN
+			li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Show_Warnings(CurrentRow, TRUE, TRUE, lb_Modified)
+		ELSE
+			li_Return = 0
+		END IF
+		IF ( li_Return = 2 ) OR ( li_Return = 20 ) THEN
+			RETURN
+		ELSE
+			w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Row_2(currentrow)
+			IF ( li_Return = 1 ) AND w_tour.ib_Auto_Display_Notes_On_OOS THEN
+				w_tour.tab_tour.SelectedTab = 4
+				RETURN
+//			ELSEIF ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_spec[currentrow] = 1 ) OR ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_tol[currentrow] = 1 ) THEN
+//				MessageBox(gs_Station_Label + ' Requires a Note', 'This ' + gs_Station_Label + ' is Abnormal and requires a Note.')
+//				RETURN
+			END IF
+		END IF
+	END IF
+	lb_Abnormal = ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_spec[currentrow] = 1 ) OR ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_tol[currentrow] = 1 )
+	IF ( lb_Abnormal ) AND w_tour.ib_AbnormalReadingsRequireNote AND Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_notes[currentrow]) THEN
+//		MessageBox(gs_Station_Label + ' Requires a Note', 'This ' + gs_Station_Label + ' is Abnormal and requires a Note.')
+		ls_MB_String = f_LanguageString('###_REQUIRES_A_NOTE', '### Requires a note')
+		ls_MB_String = StrTran(ls_MB_String, '###', gs_Station_Label)
+		ls_MB_String_2 = f_LanguageString('THIS_###_IS_ABNORMAL_AND_REQUIRES_A_NOTE.', 'This ### is Abnormal and requires a Note.')
+		ls_MB_String_2 = StrTran(ls_MB_String_2, '###', gs_Station_Label)
+		MessageBox(ls_MB_String, ls_MB_String_2)
+		RETURN
+	END IF
+ELSEIF ( oldindex = 4 ) THEN
+	w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Note()
+END IF
+// ***************************
+gb_Final_Close = TRUE
+w_tour.EVENT ue_Close_tour()
+//w_main.Visible = TRUE
+//CLOSE(w_tour)
+end event
+
+type m_- from menu within m_file
+end type
+
+on m_-.create
+call super::create
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_-.destroy
+call super::destroy
+end on
+
+type m_preferences from menu within m_file
+event clicked ( )
+end type
+
+event clicked;// ***************************
+// The below code is duplicated among all submenu items
+// of Tools and Data on mnu_tour and is a segment of code
+// taken directly from w_tour.tab_tour.EVENT SelectionChanging()
+long currentrow
+boolean lb_Modified
+integer li_Return
+integer oldindex
+
+li_Return = 0
+oldindex = w_tour.tab_tour.SelectedTab
+IF ( oldindex = 1 ) THEN
+	currentrow = w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()
+	// Don't go through this if the current station is calculated because
+	// the user went through this navigating to the station
+	IF Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.station_erd[currentrow]) THEN
+		li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.AcceptText()
+		lb_Modified = f_Check_If_Reading_Changed(currentrow)
+		IF lb_Modified THEN
+			li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Show_Warnings(CurrentRow, TRUE, TRUE, lb_Modified)
+		ELSE
+			li_Return = 0
+		END IF
+		IF ( li_Return = 2 ) OR ( li_Return = 20 ) THEN
+			RETURN
+		ELSE
+			w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Row_2(currentrow)
+			IF ( li_Return = 1 ) AND w_tour.ib_Auto_Display_Notes_On_OOS THEN
+				w_tour.tab_tour.SelectedTab = 4
+				RETURN
+			END IF
+		END IF
+	END IF
+ELSEIF ( oldindex = 4 ) THEN
+	w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Note()
+END IF
+// ***************************
+Open(w_preferences_dw)
+guo_module_specific.f_open_module_window_lite( )
+integer li_Tab
+li_Tab = w_tour.tab_tour.SelectedTab
+w_tour.tab_tour.Post EVENT Selectionchanged(li_Tab, li_Tab)
+
+end event
+
+on m_preferences.create
+call super::create
+this.text = "Preferences"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_preferences.destroy
+call super::destroy
+end on
+
+type m_testexpression from menu within m_file
+end type
+
+event clicked;OpenWithParm(w_test_expression, '')
+end event
+
+on m_testexpression.create
+call super::create
+this.text = "Test Expression"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_testexpression.destroy
+call super::destroy
+end on
+
+type m_scratchpad from menu within m_file
+end type
+
+on m_scratchpad.create
+call super::create
+this.text = "Scratch Pad"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_scratchpad.destroy
+call super::destroy
+end on
+
+event clicked;// ***************************
+// The below code is duplicated among all submenu items
+// of Tools and Data on mnu_tour and is a segment of code
+// taken directly from w_tour.tab_tour.EVENT SelectionChanging()
+long currentrow
+boolean lb_Modified
+integer li_Return
+integer oldindex
+
+li_Return = 0
+oldindex = w_tour.tab_tour.SelectedTab
+IF ( oldindex = 1 ) THEN
+	currentrow = w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()
+	// Don't go through this if the current station is calculated because
+	// the user went through this navigating to the station
+	IF Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.station_erd[currentrow]) THEN
+		li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.AcceptText()
+		lb_Modified = f_Check_If_Reading_Changed(currentrow)
+		IF lb_Modified THEN
+			li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Show_Warnings(CurrentRow, TRUE, TRUE, lb_Modified)
+		ELSE
+			li_Return = 0
+		END IF
+		IF ( li_Return = 2 ) OR ( li_Return = 20 ) THEN
+			RETURN
+		ELSE
+			w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Row_2(currentrow)
+			IF ( li_Return = 1 ) AND w_tour.ib_Auto_Display_Notes_On_OOS THEN
+				w_tour.tab_tour.SelectedTab = 4
+				RETURN
+			END IF
+		END IF
+	END IF
+ELSEIF ( oldindex = 4 ) THEN
+	w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Note()
+END IF
+// ***************************
+f_Open_Scratchpad()
+guo_module_specific.f_open_module_window_lite( )
+integer li_Tab
+li_Tab = w_tour.tab_tour.SelectedTab
+w_tour.tab_tour.Post EVENT Selectionchanged(li_Tab, li_Tab)
+
+end event
+
+type m_-0 from menu within m_file
+end type
+
+on m_-0.create
+call super::create
+this.visible = false
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_-0.destroy
+call super::destroy
+end on
+
+type m_help from menu within m_file
+end type
+
+on m_help.create
+call super::create
+this.visible = false
+this.text = "Help"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_help.destroy
+call super::destroy
+end on
+
+type m_data from menu within mnu_tour
+m_filter m_filter
+m_-1 m_-1
+m_tourparameters m_tourparameters
+m_allreadings m_allreadings
+m_abnormalreadings m_abnormalreadings
+m_missedreadings m_missedreadings
+m_requiredreadings m_requiredreadings
+m_unscannedreadings m_unscannedreadings
+m_-2 m_-2
+m_scancode m_scancode
+m_gotofirst m_gotofirst
+m_gotolast m_gotolast
+m_-4 m_-4
+m_abnormalequipment m_abnormalequipment
+end type
+
+on m_data.create
+call super::create
+this.text = "Data"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_filter=create m_filter
+this.m_-1=create m_-1
+this.m_tourparameters=create m_tourparameters
+this.m_allreadings=create m_allreadings
+this.m_abnormalreadings=create m_abnormalreadings
+this.m_missedreadings=create m_missedreadings
+this.m_requiredreadings=create m_requiredreadings
+this.m_unscannedreadings=create m_unscannedreadings
+this.m_-2=create m_-2
+this.m_scancode=create m_scancode
+this.m_gotofirst=create m_gotofirst
+this.m_gotolast=create m_gotolast
+this.m_-4=create m_-4
+this.m_abnormalequipment=create m_abnormalequipment
+this.Item[UpperBound(this.Item)+1]=this.m_filter
+this.Item[UpperBound(this.Item)+1]=this.m_-1
+this.Item[UpperBound(this.Item)+1]=this.m_tourparameters
+this.Item[UpperBound(this.Item)+1]=this.m_allreadings
+this.Item[UpperBound(this.Item)+1]=this.m_abnormalreadings
+this.Item[UpperBound(this.Item)+1]=this.m_missedreadings
+this.Item[UpperBound(this.Item)+1]=this.m_requiredreadings
+this.Item[UpperBound(this.Item)+1]=this.m_unscannedreadings
+this.Item[UpperBound(this.Item)+1]=this.m_-2
+this.Item[UpperBound(this.Item)+1]=this.m_scancode
+this.Item[UpperBound(this.Item)+1]=this.m_gotofirst
+this.Item[UpperBound(this.Item)+1]=this.m_gotolast
+this.Item[UpperBound(this.Item)+1]=this.m_-4
+this.Item[UpperBound(this.Item)+1]=this.m_abnormalequipment
+end on
+
+on m_data.destroy
+call super::destroy
+destroy(this.m_filter)
+destroy(this.m_-1)
+destroy(this.m_tourparameters)
+destroy(this.m_allreadings)
+destroy(this.m_abnormalreadings)
+destroy(this.m_missedreadings)
+destroy(this.m_requiredreadings)
+destroy(this.m_unscannedreadings)
+destroy(this.m_-2)
+destroy(this.m_scancode)
+destroy(this.m_gotofirst)
+destroy(this.m_gotolast)
+destroy(this.m_-4)
+destroy(this.m_abnormalequipment)
+end on
+
+type m_filter from menu within m_data
+event clicked ( )
+end type
+
+event clicked;// ***************************
+Open(w_tour_filter)
+end event
+
+on m_filter.create
+call super::create
+this.text = "Data Views"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_filter.destroy
+call super::destroy
+end on
+
+type m_-1 from menu within m_data
+end type
+
+on m_-1.create
+call super::create
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_-1.destroy
+call super::destroy
+end on
+
+type m_tourparameters from menu within m_data
+end type
+
+on m_tourparameters.create
+call super::create
+this.text = "Tour Parameters"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_tourparameters.destroy
+call super::destroy
+end on
+
+event clicked;// ***************************
+// The below code is duplicated among all submenu items
+// of Tools and Data on mnu_tour and is a segment of code
+// taken directly from w_tour.tab_tour.EVENT SelectionChanging()
+long currentrow
+boolean lb_Modified
+integer li_Return
+integer oldindex
+
+li_Return = 0
+oldindex = w_tour.tab_tour.SelectedTab
+IF ( oldindex = 1 ) THEN
+	currentrow = w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()
+	// Don't go through this if the current station is calculated because
+	// the user went through this navigating to the station
+	IF Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.station_erd[currentrow]) THEN
+		li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.AcceptText()
+		lb_Modified = f_Check_If_Reading_Changed(currentrow)
+		IF lb_Modified THEN
+			li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Show_Warnings(CurrentRow, TRUE, TRUE, lb_Modified)
+		ELSE
+			li_Return = 0
+		END IF
+		IF ( li_Return = 2 ) OR ( li_Return = 20 ) THEN
+			RETURN
+		ELSE
+			w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Row_2(currentrow)
+			IF ( li_Return = 1 ) AND w_tour.ib_Auto_Display_Notes_On_OOS THEN
+				w_tour.tab_tour.SelectedTab = 4
+				RETURN
+			END IF
+		END IF
+	END IF
+ELSEIF ( oldindex = 4 ) THEN
+	w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Note()
+END IF
+// ***************************
+OpenWithParm(w_tour_parameters, gi_Current_Tour)
+w_tour.Visible = FALSE
+end event
+
+type m_allreadings from menu within m_data
+end type
+
+event clicked;// ***************************
+// The below code is duplicated among all submenu items
+// of Tools and Data on mnu_tour and is a segment of code
+// taken directly from w_tour.tab_tour.EVENT SelectionChanging()
+long currentrow
+boolean lb_Modified
+integer li_Return
+integer oldindex
+
+gsu_tour_parameters[gi_Current_Tour].Filter = ''
+li_Return = 0
+oldindex = w_tour.tab_tour.SelectedTab
+IF ( oldindex = 1 ) THEN
+	currentrow = w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()
+	// Don't go through this if the current station is calculated because
+	// the user went through this navigating to the station
+	IF Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.station_erd[currentrow]) THEN
+		li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.AcceptText()
+		lb_Modified = f_Check_If_Reading_Changed(currentrow)
+		IF lb_Modified THEN
+			li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Show_Warnings(CurrentRow, TRUE, TRUE, lb_Modified)
+		ELSE
+			li_Return = 0
+		END IF
+		IF ( li_Return = 2 ) OR ( li_Return = 20 ) THEN
+			RETURN
+		ELSE
+			w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Row_2(currentrow)
+			IF ( li_Return = 1 ) AND w_tour.ib_Auto_Display_Notes_On_OOS THEN
+				w_tour.tab_tour.SelectedTab = 4
+				RETURN
+//			ELSEIF ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_spec[currentrow] = 1 ) OR ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_tol[currentrow] = 1 ) THEN
+//				MessageBox(gs_Station_Label + ' Requires a Note', 'This ' + gs_Station_Label + ' is Abnormal and requires a Note.')
+//				RETURN
+			END IF
+		END IF
+	END IF
+ELSEIF ( oldindex = 4 ) THEN
+	w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Note()
+END IF
+// ***************************
+w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Retrieve_Current_Tour(FALSE)
+
+//w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Filter_Menus('ALL')
+
+end event
+
+on m_allreadings.create
+call super::create
+this.visible = false
+this.text = "View All Readings"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_allreadings.destroy
+call super::destroy
+end on
+
+type m_abnormalreadings from menu within m_data
+end type
+
+on m_abnormalreadings.create
+call super::create
+this.visible = false
+this.text = "View Abnormal Readings"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_abnormalreadings.destroy
+call super::destroy
+end on
+
+event clicked;// ***************************
+// The below code is duplicated among all submenu items
+// of Tools and Data on mnu_tour and is a segment of code
+// taken directly from w_tour.tab_tour.EVENT SelectionChanging()
+long currentrow
+boolean lb_Modified
+integer li_Return
+integer oldindex
+
+li_Return = 0
+oldindex = w_tour.tab_tour.SelectedTab
+IF ( oldindex = 1 ) THEN
+	currentrow = w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()
+	// Don't go through this if the current station is calculated because
+	// the user went through this navigating to the station
+	IF Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.station_erd[currentrow]) THEN
+		li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.AcceptText()
+		lb_Modified = f_Check_If_Reading_Changed(currentrow)
+		IF lb_Modified THEN
+			li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Show_Warnings(CurrentRow, TRUE, TRUE, lb_Modified)
+		ELSE
+			li_Return = 0
+		END IF
+		IF ( li_Return = 2 ) OR ( li_Return = 20 ) THEN
+			RETURN
+		ELSE
+			w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Row_2(currentrow)
+			IF ( li_Return = 1 ) AND w_tour.ib_Auto_Display_Notes_On_OOS THEN
+				w_tour.tab_tour.SelectedTab = 4
+				RETURN
+//			ELSEIF ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_spec[currentrow] = 1 ) OR ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_tol[currentrow] = 1 ) THEN
+//				MessageBox(gs_Station_Label + ' Requires a Note', 'This ' + gs_Station_Label + ' is Abnormal and requires a Note.')
+//				RETURN
+			END IF
+		END IF
+	END IF
+ELSEIF ( oldindex = 4 ) THEN
+	w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Note()
+END IF
+// ***************************
+//This.Checked = TRUE
+w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Filter_For_Abnormal()
+
+//w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Filter_Menus('ABNORMAL')
+
+end event
+
+type m_missedreadings from menu within m_data
+end type
+
+event clicked;// ***************************
+// The below code is duplicated among all submenu items
+// of Tools and Data on mnu_tour and is a segment of code
+// taken directly from w_tour.tab_tour.EVENT SelectionChanging()
+long currentrow
+boolean lb_Modified
+integer li_Return
+integer oldindex
+
+li_Return = 0
+oldindex = w_tour.tab_tour.SelectedTab
+IF ( oldindex = 1 ) THEN
+	currentrow = w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()
+	// Don't go through this if the current station is calculated because
+	// the user went through this navigating to the station
+	IF Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.station_erd[currentrow]) THEN
+		li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.AcceptText()
+		lb_Modified = f_Check_If_Reading_Changed(currentrow)
+		IF lb_Modified THEN
+			li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Show_Warnings(CurrentRow, TRUE, TRUE, lb_Modified)
+		ELSE
+			li_Return = 0
+		END IF
+		IF ( li_Return = 2 ) OR ( li_Return = 20 ) THEN
+			RETURN
+		ELSE
+			w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Row_2(currentrow)
+			IF ( li_Return = 1 ) AND w_tour.ib_Auto_Display_Notes_On_OOS THEN
+				w_tour.tab_tour.SelectedTab = 4
+				RETURN
+//			ELSEIF ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_spec[currentrow] = 1 ) OR ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_tol[currentrow] = 1 ) THEN
+//				MessageBox(gs_Station_Label + ' Requires a Note', 'This ' + gs_Station_Label + ' is Abnormal and requires a Note.')
+//				RETURN
+			END IF
+		END IF
+	END IF
+ELSEIF ( oldindex = 4 ) THEN
+	w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Note()
+END IF
+// ***************************
+//This.Checked = TRUE
+w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Filter_For_Missed()
+
+//w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Filter_Menus('MISSED')
+
+end event
+
+on m_missedreadings.create
+call super::create
+this.visible = false
+this.text = "View Missed Readings"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_missedreadings.destroy
+call super::destroy
+end on
+
+type m_requiredreadings from menu within m_data
+end type
+
+on m_requiredreadings.create
+call super::create
+this.visible = false
+this.text = "View Required Readings"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_requiredreadings.destroy
+call super::destroy
+end on
+
+event clicked;// ***************************
+// The below code is duplicated among all submenu items
+// of Tools and Data on mnu_tour and is a segment of code
+// taken directly from w_tour.tab_tour.EVENT SelectionChanging()
+long currentrow
+boolean lb_Modified
+integer li_Return
+integer oldindex
+
+li_Return = 0
+oldindex = w_tour.tab_tour.SelectedTab
+IF ( oldindex = 1 ) THEN
+	currentrow = w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()
+	// Don't go through this if the current station is calculated because
+	// the user went through this navigating to the station
+	IF Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.station_erd[currentrow]) THEN
+		li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.AcceptText()
+		lb_Modified = f_Check_If_Reading_Changed(currentrow)
+		IF lb_Modified THEN
+			li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Show_Warnings(CurrentRow, TRUE, TRUE, lb_Modified)
+		ELSE
+			li_Return = 0
+		END IF
+		IF ( li_Return = 2 ) OR ( li_Return = 20 ) THEN
+			RETURN
+		ELSE
+			w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Row_2(currentrow)
+			IF ( li_Return = 1 ) AND w_tour.ib_Auto_Display_Notes_On_OOS THEN
+				w_tour.tab_tour.SelectedTab = 4
+				RETURN
+//			ELSEIF ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_spec[currentrow] = 1 ) OR ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_tol[currentrow] = 1 ) THEN
+//				MessageBox(gs_Station_Label + ' Requires a Note', 'This ' + gs_Station_Label + ' is Abnormal and requires a Note.')
+//				RETURN
+			END IF
+		END IF
+	END IF
+ELSEIF ( oldindex = 4 ) THEN
+	w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Note()
+END IF
+// ***************************
+//This.Checked = TRUE
+w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Filter_For_Required()
+
+//w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Filter_Menus('REQUIRED')
+
+end event
+
+type m_unscannedreadings from menu within m_data
+end type
+
+event clicked;// ***************************
+// The below code is duplicated among all submenu items
+// of Tools and Data on mnu_tour and is a segment of code
+// taken directly from w_tour.tab_tour.EVENT SelectionChanging()
+long currentrow
+boolean lb_Modified
+integer li_Return
+integer oldindex
+
+li_Return = 0
+oldindex = w_tour.tab_tour.SelectedTab
+IF ( oldindex = 1 ) THEN
+	currentrow = w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()
+	// Don't go through this if the current station is calculated because
+	// the user went through this navigating to the station
+	IF Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.station_erd[currentrow]) THEN
+		li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.AcceptText()
+		lb_Modified = f_Check_If_Reading_Changed(currentrow)
+		IF lb_Modified THEN
+			li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Show_Warnings(CurrentRow, TRUE, TRUE, lb_Modified)
+		ELSE
+			li_Return = 0
+		END IF
+		IF ( li_Return = 2 ) OR ( li_Return = 20 ) THEN
+			RETURN
+		ELSE
+			w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Row_2(currentrow)
+			IF ( li_Return = 1 ) AND w_tour.ib_Auto_Display_Notes_On_OOS THEN
+				w_tour.tab_tour.SelectedTab = 4
+				RETURN
+//			ELSEIF ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_spec[currentrow] = 1 ) OR ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_tol[currentrow] = 1 ) THEN
+//				MessageBox(gs_Station_Label + ' Requires a Note', 'This ' + gs_Station_Label + ' is Abnormal and requires a Note.')
+//				RETURN
+			END IF
+		END IF
+	END IF
+ELSEIF ( oldindex = 4 ) THEN
+	w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Note()
+END IF
+// ***************************
+//This.Checked = TRUE
+w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Filter_For_Unscanned()
+
+//w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Filter_Menus('UNSCANNED')
+
+end event
+
+on m_unscannedreadings.create
+call super::create
+this.visible = false
+this.text = "View Unscanned Readings"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_unscannedreadings.destroy
+call super::destroy
+end on
+
+type m_-2 from menu within m_data
+end type
+
+on m_-2.create
+call super::create
+this.visible = false
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_-2.destroy
+call super::destroy
+end on
+
+type m_scancode from menu within m_data
+event clicked ( )
+end type
+
+event clicked;// ***************************
+// The below code is duplicated among all submenu items
+// of Tools and Data on mnu_tour and is a segment of code
+// taken directly from w_tour.tab_tour.EVENT SelectionChanging()
+long currentrow
+boolean lb_Modified
+integer li_Return
+integer oldindex
+
+li_Return = 0
+oldindex = w_tour.tab_tour.SelectedTab
+IF ( oldindex = 1 ) THEN
+	currentrow = w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()
+	// Don't go through this if the current station is calculated because
+	// the user went through this navigating to the station
+	IF Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.station_erd[currentrow]) THEN
+		li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.AcceptText()
+		lb_Modified = f_Check_If_Reading_Changed(currentrow)
+		IF lb_Modified THEN
+			li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Show_Warnings(CurrentRow, TRUE, TRUE, lb_Modified)
+		ELSE
+			li_Return = 0
+		END IF
+		IF ( li_Return = 2 ) OR ( li_Return = 20 ) THEN
+			RETURN
+		ELSE
+			w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Row_2(currentrow)
+			IF ( li_Return = 1 ) AND w_tour.ib_Auto_Display_Notes_On_OOS THEN
+				w_tour.tab_tour.SelectedTab = 4
+				RETURN
+//			ELSEIF ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_spec[currentrow] = 1 ) OR ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_tol[currentrow] = 1 ) THEN
+//				MessageBox(gs_Station_Label + ' Requires a Note', 'This ' + gs_Station_Label + ' is Abnormal and requires a Note.')
+//				RETURN
+			END IF
+		END IF
+	END IF
+ELSEIF ( oldindex = 4 ) THEN
+	w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Note()
+END IF
+
+f_Scancode(0)
+end event
+
+on m_scancode.create
+call super::create
+this.text = "Find by Scan Code"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_scancode.destroy
+call super::destroy
+end on
+
+type m_gotofirst from menu within m_data
+event clicked ( )
+end type
+
+event clicked;// ***************************
+// The below code is duplicated among all submenu items
+// of Tools and Data on mnu_tour and is a segment of code
+// taken directly from w_tour.tab_tour.EVENT SelectionChanging()
+string ls_MB_String
+string ls_MB_String_2
+long currentrow
+boolean lb_Modified
+integer li_Return
+integer oldindex
+boolean lb_Abnormal
+
+li_Return = 0
+oldindex = w_tour.tab_tour.SelectedTab
+IF ( oldindex = 1 ) THEN
+	currentrow = w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()
+	// Don't go through this if the current station is calculated because
+	// the user went through this navigating to the station
+	IF Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.station_erd[currentrow]) THEN
+		li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.AcceptText()
+		lb_Modified = f_Check_If_Reading_Changed(currentrow)
+		IF lb_Modified THEN
+			li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Show_Warnings(CurrentRow, TRUE, TRUE, lb_Modified)
+		ELSE
+			li_Return = 0
+		END IF
+		IF ( li_Return = 2 ) OR ( li_Return = 20 ) THEN
+			RETURN
+		ELSE
+			w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Row_2(currentrow)
+			IF ( li_Return = 1 ) AND w_tour.ib_Auto_Display_Notes_On_OOS THEN
+				w_tour.tab_tour.SelectedTab = 4
+				RETURN
+//			ELSEIF ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_spec[currentrow] = 1 ) OR ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_tol[currentrow] = 1 ) THEN
+//				MessageBox(gs_Station_Label + ' Requires a Note', 'This ' + gs_Station_Label + ' is Abnormal and requires a Note.')
+//				RETURN
+			END IF
+		END IF
+	END IF
+	lb_Abnormal = ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_spec[currentrow] = 1 ) OR ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_tol[currentrow] = 1 )
+	IF ( lb_Abnormal ) AND w_tour.ib_AbnormalReadingsRequireNote AND Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_notes[currentrow]) THEN
+//		MessageBox(gs_Station_Label + ' Requires a Note', 'This ' + gs_Station_Label + ' is Abnormal and requires a Note.')
+		ls_MB_String = f_LanguageString('###_REQUIRES_A_NOTE', '### Requires a note')
+		ls_MB_String = StrTran(ls_MB_String, '###', gs_Station_Label)
+		ls_MB_String_2 = f_LanguageString('THIS_###_IS_ABNORMAL_AND_REQUIRES_A_NOTE.', 'This ### is Abnormal and requires a Note.')
+		ls_MB_String_2 = StrTran(ls_MB_String_2, '###', gs_Station_Label)
+		MessageBox(ls_MB_String, ls_MB_String_2)
+		RETURN
+	END IF
+ELSEIF ( oldindex = 4 ) THEN
+	w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Note()
+END IF
+// ***************************
+w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Navigate_To_First_Row(FALSE)
+end event
+
+on m_gotofirst.create
+call super::create
+this.text = "Go To First"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_gotofirst.destroy
+call super::destroy
+end on
+
+type m_gotolast from menu within m_data
+event clicked ( )
+end type
+
+event clicked;// ***************************
+// The below code is duplicated among all submenu items
+// of Tools and Data on mnu_tour and is a segment of code
+// taken directly from w_tour.tab_tour.EVENT SelectionChanging()
+string ls_MB_String
+string ls_MB_String_2
+long currentrow
+boolean lb_Modified
+integer li_Return
+integer oldindex
+boolean lb_Abnormal
+
+li_Return = 0
+oldindex = w_tour.tab_tour.SelectedTab
+IF ( oldindex = 1 ) THEN
+	currentrow = w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()
+	// Don't go through this if the current station is calculated because
+	// the user went through this navigating to the station
+	IF Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.station_erd[currentrow]) THEN
+		li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.AcceptText()
+		lb_Modified = f_Check_If_Reading_Changed(currentrow)
+		IF lb_Modified THEN
+			li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Show_Warnings(CurrentRow, TRUE, TRUE, lb_Modified)
+		ELSE
+			li_Return = 0
+		END IF
+		IF ( li_Return = 2 ) OR ( li_Return = 20 ) THEN
+			RETURN
+		ELSE
+			w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Row_2(currentrow)
+			IF ( li_Return = 1 ) AND w_tour.ib_Auto_Display_Notes_On_OOS THEN
+				w_tour.tab_tour.SelectedTab = 4
+				RETURN
+//			ELSEIF ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_spec[currentrow] = 1 ) OR ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_tol[currentrow] = 1 ) THEN
+//				MessageBox(gs_Station_Label + ' Requires a Note', 'This ' + gs_Station_Label + ' is Abnormal and requires a Note.')
+//				RETURN
+			END IF
+		END IF
+	END IF
+	lb_Abnormal = ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_spec[currentrow] = 1 ) OR ( w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_tol[currentrow] = 1 )
+	IF ( lb_Abnormal ) AND w_tour.ib_AbnormalReadingsRequireNote AND Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_notes[currentrow]) THEN
+//		MessageBox(gs_Station_Label + ' Requires a Note', 'This ' + gs_Station_Label + ' is Abnormal and requires a Note.')
+		ls_MB_String = f_LanguageString('###_REQUIRES_A_NOTE', '### Requires a note')
+		ls_MB_String = StrTran(ls_MB_String, '###', gs_Station_Label)
+		ls_MB_String_2 = f_LanguageString('THIS_###_IS_ABNORMAL_AND_REQUIRES_A_NOTE.', 'This ### is Abnormal and requires a Note.')
+		ls_MB_String_2 = StrTran(ls_MB_String_2, '###', gs_Station_Label)
+		MessageBox(ls_MB_String, ls_MB_String_2)
+		RETURN
+	END IF
+ELSEIF ( oldindex = 4 ) THEN
+	w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Note()
+END IF
+// ***************************
+w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_NAvigate_To_Last_Row(FALSE)
+end event
+
+on m_gotolast.create
+call super::create
+this.text = "Go To Last"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_gotolast.destroy
+call super::destroy
+end on
+
+type m_-4 from menu within m_data
+end type
+
+on m_-4.create
+call super::create
+this.visible = false
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_-4.destroy
+call super::destroy
+end on
+
+type m_abnormalequipment from menu within m_data
+end type
+
+on m_abnormalequipment.create
+call super::create
+this.text = "Abnormal Equipment"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_abnormalequipment.destroy
+call super::destroy
+end on
+
+event clicked;// ***************************
+// The below code is duplicated among all submenu items
+// of Tools and Data on mnu_tour and is a segment of code
+// taken directly from w_tour.tab_tour.EVENT SelectionChanging()
+long currentrow
+boolean lb_Modified
+integer li_Return
+integer oldindex
+
+li_Return = 0
+oldindex = w_tour.tab_tour.SelectedTab
+IF ( oldindex = 1 ) THEN
+	currentrow = w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()
+	// Don't go through this if the current station is calculated because
+	// the user went through this navigating to the station
+	IF Empty(w_tour.tab_tour.tabpage_readings.dw_readings.Object.station_erd[currentrow]) THEN
+		li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.AcceptText()
+		lb_Modified = f_Check_If_Reading_Changed(currentrow)
+		IF lb_Modified THEN
+			li_Return = w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Show_Warnings(CurrentRow, TRUE, TRUE, lb_Modified)
+		ELSE
+			li_Return = 0
+		END IF
+		IF ( li_Return = 2 ) OR ( li_Return = 20 ) THEN
+			RETURN
+		ELSE
+			w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Row_2(currentrow)
+			IF ( li_Return = 1 ) AND w_tour.ib_Auto_Display_Notes_On_OOS THEN
+				w_tour.tab_tour.SelectedTab = 4
+				RETURN
+			END IF
+		END IF
+	END IF
+ELSEIF ( oldindex = 4 ) THEN
+	w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Update_Note()
+END IF
+// ***************************
+Open(w_abnormal_equipment_dw)
+end event
+

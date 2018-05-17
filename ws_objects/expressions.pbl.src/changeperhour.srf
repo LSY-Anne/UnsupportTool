@@ -1,0 +1,25 @@
+﻿$PBExportHeader$changeperhour.srf
+global type changeperhour from function_object
+end type
+
+forward prototypes
+global function string changeperhour (long ll_sta, long ll_back)
+end prototypes
+
+global function string changeperhour (long ll_sta, long ll_back);dec ldb_rd_1,ldb_rd_2,ldb_seconds
+string ls_return
+
+SetNull(ls_return)
+
+ldb_rd_1		= n(RdInfo(ll_sta,ll_back,'RD'))
+ldb_rd_2		= n(RdInfo(ll_sta,ll_back+1,'RD'))
+
+ldb_seconds	= n(SecondDiff(RdInfo(ll_sta,ll_back+1,'RD'),RdInfo(ll_sta,ll_back,'RD')))
+
+IF ldb_seconds <> 0 THEN
+	ls_return	= s((ldb_rd_2 - ldb_rd_1 )/ldb_seconds/60/60)
+END IF
+
+RETURN ls_return
+end function
+

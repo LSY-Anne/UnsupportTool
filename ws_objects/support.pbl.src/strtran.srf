@@ -1,0 +1,24 @@
+﻿$PBExportHeader$strtran.srf
+global type strtran from function_object
+end type
+
+forward prototypes
+global function string strtran (string cstring, string cfind, string creplace)
+end prototypes
+
+global function string strtran (string cstring, string cfind, string creplace);INTEGER li_start,li_end
+li_start	= 1
+li_end	= 1
+
+DO WHILE TRUE
+	li_end = Pos(cString,cFind,li_start)
+	IF li_end = 0 THEN
+		EXIT
+	END IF
+	li_start	= li_end + Len(cFind)
+	cString	= Mid(cString,1,li_end - 1)+cReplace+Mid(cString,li_start)
+	li_start	= li_end + Len(cReplace)
+LOOP
+RETURN cString
+end function
+

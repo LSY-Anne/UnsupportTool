@@ -1,0 +1,39 @@
+﻿$PBExportHeader$ds_type_profilestring.srd
+release 8;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=1 HTMLDW=no print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no grid.lines=0 )
+header(height=80 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=92 color="536870912" )
+table(column=(type=char(4) updatewhereclause=yes name=module_id dbname="module_id" )
+ column=(type=char(5) updatewhereclause=yes name=type_id dbname="deviation_types_preferences.type_id" )
+ column=(type=char(255) updatewhereclause=yes name=key_id dbname="deviation_types_preferences.key_id" )
+ column=(type=char(1000) updatewhereclause=yes name=value_id dbname="deviation_types_preferences.value_id" )
+ column=(type=char(1000) updatewhereclause=yes name=default_value dbname="deviation_types_preferences.default_value" )
+ retrieve="	SELECT 'DEV' as module_id, 
+			 dev_type_id AS type_id, 
+			 key_id, 
+			 value_id, 
+			 default_value 
+	  FROM deviation_types_preferences 
+	 UNION 
+	SELECT 'NCCS' AS module_id, 
+			 type_id, 
+			 key_id, 
+			 value_id, 
+			 default_value 
+	  FROM nccs_proc_type_prefs 
+	 ORDER BY 1, 2, 3 
+" )
+column(band=detail id=1 alignment="0" tabsequence=0 border="0" color="0" x="9" y="0" height="76" width="119" html.valueishtml="0"  name=module_id visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Module Id" border="0" color="0" x="5" y="4" height="76" width="123" html.valueishtml="0"  name=module_id_t visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=0 border="0" color="0" x="142" y="0" height="76" width="151" html.valueishtml="0"  name=type_id visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Type Id" border="0" color="0" x="137" y="4" height="76" width="155" html.valueishtml="0"  name=type_id_t visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=0 border="0" color="0" x="306" y="0" height="76" width="4379" html.valueishtml="0"  name=key_id visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Key Id" border="0" color="0" x="302" y="4" height="76" width="4384" html.valueishtml="0"  name=key_id_t visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=0 border="0" color="0" x="4699" y="0" height="76" width="4379" html.valueishtml="0"  name=value_id visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Value Id" border="0" color="0" x="4695" y="4" height="76" width="4384" html.valueishtml="0"  name=value_id_t visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="0" tabsequence=0 border="0" color="0" x="9093" y="0" height="76" width="4379" html.valueishtml="0"  name=default_value visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Default Value" border="0" color="0" x="9088" y="4" height="76" width="4384" html.valueishtml="0"  name=default_value_t visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" netscapelayers="0" )

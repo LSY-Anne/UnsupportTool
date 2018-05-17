@@ -1,0 +1,11 @@
+﻿$PBExportHeader$sumlastx.srf
+global type sumlastx from function_object
+end type
+
+forward prototypes
+global function string sumlastx (integer sta, integer count)
+end prototypes
+
+global function string sumlastx (integer sta, integer count);RETURN GenLastX(sta,count,"SUM")
+end function
+

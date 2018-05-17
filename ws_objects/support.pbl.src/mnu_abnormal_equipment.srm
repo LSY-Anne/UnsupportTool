@@ -1,0 +1,96 @@
+﻿$PBExportHeader$mnu_abnormal_equipment.srm
+forward
+global type mnu_abnormal_equipment from menu
+end type
+type m_edit from menu within mnu_abnormal_equipment
+end type
+type m_copy from menu within mnu_abnormal_equipment
+end type
+type m_delete from menu within mnu_abnormal_equipment
+end type
+global type mnu_abnormal_equipment from menu
+m_edit m_edit
+m_copy m_copy
+m_delete m_delete
+end type
+end forward
+
+global type mnu_abnormal_equipment from menu
+m_edit m_edit
+m_copy m_copy
+m_delete m_delete
+end type
+global mnu_abnormal_equipment mnu_abnormal_equipment
+
+on mnu_abnormal_equipment.create
+mnu_abnormal_equipment=this
+call super::create
+this.text = "mnu_abnormal_equipment"
+this.m_edit=create m_edit
+this.m_copy=create m_copy
+this.m_delete=create m_delete
+this.Item[UpperBound(this.Item)+1]=this.m_edit
+this.Item[UpperBound(this.Item)+1]=this.m_copy
+this.Item[UpperBound(this.Item)+1]=this.m_delete
+end on
+
+on mnu_abnormal_equipment.destroy
+call super::destroy
+destroy(this.m_edit)
+destroy(this.m_copy)
+destroy(this.m_delete)
+end on
+
+type m_edit from menu within mnu_abnormal_equipment
+end type
+
+event clicked;OpenWithParm(w_abnormal_equipment, 'EDIT_' + This.Tag)
+w_abnormal_equipment_dw.dw_abnormal_equipment.EVENT ue_Retrieve()
+end event
+
+on m_edit.create
+call super::create
+this.text = "Edit"
+end on
+
+on m_edit.destroy
+call super::destroy
+end on
+
+type m_copy from menu within mnu_abnormal_equipment
+end type
+
+event clicked;OpenWithParm(w_abnormal_equipment, 'COPY_' + This.Tag)
+w_abnormal_equipment_dw.dw_abnormal_equipment.EVENT ue_Retrieve()
+end event
+
+on m_copy.create
+call super::create
+this.text = "Copy"
+end on
+
+on m_copy.destroy
+call super::destroy
+end on
+
+type m_delete from menu within mnu_abnormal_equipment
+end type
+
+event clicked;integer li_Return
+
+li_Return = MessageBox(f_LanguageString('DELETE_ABNORMAL_EQUIPMENT?', 'Delete Abnormal Equipment?'), f_LanguageString('ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_ABNORMAL_EQUIPMENT?', 'Are you sure you want to delete this abnormal equipment?'), Question!, YesNo!)
+
+IF ( li_Return = 1 ) THEN
+	w_abnormal_equipment_dw.dw_abnormal_equipment.EVENT ue_Delete_Multi()
+END IF
+end event
+
+on m_delete.create
+call super::create
+this.text = "Delete"
+end on
+
+on m_delete.destroy
+call super::destroy
+end on
+

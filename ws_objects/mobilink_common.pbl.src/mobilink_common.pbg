@@ -1,0 +1,37 @@
+﻿Save Format v3.0(19990112)
+@begin Libraries
+ "mobilink_common.pbl" "";
+@end;
+@begin Objects 
+ "d_logs_download.srd" "mobilink_common.pbl";
+ "d_logs_upload.srd" "mobilink_common.pbl";
+ "d_manual_configuration.srd" "mobilink_common.pbl";
+ "d_related_equipment_invalid.srd" "mobilink_common.pbl";
+ "d_section_download.srd" "mobilink_common.pbl";
+ "d_section_upload.srd" "mobilink_common.pbl";
+ "d_steps_download.srd" "mobilink_common.pbl";
+ "d_steps_upload.srd" "mobilink_common.pbl";
+ "d_tours_download.srd" "mobilink_common.pbl";
+ "d_tours_upload.srd" "mobilink_common.pbl";
+ "f_check_equip_status_entries.srf" "mobilink_common.pbl";
+ "f_config_type_is_granted.srf" "mobilink_common.pbl";
+ "f_connect_to_db_with_connect_string.srf" "mobilink_common.pbl";
+ "f_get_ml_section_detail_dw.srf" "mobilink_common.pbl";
+ "f_log_is_granted_consolidated.srf" "mobilink_common.pbl";
+ "f_ml_create_subscriptions.srf" "mobilink_common.pbl";
+ "f_ml_type_is_granted.srf" "mobilink_common.pbl";
+ "f_tour_is_granted.srf" "mobilink_common.pbl";
+ "gf_esoms_configure_sync.srf" "mobilink_common.pbl";
+ "gf_esoms_sync.srf" "mobilink_common.pbl";
+ "s_sync_parms.srs" "mobilink_common.pbl";
+ "nvo_esoms_mlsync.sru" "mobilink_common.pbl";
+ "nvo_sync.sru" "mobilink_common.pbl";
+ "u_user_ml.sru" "mobilink_common.pbl";
+ "w_countdown.srw" "mobilink_common.pbl";
+ "w_esoms_sync_options.srw" "mobilink_common.pbl";
+ "w_esoms_syncprogress.srw" "mobilink_common.pbl";
+ "w_login_ml.srw" "mobilink_common.pbl";
+ "w_related_equipment_invalid.srw" "mobilink_common.pbl";
+ "w_select_from_asa.srw" "mobilink_common.pbl";
+ "w_sync.srw" "mobilink_common.pbl";
+@end;

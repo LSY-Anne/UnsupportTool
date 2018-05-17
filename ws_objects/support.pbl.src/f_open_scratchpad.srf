@@ -1,0 +1,31 @@
+﻿$PBExportHeader$f_open_scratchpad.srf
+global type f_open_scratchpad from function_object
+end type
+
+forward prototypes
+global subroutine f_open_scratchpad ()
+end prototypes
+
+global subroutine f_open_scratchpad ();integer li_FileNum
+string ls_File
+string ls_Temp
+
+IF gb_Allow_Note_Files THEN
+	ls_Temp = MID(gs_Scratchpad_File, 1, POS(gs_Scratchpad_File, '.') - 1)
+	ls_File = GetCurrentDirectory() + "\" + ls_Temp + ".pwi"
+	IF NOT FileExists(ls_File) THEN
+		li_FileNum = FileOpen(ls_File, LineMode!, Write!)
+		FileClose(li_FileNum)
+	END IF
+	f_Open_File(ls_File)
+ELSE
+	ls_File = GetCurrentDirectory() + "\" + gs_Scratchpad_File
+	IF NOT FileExists(ls_File) THEN
+		li_FileNum = FileOpen(ls_File, StreamMode!, Write!)
+		FileClose(li_FileNum)
+	END IF
+	Open(w_scratchpad)
+END IF
+
+end subroutine
+

@@ -1,0 +1,13 @@
+﻿$PBExportHeader$dtor.srf
+global type dtor from function_object
+end type
+
+forward prototypes
+global function dec dtor (dec degrees)
+end prototypes
+
+global function dec dtor (dec degrees);dec radians
+radians = degrees * pi(1)/180
+return radians
+end function
+

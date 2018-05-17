@@ -1,0 +1,22 @@
+﻿$PBExportHeader$f_release_buttons.srf
+global type f_release_buttons from function_object
+end type
+
+forward prototypes
+global subroutine f_release_buttons ()
+end prototypes
+
+global subroutine f_release_buttons ();//This code captures the app key button presses and sends the code to an object with a Key_down event. 
+//APP5_BTN is the record button. You must use the PPCs Button Assignment program in settings to 
+//associate this with something other than Record before you can capture it. 
+//
+
+long ll_Key
+
+IF gb_Platform_Is_CE THEN
+	FOR ll_Key = APPKEY1 TO APPKEY6
+		SHSetAppKeyWndAssoc(ll_Key, 0)
+	NEXT
+END IF
+end subroutine
+

@@ -1,0 +1,26 @@
+﻿$PBExportHeader$f_get_temp_path.srf
+global type f_Get_Temp_Path from function_object
+end type
+
+forward prototypes
+global function string f_get_temp_path ()
+end prototypes
+
+global function string f_get_temp_path ();ulong ll_Length
+string ls_Path
+string ls_LongName
+
+ll_Length	= 256
+ls_Path = Space(ll_Length)
+GetTempPath(ll_Length,ls_Path)
+ls_Path =Trim(ls_Path)
+ls_LongName = Space(ll_Length)
+GetLongPathName(ls_path, ls_LongName, ll_Length)
+
+IF ( Right(ls_LongName,1) <> '\' ) THEN
+	ls_LongName += '\'
+END IF
+
+RETURN ls_LongName
+end function
+

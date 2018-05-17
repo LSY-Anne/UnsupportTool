@@ -1,0 +1,21 @@
+﻿$PBExportHeader$findpos.srf
+global type findpos from function_object
+end type
+
+forward prototypes
+global function integer findpos (string ls_search, string ls_find, integer li_find)
+end prototypes
+
+global function integer findpos (string ls_search, string ls_find, integer li_find);integer li_Pos, I
+
+li_Pos = 0
+
+FOR I = 1 TO li_Find + 1
+	li_Pos = POS(ls_Search, ls_Find, li_Pos) + 1
+NEXT
+
+RETURN li_Pos - 1
+
+
+end function
+

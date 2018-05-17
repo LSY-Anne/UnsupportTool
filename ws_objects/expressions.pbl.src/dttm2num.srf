@@ -1,0 +1,74 @@
+﻿$PBExportHeader$dttm2num.srf
+global type dttm2num from function_object
+end type
+
+forward prototypes
+global function double dttm2num (string ls_date_time)
+end prototypes
+
+global function double dttm2num (string ls_date_time);datetime ldt_null,ldt_date_time
+date ld_date
+time lt_time
+string ls_date,ls_time
+double ldb_days
+double ldb_seconds
+integer li_Year
+integer li_Month
+integer li_Day
+
+// 2009-02-18 - RPR corrected for localization WRT Date(~string~) and the string is NOT in the localized format.
+//              This is still expecting a string in the format mm-dd-yyyy
+li_Year	= Integer(Mid(ls_date_time,7,4))
+li_Month	= Integer(Mid(ls_date_time,1,2))
+li_Day	= Integer(Mid(ls_date_time,4,2))
+ld_date	= Date(li_Year, li_Month, li_Day)
+
+ldt_null	= DateTime(Date(1980, 1, 1), Time("00:00"))
+
+ls_date_time = StrTran(ls_date_time, ":", "")
+ls_date	= String(ld_date, '[shortdate]')
+IF IsDate(ls_date) THEN
+	ls_time = Mid(ls_date_time,12,2)+":"+Mid(ls_date_time,14,2)
+	IF IsTime(ls_time) THEN
+		ldt_date_time = DateTime(ld_date,Time(ls_time))
+	ELSE
+		ldt_date_time = DateTime(ld_date,Time("00:00"))
+	END IF
+ELSE
+	ldt_date_time = ldt_null
+END IF
+
+ldb_days		= DaysAfter(Date(ldt_null), Date(ldt_date_time))
+ldb_seconds	= SecondsAfter(Time(ldt_null), Time(ldt_date_time))
+ldb_days		= ldb_days * 1440 + ldb_seconds / 60
+
+RETURN ldb_days
+
+//datetime ldt_null,ldt_date_time
+//date ld_date
+//time lt_time
+//string ls_date,ls_time
+//dec ldb_days
+//dec ldb_seconds
+//
+//ldt_null	= DateTime(Date("01-01-1980"),Time("00:00"))
+//ls_date_time = StrTran(ls_date_time, ":", "")
+//ls_date	= Mid(ls_date_time, 1,10)
+//ls_time	= Mid(ls_date_time,12,2)+":"+Mid(ls_date_time,14,2)
+//IF IsDate(ls_date) THEN
+//	IF IsTime(ls_time) THEN
+//		ldt_date_time	= DateTime(Date(ls_date),Time(ls_time))
+//	ELSE
+//		ldt_date_time	= DateTime(Date(ls_date),Time("00:00"))
+//	END IF
+//ELSE
+//	ldt_date_time	= DateTime(Date("01-01-1980"),Time("00:00"))
+//END IF
+//
+//ldb_days		= DaysAfter(   Date(ldt_null),Date(ldt_date_time) )
+//ldb_seconds	= SecondsAfter(Time(ldt_null),Time(ldt_date_time) )
+//ldb_days		= ldb_days * 1440 + ldb_seconds / 60
+//
+//RETURN ldb_days
+end function
+

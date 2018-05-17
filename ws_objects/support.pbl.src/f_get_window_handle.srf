@@ -1,0 +1,19 @@
+﻿$PBExportHeader$f_get_window_handle.srf
+global type f_get_window_handle from function_object
+end type
+
+forward prototypes
+global function unsignedlong f_get_window_handle (string as_window_title)
+end prototypes
+
+global function unsignedlong f_get_window_handle (string as_window_title);ulong lul_Handle
+
+IF gb_Platform_Is_CE THEN
+	lul_Handle = FindWindow_CE(0, as_Window_Title)
+ELSE
+	lul_Handle = FindWindow_NT(0, as_Window_Title)
+END IF
+
+RETURN lul_Handle
+end function
+

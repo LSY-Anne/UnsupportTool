@@ -1,0 +1,58 @@
+﻿$PBExportHeader$f_delete_log_files.srf
+global type f_delete_log_files from function_object
+end type
+
+forward prototypes
+global function boolean f_delete_log_files (string ls_from_folder)
+end prototypes
+
+global function boolean f_delete_log_files (string ls_from_folder);boolean lb_Return
+string ls_From_File
+integer li_Return
+string ls_File
+integer li_Count
+integer li_Num_Files
+string ls_Filespec
+
+lb_Return = TRUE
+ls_Filespec = "*.LOG"
+IF w_main.ddlb_backup.DirList(ls_From_Folder + "\" + ls_Filespec, 0) THEN
+	li_Num_Files = w_main.ddlb_backup.TotalItems()
+	FOR li_Count = 1 TO li_Num_Files
+		IF lb_Return THEN
+			ls_File = w_main.ddlb_backup.Text(li_Count)
+			IF ( LEN(ls_File) = 12 ) THEN
+				ls_From_File = ls_From_Folder + "\" + ls_File
+				IF FileExists(ls_From_File) THEN
+					IF gb_Platform_Is_CE THEN
+						lb_Return = lb_Return AND SetFileAttributes_CE(ls_From_File, 128)
+					ELSE
+						lb_Return = lb_Return AND SetFileAttributes_NT(ls_From_File, 128)
+					END IF
+					lb_Return = FileDelete(ls_From_File)
+				END IF
+			END IF
+		ELSE
+			EXIT
+		END IF
+	NEXT
+	IF lb_Return THEN
+		FOR li_Count = 1 TO li_Num_Files
+			IF lb_Return THEN
+				ls_File = w_main.ddlb_backup.Text(li_Count)
+				IF ( LEN(ls_File) = 12 ) THEN
+					ls_From_File = ls_From_Folder + "\" + ls_File
+					IF FileExists(ls_From_File) THEN
+						lb_Return = lb_Return AND FileDelete(ls_From_File)
+					END IF
+				END IF
+			ELSE
+				EXIT
+			END IF
+		NEXT
+	END IF
+END IF
+
+RETURN lb_Return
+end function
+

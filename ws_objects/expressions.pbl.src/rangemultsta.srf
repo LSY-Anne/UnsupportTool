@@ -1,0 +1,11 @@
+﻿$PBExportHeader$rangemultsta.srf
+global type rangemultsta from function_object
+end type
+
+forward prototypes
+global function string rangemultsta (string ls_station_list)
+end prototypes
+
+global function string rangemultsta (string ls_station_list);RETURN genmultsta(ls_station_list,'RANGE')
+end function
+

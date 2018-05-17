@@ -1,0 +1,11 @@
+﻿$PBExportHeader$fahr2rankine.srf
+global type fahr2rankine from function_object
+end type
+
+forward prototypes
+global function double fahr2rankine (double ldb_deg_fahr)
+end prototypes
+
+global function double fahr2rankine (double ldb_deg_fahr);RETURN ( ldb_deg_fahr + 459.67 )
+end function
+

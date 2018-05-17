@@ -1,0 +1,27 @@
+﻿$PBExportHeader$val.srf
+global type val from function_object
+end type
+
+forward prototypes
+global function integer val (string c)
+end prototypes
+
+global function integer val (string c);integer I
+string cOut
+c		= Trim(c)
+cOut	= ""
+
+FOR I = 1 TO LEN(c)
+	IF IsDigit(c,I)THEN
+		cOut = cOut + Mid(c,I,1)
+	ELSE
+		EXIT
+	END IF
+NEXT
+
+RETURN Integer(cOut)
+
+
+
+end function
+

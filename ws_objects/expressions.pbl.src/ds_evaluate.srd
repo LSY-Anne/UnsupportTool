@@ -1,0 +1,67 @@
+﻿$PBExportHeader$ds_evaluate.srd
+release 8;
+datawindow(units=0 timer_interval=0 color=16777215 processing=1 HTMLDW=no print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no grid.lines=0 )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=68 color="536870912" )
+table(column=(type=datetime update=yes updatewhereclause=yes key=yes name=dt dbname="history.dt" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes key=yes name=tour dbname="history.tour" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=rev_no dbname="history.rev_no" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes key=yes name=sta dbname="history.sta" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes key=yes name=shift_no dbname="history.shift_no" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes key=yes name=reading_id dbname="history.reading_id" )
+ column=(type=char(12) update=yes updatewhereclause=yes name=user_id dbname="history.user_id" )
+ column=(type=char(40) update=yes updatewhereclause=yes name=rd dbname="history.rd" )
+ column=(type=datetime update=yes updatewhereclause=yes name=cdt dbname="history.cdt" )
+ column=(type=char(250) update=yes updatewhereclause=yes name=notes dbname="history.notes" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=spec dbname="history.spec" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=tol dbname="history.tol" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=scan dbname="history.scan" )
+ retrieve="SELECT dt,
+       tour,
+       rev_no,
+       sta,
+       shift_no,
+       reading_id,
+       user_id,
+       rd,
+       cdt,
+       notes,
+       spec,
+       tol,
+       scan 
+  FROM history
+ WHERE dt = :ldt_dt AND
+       tour = :ll_tour AND
+       sta = :ll_sta AND
+       shift_no = :ll_shift_no AND
+       reading_id = :ll_reading_id 
+" update="history" updatewhere=0 updatekeyinplace=yes arguments=(("ldt_dt", datetime),("ll_tour", number),("ll_sta", number),("ll_shift_no", number),("ll_reading_id", number)) )
+text(band=header alignment="0" text="Dt" border="0" color="0" x="210" y="4" height="56" width="288" html.valueishtml="0"  name=dt_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Tour" border="0" color="0" x="507" y="4" height="56" width="233" html.valueishtml="0"  name=tour_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Rev No" border="0" color="0" x="750" y="4" height="56" width="229" html.valueishtml="0"  name=rev_no_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Sta" border="0" color="0" x="987" y="4" height="56" width="146" html.valueishtml="0"  name=sta_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Shift No" border="0" color="0" x="1143" y="4" height="56" width="137" html.valueishtml="0"  name=shift_no_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Reading Id" border="0" color="0" x="1289" y="4" height="56" width="128" html.valueishtml="0"  name=reading_id_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="User Id" border="0" color="0" x="1426" y="4" height="56" width="233" html.valueishtml="0"  name=user_id_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Cdt" border="0" color="0" x="1669" y="4" height="56" width="288" html.valueishtml="0"  name=cdt_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Notes" border="0" color="0" x="1966" y="4" height="56" width="562" html.valueishtml="0"  name=notes_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Spec" border="0" color="0" x="2537" y="4" height="56" width="119" html.valueishtml="0"  name=spec_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Tol" border="0" color="0" x="2665" y="4" height="56" width="82" html.valueishtml="0"  name=tol_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Scan" border="0" color="0" x="2757" y="4" height="56" width="119" html.valueishtml="0"  name=scan_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="0" x="9" y="4" height="56" width="192" format="[general]" html.valueishtml="0"  name=rd visible="1" edit.limit=40 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes   font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="210" y="4" height="56" width="288" format="[shortdate] [time]" html.valueishtml="0"  name=dt visible="1" edit.limit=0 edit.case=any edit.autoselect=yes   font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="507" y="4" height="56" width="233" format="[general]" html.valueishtml="0"  name=tour visible="1" edit.limit=0 edit.case=any edit.autoselect=yes   font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="750" y="4" height="56" width="229" format="[general]" html.valueishtml="0"  name=rev_no visible="1" edit.limit=0 edit.case=any edit.autoselect=yes   font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="0" x="987" y="4" height="56" width="146" format="[general]" html.valueishtml="0"  name=sta visible="1" edit.limit=0 edit.case=any edit.autoselect=yes   font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="0" x="1143" y="4" height="56" width="137" format="[general]" html.valueishtml="0"  name=shift_no visible="1" edit.limit=0 edit.case=any edit.autoselect=yes   font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="0" x="1289" y="4" height="56" width="128" format="[general]" html.valueishtml="0"  name=reading_id visible="1" edit.limit=0 edit.case=any edit.autoselect=yes   font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="0" x="1426" y="4" height="56" width="233" format="[general]" html.valueishtml="0"  name=user_id visible="1" edit.limit=0 edit.case=any edit.autoselect=yes   font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="0" x="1669" y="4" height="56" width="288" format="[shortdate] [time]" html.valueishtml="0"  name=cdt visible="1" edit.limit=0 edit.case=any edit.autoselect=yes   font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="0" x="1966" y="4" height="56" width="562" format="[general]" html.valueishtml="0"  name=notes visible="1" edit.limit=0 edit.case=any edit.autoselect=yes   font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=11 alignment="0" tabsequence=32766 border="0" color="0" x="2537" y="4" height="56" width="119" format="[general]" html.valueishtml="0"  name=spec visible="1" edit.limit=0 edit.case=any edit.autoselect=yes   font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=12 alignment="0" tabsequence=32766 border="0" color="0" x="2665" y="4" height="56" width="82" format="[general]" html.valueishtml="0"  name=tol visible="1" edit.limit=0 edit.case=any edit.autoselect=yes   font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=13 alignment="0" tabsequence=32766 border="0" color="0" x="2757" y="4" height="56" width="119" format="[general]" html.valueishtml="0"  name=scan visible="1" edit.limit=0 edit.case=any edit.autoselect=yes   font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" netscapelayers="0" )
+ 

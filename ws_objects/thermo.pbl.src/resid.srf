@@ -1,0 +1,312 @@
+﻿$PBExportHeader$resid.srf
+global type resid from function_object
+end type
+
+forward prototypes
+global subroutine resid (double t, double rho, ref double ar, ref double cvr, ref double dpdrr, ref double dpdtr, ref double gr, ref double hr, ref double pr, ref double sr, ref double ur)
+end prototypes
+
+global subroutine resid (double t, double rho, ref double ar, ref double cvr, ref double dpdrr, ref double dpdtr, ref double gr, ref double hr, ref double pr, ref double sr, ref double ur);//subroutine resid ( t, rho, ar, cvr, dpdrr, dpdtr, gr, hr, pr, sr, ur )
+//
+//
+//// RESID calculates residual contributions to thermodynamic quantities.
+//
+//
+//  Discussion:
+//
+//    The residual function consists of 40 terms.  The first 36 are
+//    used in a global least squares fit to experimental data.
+//
+//    Three terms were added that contribute only in the immediate
+//    neighborhood of the critical point 
+//      (tk-5) <= T <= (tk+5) C
+//      0.20   <= rho <= 0.44 g/cm3, 
+//
+//    A single term was added for the region of high pressure and 
+//    low temperature: T < 75 C, P > 300 MPa.
+//
+//    Except in these limited regions, the residual function is
+//    given by the first 36 terms.  The equation is
+//   
+//      A(residual)(rho,T)=
+//        sum(i=1 to 36) (g(i)/k(i)) * (T0/T)^(l(i)) (1-exp(-rho))^(k(i))
+//      + sum(i=37 to 40) g(i)*delta(i)^(k(i))
+//        * exp(-alpha(i)*delta(i)^(k(i)) - beta(i)*tau(i)^2)
+//                                                     (Equation 5)
+//   
+//    where
+//
+//      g(i) are coefficients determined by fits to data,
+//      delta(i) are reduced densities (delta(i)=((rho-rho(i))/rho(i))
+//      tau(i) are reduced temperatures (tau(i)=((T-tau(i))/tau(i))
+//      rho(i) are specified densities.
+//      tau(i) are specified temperatures.
+//      The k(i) and l(i) are specified integers.
+//   
+//  Modified:
+//
+//    22 November 1998
+//
+//  Reference:
+//
+//    Lester Haar, John Gallagher and George Kell,
+//    NBS/NRC Steam Tables:
+//    Thermodynamic and Transport Properties and Computer Programs
+//      for Vapor and Liquid States of Water in SI Units,
+//    Hemisphere Publishing Corporation, Washington, 1984,
+//    TJ270.H3
+//
+//    C A Meyer, R B McClintock, G J Silvestri, R C Spencer,
+//    ASME Steam Tables: Thermodynamic and Transport Properties of Steam,
+//    American Society of Mechanical Engineers, 1967.
+//
+//  Parameters:
+//
+//    Input, double T, the temperature, in degrees Kelvin.
+//
+//    Input, double RHO, the density, in G/CM3.
+//
+//    Output, double AR, the residual contribution to the 
+//    Helmholtz function, in KJ/kg.
+//
+//    Output, double CVR, the residual contribution to the 
+//    isochoric (constant volume) heat capacity, in KJ/(kg degrees Kelvin).
+//
+//    Output, double DPDRR, the residual contribution to 
+//    the partial derivative dP(T,RHO)/dRHO, with T held fixed, in 
+//    (MegaPascals CM3)/G.
+//
+//    Output, double DPDTR, the residual contribution to 
+//    the partial derivative dP(T,RHO)/dT, with RHO held fixed, 
+//    in MegaPascals/degrees Kelvin.
+//
+//    Output, double GR, the residual contribution to the Gibbs 
+//    function, in KJ/kg.
+//
+//    Output, double HR, the residual contribution to the 
+//    enthalpy, in KJ/kg.
+//
+//    Output, double PR, the residual contribution to the pressure, 
+//    in MegaPascals.
+//
+//    Output, double SR, the residual contribution to the entropy, 
+//    in KJ/(kg degrees Kelvin).
+//
+//    Output, double UR, the residual contribution to the 
+//    internal energy, in KJ/kg.
+//
+
+//
+  double aad[] = { 34.0E+00, 40.0E+00, 30.0E+00, 1050.0E+00 }
+  double aat[] = { 20000.0E+00, 20000.0E+00, 40000.0E+00, 25.0E+00 }
+  double adz[] = { 0.319E+00, 0.319E+00, 0.319E+00, 1.55E+00 }
+  double att
+  double atz[] = { 640.0E+00, 640.0E+00, 641.6E+00, 270.0E+00 }
+  double dadt
+  double ddz
+  double del
+  double dex
+  double dfdt
+  double e
+  double errtol
+  double ex0
+  double ex1
+  double ex2
+  double fct
+  double g[] = { -530.62968529023E+00,  0.22744901424408E+04, 0.78779333020687E+03, &
+    -69.830527374994E+00,  0.17863832875422E+05,-0.39514731563338E+05, &
+    0.33803884280753E+05, -0.13855050202703E+05,-0.25637436613260E+06, &
+    0.48212575981415E+06, -0.34183016969660E+06, 0.12223156417448E+06, &
+    0.11797433655832E+07, -0.21734810110373E+07, 0.10829952168620E+07, &
+   -0.25441998064049E+06, -0.31377774947767E+07, 0.52911910757704E+07, &
+   -0.13802577177877E+07, -0.25109914369001E+06, 0.46561826115608E+07, &
+   -0.72752773275387E+07,  0.41774246148294E+06, 0.14016358244614E+07, &
+   -0.31555231392127E+07,  0.47929666384584E+07, 0.40912664781209E+06, &
+   -0.13626369388386E+07,  0.69625220862664E+06,-0.10834900096447E+07, &
+   -0.22722827401688E+06,  0.38365486000660E+06, 0.68833257944332E+04, &
+    0.21757245522644E+05, -0.26627944829770E+04,-0.70730418082074E+05, &
+   -0.225E+00, -1.68E+00, 0.055E+00, -93.0E+00 }
+  double gascon
+  integer i
+  integer ii[] = { 0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,8,8,8,8,2,2,0,4,2,2,2,4 }
+  integer j
+  integer jj[] = { 2,3,5,7,2,3,5,7,2,3,5,7,2,3,5,7,2,3,5,7,2,3,5,7,2,3,5,7,2,3,5,7,1,4,4,4,0,2,0,0 }
+  integer k
+  integer l
+  integer nc
+  double q10
+  double q20
+  double q2a
+  double q5t
+  double qm
+  double qp
+  double qr[11]
+  double qt[10]
+  double s_ref = 7.6180720166752E+00
+  double t_ref = 647.073E+00
+  double tau
+  double tx
+  double u_ref = - 4328.4549774261E+00
+  double v
+	string ls_MB_String
+	string ls_MB_String_2
+//
+//  errtol = sqrt ( epsilon ( errtol ) )
+//  errtol = sqrt (  errtol )
+  errtol = 0.0000001
+//
+//  Refuse to handle zero or negative temperatures.
+//
+
+  if ( t <= 0.0E+00 ) then
+	ls_MB_String = f_LanguageString('###_-_FATAL_ERROR', '### - Fatal Error')
+	ls_MB_String = StrTran(ls_MB_String, '###', 'RESID')
+	ls_MB_String_2 = f_LanguageString('THE_INPUT_TEMPERATURE_T_MUST_BE_POSITIVE.__INPUT_VALUE_WAS_T_=_###', 'The input temperature T must be positive.  Input value was T = ###')
+	ls_MB_String_2 = StrTran(ls_MB_String_2, '###', String(t))
+	MessageBox(ls_MB_String, ls_MB_String_2)
+//	MessageBox('RESID - Fatal error','The input temperature T must be positive.  Input value was T = '+String( t))
+	 return
+   /* write ( *, '(a)' ) ' '
+    write ( *, '(a)' ) 'RESID - Fatal error//'
+    write ( *, '(a)' ) '  The input temperature T must be positive.'
+    write ( *, '(a,g14.6)' ) '  Input value was T = ', t
+    stop*/
+  end if
+//
+//  Refuse to handle zero or negative density.
+//
+  if ( rho <= 0.0E+00 ) then
+	ls_MB_String = f_LanguageString('###_-_FATAL_ERROR', '### - Fatal Error')
+	ls_MB_String = StrTran(ls_MB_String, '###', 'RESID')
+	ls_MB_String_2 = f_LanguageString('THE_INPUT_DENSITY_RHO_MUST_BE_POSITIVE.__INPUT_VALUE_WAS_RHO_=_###', 'The input density RHO must be positive.  Input value was RHO = ###')
+	ls_MB_String_2 = StrTran(ls_MB_String_2, '###', String(rho))
+	MessageBox(ls_MB_String, ls_MB_String_2)
+//	MessageBox('RESID - Fatal error','The input density RHO must be positive.  Input value was RHO = '+string( rho))
+/*    write ( *, '(a)' ) ' '
+    write ( *, '(a)' ) 'RESID - Fatal error//'
+    write ( *, '(a)' ) '  The input density RHO must be positive.'
+    write ( *, '(a,g14.6)' ) '  Input value was RHO = ', rho
+    stop*/
+  end if
+
+  nc = 36
+  dpdrr = 0.0E+00
+  pr = 0.0E+00
+  ar = 0.0E+00
+  dadt = 0.0E+00
+  cvr = 0.0E+00
+  dpdtr = 0.0E+00
+
+  ex0 = - rho
+// ex0 = max ( ex0, - 225.0E+00 )
+// ex0 = min ( ex0, 225.0E+00 )
+  e = exp ( ex0 )
+
+  q10 = rho * rho * e
+  q20 = 1.0E+00 - e
+
+  qr[1] = 0.0E+00
+  qr[2] = q10
+  for i = 2 to 10
+    qr[i + 1] = qr[i] * q20
+  next
+
+  v = t_ref / t
+  qt[1] = t / t_ref
+  for i = 2 to 10
+    qt[i] = qt[i - 1] * v
+  next
+
+  for i = 1 to nc
+
+    k = ii[i] + 1
+    l = jj[i]
+    qp = g[i] * qr[k+1] * qt[l+1]
+    pr = pr + qp
+
+    dpdrr = dpdrr + ( 2.0E+00 / rho - ( 1.0E+00 - e * double ( k - 1 ) / &
+      ( 1.0E+00 - e ) ) ) * qp
+
+    ar = ar + g[i] * qr[k+2] * qt[l+1] / ( rho^2 * e * double ( k ) &
+      * gascon ( ) * t )
+
+    dfdt = ( 1.0E+00 - e )^k * double ( 1 - l ) * qt[l+2] / t_ref / double ( k )
+
+    dadt = dadt + g[i] * dfdt
+
+    dpdtr = dpdtr + g[i] * dfdt * rho^2 * e * double ( k ) / ( 1.0E+00 - e )
+
+    cvr = cvr + g[i] * double ( l ) * dfdt / gascon()
+
+  next
+
+  qp = 0.0E+00
+  q2a = 0.0E+00
+
+  for j = 37 to 40
+
+    k = ii[j]
+    ddz = adz[j - 36]
+    del = rho / ddz - 1.0E+00
+
+    if ( abs ( del ) < errtol ) then
+      del = errtol
+    end if
+
+    ex1 = - aad[j - 36] * del^k
+//   ex1 = max ( ex1, - 225.0E+00 )
+//   ex1 = min ( ex1, 225.0E+00 )
+    dex = exp ( ex1 ) * del^jj[j]
+
+    att = aat[j - 36]
+    tx = atz[j - 36]
+    tau = ( t / tx ) - 1.0E+00
+
+    ex2 = - att * tau^2
+//   ex2 = max ( ex2, - 225.0E+00 )
+//   ex2 = min ( ex2, 225.0E+00 )
+    q10 = dex * exp ( ex2 )
+
+    qm = double ( jj[j] ) / del - double ( k ) * aad[j - 36] * del^(k - 1)
+    fct = qm * rho^2 * q10 / ddz
+
+    q5t = fct * ( 2.0E+00 / rho + qm / ddz ) - ( rho / ddz )^2 * q10 * &
+      ( double ( jj[j] ) / del^2 + double ( k * ( k - 1 ) ) * aad[j - 36] * &
+      del^(k - 2) )
+
+    dpdrr = dpdrr + q5t * g[j]
+    qp = qp + g[j] * fct
+    dadt = dadt - 2.0E+00 * g[j] * att * tau * q10 / tx
+    dpdtr = dpdtr - 2.0E+00 * g[j] * att * tau * fct / tx
+
+    q2a = q2a + t * g[j] * att * ( 4.0E+00 * ex2 + 2.0E+00 ) * q10 / tx^2
+
+    ar = ar + q10 * g[j] / ( gascon() * t )
+
+  next
+
+  cvr = cvr + q2a / gascon()
+  pr = pr + qp
+  sr = - dadt / gascon()
+  ur = ar + sr
+//
+//  Assign dimensions.
+//
+  ar =  gascon() * t *  ar
+  cvr = gascon() *     cvr
+  sr =  gascon() *      sr
+  ur =  gascon() * t *  ur
+//
+//  Adjust energies.
+//
+  ar = ar + gascon ( ) * t * s_ref - gascon ( ) * u_ref
+  sr = sr - gascon ( ) * s_ref
+  ur = ur - gascon ( ) * u_ref
+
+  gr = ar + pr / rho
+  hr = ur + pr / rho
+
+  return
+
+end subroutine
+

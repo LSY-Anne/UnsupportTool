@@ -1,0 +1,12 @@
+﻿$PBExportHeader$s_alert.srs
+global type s_alert from structure
+	integer		tour
+	integer		rev_no
+	date		dt
+	integer		shift_no
+	integer		sta
+	integer		reading_id
+	integer		alert_id
+	datetime		datetime
+end type
+

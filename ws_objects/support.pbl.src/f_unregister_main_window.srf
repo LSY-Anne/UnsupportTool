@@ -1,0 +1,15 @@
+﻿$PBExportHeader$f_unregister_main_window.srf
+global type f_unregister_main_window from function_object
+end type
+
+forward prototypes
+global subroutine f_unregister_main_window (window aw_passed)
+end prototypes
+
+global subroutine f_unregister_main_window (window aw_passed);string ls_App_Name
+
+ls_App_Name = MID(aw_passed.Title, POS(aw_passed.Title, " ") + 1)
+RegistrySet("HKEY_LOCAL_MACHINE\Software\TechAssist\Mobile eSOMS\" + ls_App_Name, "Main_Handle", RegULong!, 0)
+
+end subroutine
+

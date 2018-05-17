@@ -1,0 +1,123 @@
+﻿$PBExportHeader$f_get_main_status.srf
+global type f_get_main_status from function_object
+end type
+
+forward prototypes
+global function string f_get_main_status ()
+end prototypes
+
+global function string f_get_main_status ();string ls_Status
+string ls_Newline
+ulong lul_Temp
+integer li_Temp
+
+ls_Newline = CHAR(13) + CHAR(10)
+
+string ls_MB_String
+string ls_MB_String_2
+string ls_Parameters[]
+string ls_Delimiters[]
+string ls_Blank[]
+
+ls_Parameters[1] = gs_Module_Name
+ls_Delimiters[1] = '###'
+ls_MB_String = 'Mobile eSOMS for ###'
+ls_MB_String = guo_user_settings.uf_LanguageString_2('MOBILE_ESOMS_FOR_###', ls_MB_String, ls_Parameters, ls_Delimiters)
+ls_Parameters = ls_Blank
+ls_Delimiters = ls_Blank
+ls_Status = ls_MB_String + ls_Newline
+//ls_Status = "Mobile eSOMS for " + gs_Module_Name + 
+debugbreak()
+ls_Status = ls_Status + f_DW_Language_call_2("Version") + " " + gs_Current_Version + ' ' + gs_Compile_Date + ls_Newline
+
+LONG l_mem[] = {32, 0, 0, 0, 0, 0, 0, 0 }
+
+IF gb_Platform_Is_CE THEN
+	// typedef struct _MEMORYSTATUS { 
+	// DWORD dwLength; 
+	// DWORD dwMemoryLoad; 
+	// DWORD dwTotalPhys; 
+	// DWORD dwAvailPhys; 
+	// DWORD dwTotalPageFile; 
+	// DWORD dwAvailPageFile; 
+	// DWORD dwTotalVirtual; 
+	// DWORD dwAvailVirtual; 
+	// } MEMORYSTATUS, *LPMEMORYSTATUS; 
+	
+	GlobalMemoryStatus( l_mem )
+	
+	String ls_val
+	
+	// Useful values are:
+	// dwMemoryLoad is a percentage
+	//			I'm still not sure of what...
+	// Total Physical = "Allocated Program Space"
+	// Avail Physical = "Free Program Space"
+	//			Above two match the Memory values in "System Settings" plugin
+	// Total Virtual = 32MB on mine
+	// Avail Virtual = free space in the 32MB address space.
+	//			Which is really useless because of the WinCE bogus
+	//			architecture which fragments memory badly...
+//	
+//	ls_val += "dwMemoryLoad: " + String(l_mem[2]) + "%~r~n"
+//	ls_val += "dwTotalPhys: " + String(l_mem[3]) + "~r~n"
+//	ls_val += "dwAvailPhys: " + String(l_mem[4]) + "~r~n"
+//	ls_val += "dwTotalVirtual: " + String(l_mem[7]) + "~r~n"
+//	ls_val += "dwAvailVirtual: " + String(l_mem[8])
+//	lul_Temp = fnMemoryTotal()
+//ELSE
+//	lul_Temp = 0
+END IF
+
+
+if appeongetclienttype()="MOBILE" then
+   eon_mobile_deviceex lgnv_aws
+   string ls_type,ls_version,ls_name,ls_platform
+	integer li_return
+   lgnv_aws = CREATE eon_mobile_deviceex
+	
+	ls_type = space(50)
+	ls_version = space(50)
+	ls_name = space(50)	
+	ls_platform = '                           '
+	
+	l_mem[3]	= lgnv_aws.of_gettotalmemory() 
+	l_mem[4]	= lgnv_aws.of_getfreememory() 
+	
+	lgnv_aws.of_getdevicetype(ls_type)
+	lgnv_aws.of_getosversion(ls_version)
+	lgnv_aws.of_getname(ls_name)
+	li_return = lgnv_aws.of_getplatform( ls_platform )
+	
+//	MessageBox(string(li_return),ls_platform)
+	
+//	MessageBox(ls_type,ls_type)
+	
+//	MessageBox('test','test')
+
+	ls_Status =  ls_status + ls_platform+ ls_Newline
+	
+    destroy lgnv_aws
+end if
+
+
+
+ls_Status = ls_Status + f_LanguageString('MEMORY_TOTAL:', 'Memory Total:') + " " + String(l_mem[3] / (1024 ), "0.0") + " MB" + ls_Newline
+
+//IF gb_Platform_Is_CE THEN
+//	lul_Temp = fnMemoryAvailable()
+//ELSE
+//	lul_Temp = 0
+//END IF
+ls_Status = ls_Status + f_LanguageString('MEMORY_AVAIL:', 'Memory Avail:') + " " + String(l_mem[4] / (1024 ), "0.0") + " MB" + ls_Newline
+
+IF gb_Platform_Is_CE THEN
+	li_Temp = fnBatteryStatus()
+ELSE
+	li_Temp = 0
+END IF
+//ls_Status = ls_Status + f_LanguageString('BATTERY_REMAINING:', 'Battery Remaining:') + " " + String(li_Temp) + "%" + ls_Newline
+
+RETURN ls_Status
+end function
+

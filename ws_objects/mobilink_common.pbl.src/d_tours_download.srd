@@ -1,0 +1,65 @@
+﻿$PBExportHeader$d_tours_download.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=1 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no grid.lines=0 selected.mouse=no )
+header(height=64 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=0 color="536870912"  height.autosize=yes)
+table(column=(type=char(50) updatewhereclause=yes name=tour_group_name dbname="tour_group.tour_group_name" )
+ column=(type=char(50) updatewhereclause=yes name=tour_name dbname="tour.tour_name" )
+ column=(type=decimal(0) updatewhereclause=yes name=tour dbname="tour.tour" )
+ column=(type=decimal(0) updatewhereclause=yes name=rev_no dbname="tour.rev_no" )
+ column=(type=char(10) updatewhereclause=yes name=tour_type_id dbname="tour.tour_type_id" )
+ column=(type=char(50) updatewhereclause=yes name=rev_desc dbname="tour.rev_desc" )
+ column=(type=decimal(0) updatewhereclause=yes name=current_rev_no dbname="current_tour_revision.current_rev_no" )
+ column=(type=long updatewhereclause=yes name=selected dbname="selected" values="	1/	0" )
+ column=(type=datetime updatewhereclause=yes name=tour_next_scheduled_date dbname="tour.next_scheduled_date" )
+ column=(type=datetime updatewhereclause=yes name=last_performance_date dbname="tour.last_performance_date" )
+ column=(type=decimal(0) updatewhereclause=yes name=tour_periodicity_code dbname="tour.periodicity_code" )
+ column=(type=decimal(0) updatewhereclause=yes name=tour_is_revision dbname="tour.tour_is_revision" )
+ column=(type=long updatewhereclause=yes name=open_on_handheld dbname="open_on_handheld" )
+ column=(type=long updatewhereclause=yes name=allow_deselect dbname="allow_deselect" )
+ column=(type=long updatewhereclause=yes name=hidden dbname="hidden" )
+ retrieve="  SELECT tour_group.tour_group_name,
+         tour.tour_name,
+         tour.tour,
+         tour.rev_no rev_no,
+         tour.tour_type_id, 
+         tour.rev_desc,
+         current_tour_revision.rev_no current_rev_no,
+         0 AS selected,  
+         tour.next_scheduled_date,
+         tour.last_performance_date,
+         tour.periodicity_code,
+         tour_is_revision, 
+         0 AS open_on_handheld, 
+			1 AS allow_deselect, 
+         0 as hidden 
+    FROM tour_group,
+         tour,
+         current_tour_revision
+   WHERE ( tour_group.tour_group = tour.tour_group ) 
+     AND ( tour.active = 1 ) 
+     AND ( current_tour_revision.tour = tour.tour ) 
+     AND ( ( tour_is_revision > 0 ) OR ( current_tour_revision.rev_no = tour.rev_no ) ) 
+     AND ( ( tour.periodicity_code = 0 ) OR ( periodicity_code IS NULL ) OR ( next_scheduled_date <= :ldt_end ) ) 
+ ORDER BY tour_group.sort_order,
+          position,
+          tour.tour_name,
+          tour.rev_no DESC
+" filter="( ( f_tour_is_granted( tour , 1) and rev_no = current_rev_no ) OR ( f_tour_is_granted( tour , 18)  and tour_is_revision > 0 ) ) AND f_tour_is_granted( tour , 33)"arguments=(("ldt_end", datetime),("user_id", string)) )
+text(band=header alignment="2" text="" border="6" color="33554432" x="9" y="0" height="56" width="82" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Tour Group" border="6" color="33554432" x="101" y="0" height="56" width="462" html.valueishtml="0"  name=tour_group_name_t visible="1"  font.face="Tahoma" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Tour" border="6" color="33554432" x="571" y="0" height="56" width="462" html.valueishtml="0"  name=tour_name_t visible="1"  font.face="Tahoma" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Rev" border="6" color="33554432" x="1042" y="0" height="56" width="119" html.valueishtml="0"  name=rev_no_t visible="1"  font.face="Tahoma" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Next Scheduled Date" border="6" color="33554432" x="1170" y="0" height="56" width="658" html.valueishtml="0"  name=tour_next_scheduled_date_t visible="1"  font.face="Tahoma" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Last Performance Date" border="6" color="33554432" x="1838" y="0" height="56" width="658" html.valueishtml="0"  name=last_performance_date_t visible="1"  font.face="Tahoma" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=8 alignment="2" tabsequence=32766 border="0" color="33554432" x="9" y="0" height="60" width="82" format="[general]" html.valueishtml="0"  name=selected visible="1~tIF(hidden=0, 1, 0)" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=no checkbox.threed=yes  font.face="Tahoma" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="1073741824~tIF(open_on_handheld=1, RGB(255, 0, 0), RGB(255, 255, 255))" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432~tIF( allow_deselect = 0, RGB(192, 192, 192), 0)" x="101" y="0" height="60" width="462" format="[general]" html.valueishtml="0"  name=tour_group_name visible="1~tIF(hidden=0, 1, 0)" height.autosize=yes edit.limit=0 edit.case=any  edit.autoselect=yes   font.face="Tahoma" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432~tIF( allow_deselect = 0, RGB(192, 192, 192), 0)" x="571" y="0" height="60" width="462" format="[general]" html.valueishtml="0"  name=tour_name visible="1~tIF(hidden=0, 1, 0)" height.autosize=yes edit.limit=0 edit.case=any edit.focusrectangle=no  edit.autoselect=no edit.autohscroll=yes  edit.displayonly=yes  font.face="Tahoma" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=4 alignment="2" tabsequence=32766 border="0" color="33554432~tIF( allow_deselect = 0, RGB(192, 192, 192), 0)" x="1042" y="4" height="60" width="119" format="[general]" html.valueishtml="0"  name=rev_no visible="1~tIF(hidden=0, 1, 0)" edit.limit=0 edit.case=any  edit.autoselect=yes   font.face="Tahoma" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="33554432~tIF( allow_deselect = 0, RGB(192, 192, 192), 0)" x="1170" y="4" height="60" width="658" format="[shortdate] [time]" html.valueishtml="0"  name=tour_next_scheduled_date visible="1~tIF(hidden=0, 1, 0)" edit.limit=0 edit.case=any  edit.autoselect=yes   font.face="Tahoma" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="33554432~tIF( allow_deselect = 0, RGB(192, 192, 192), 0)" x="1838" y="4" height="60" width="658" format="[shortdate] [time]" html.valueishtml="0"  name=last_performance_date visible="1~tIF(hidden=0, 1, 0)" edit.limit=0 edit.case=any  edit.autoselect=yes   font.face="Tahoma" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+
+sparse(names="tour_group_name")htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" netscapelayers="0" )

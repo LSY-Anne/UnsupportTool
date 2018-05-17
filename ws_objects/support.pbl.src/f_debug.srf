@@ -1,0 +1,36 @@
+﻿$PBExportHeader$f_debug.srf
+global type f_debug from function_object
+end type
+
+forward prototypes
+global subroutine debug (string as_command)
+global subroutine f_debug (string as_command)
+end prototypes
+
+global subroutine debug (string as_command);CHOOSE CASE Upper(as_Command)
+	CASE 'OPEN'
+		gi_Debug_File = FileOpen('\Debug.txt', LineMode!, Write!, Shared!, Append!)
+	CASE 'CLOSE'
+		FileClose(gi_Debug_File)
+	CASE ELSE
+		FileWrite(gi_Debug_File, as_Command)
+END CHOOSE
+			
+end subroutine
+
+global subroutine f_debug (string as_command);CHOOSE CASE Upper(as_Command)
+	CASE 'OPEN'
+		gi_Debug_File = FileOpen('\Debug.txt', LineMode!, Write!, Shared!, Append!)
+	CASE 'RESET'
+		IF ( gi_Debug_File > 0 ) OR IsNull(gi_Debug_File) THEN
+			FileClose(gi_Debug_File)
+		END IF
+		FileDelete('\Debug.txt')
+	CASE 'CLOSE'
+		FileClose(gi_Debug_File)
+	CASE ELSE
+		FileWrite(gi_Debug_File, as_Command)
+END CHOOSE
+			
+end subroutine
+

@@ -1,0 +1,21 @@
+﻿$PBExportHeader$f_load_type_profilestring.srf
+global type f_load_type_profilestring from function_object
+end type
+
+forward prototypes
+global subroutine f_load_type_profilestring ()
+end prototypes
+
+global subroutine f_load_type_profilestring ();long ll_Num_Rows
+integer li_Return
+
+IF NOT IsValid(ads_types) THEN
+	ads_types = CREATE datastore
+END IF
+
+ads_types.Dataobject = 'ds_type_profilestring'
+li_Return = ads_types.SetTransObject(SQLCA)
+ll_Num_Rows = ads_types.Retrieve()
+
+end subroutine
+

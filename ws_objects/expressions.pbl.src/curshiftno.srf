@@ -1,0 +1,17 @@
+﻿$PBExportHeader$curshiftno.srf
+global type curshiftno from function_object
+end type
+
+forward prototypes
+global function integer curshiftno ()
+end prototypes
+
+global function integer curshiftno ();//** IF w_tour.ids_evaluate.RowCount() > 0 THEN
+//**	RETURN w_tour.ids_evaluate.object.shift_no[1]
+//**ELSE
+//**	RETURN -1
+//**END IF
+
+RETURN gsu_Tour_Parameters[gi_Current_Tour].shift_no//**
+end function
+

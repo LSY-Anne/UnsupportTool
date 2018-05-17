@@ -1,0 +1,12 @@
+﻿$PBExportHeader$sumdaterange.srf
+global type sumdaterange from function_object
+end type
+
+forward prototypes
+global function string sumdaterange (integer sta, string start_date, string end_date)
+end prototypes
+
+global function string sumdaterange (integer sta, string start_date, string end_date);RETURN GenDateRange(sta,start_date,end_date,"SUM")
+
+end function
+

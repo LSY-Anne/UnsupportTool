@@ -1,0 +1,172 @@
+﻿$PBExportHeader$psat.srf
+global type psat from function_object
+end type
+
+forward prototypes
+global subroutine psat (double t, ref double p, ref double rhol, ref double rhov)
+end prototypes
+
+global subroutine psat (double t, ref double p, ref double rhol, ref double rhov);//subroutine psat ( t, p, rhol, rhov )
+//
+//
+//// PSAT calculates the vapor pressure, and the liquid and vapor densities.
+//
+//
+//  Discussion:
+//
+//    These quantities correspond to the input temperature T, corrected
+//    so that the Gibbs functions for liquid and vapor phase are
+//    equal to within a tolerance.
+//
+//  Reference:
+//
+//    Lester Haar, John Gallagher and George Kell,
+//    NBS/NRC Steam Tables:
+//    Thermodynamic and Transport Properties and Computer Programs
+//      for Vapor and Liquid States of Water in SI Units,
+//    Hemisphere Publishing Corporation, Washington, 1984,
+//    TJ270.H3
+//
+//    C A Meyer, R B McClintock, G J Silvestri, R C Spencer,
+//    ASME Steam Tables: Thermodynamic and Transport Properties of Steam,
+//    American Society of Mechanical Engineers, 1967.
+//
+//  Modified:
+//
+//    04 February 2002
+//
+//  Parameters:
+//
+//    Input, double T, the vapor temperature, in degrees Kelvin.
+//
+//    Output, double P, the vapor pressure, in MegaPascals.
+//
+//    Output, double RHOL, the liquid density, in G/CM3.
+//
+//    Output, double RHOV, the vapor density, in G/CM3.
+//
+//
+  double bot
+  double delg
+  double dp
+  double errtol
+  double gascon
+  integer it
+  integer it_max = 100
+  double p_consistent
+  double p_old
+  string ls_MB_String
+  string ls_MB_String_2
+//
+//  Ensure that output quantities are initialized,, obliterating any
+//  input values.
+//
+  p = 0.0E+00
+  rhol = 0.0E+00
+  rhov = 0.0E+00
+//
+//  Set the error tolerance.
+//
+//  errtol = 100.0E+00 * sqrt ( .000001 )
+   errtol = 0.000001
+
+
+//
+//  Refuse to handle zero or negative temperatures.
+//
+  if ( t <= 0.0E+00 ) then
+//	MessageBox('PSAT - Fatal error','The input temperature T must be positive.  Input value was T = '+string( t))
+   p = 1
+	return
+/*	
+    write ( *, '(a)' ) ' '
+    write ( *, '(a)' ) 'PSAT - Fatal error//'
+    write ( *, '(a)' ) '  The input temperature T must be positive.'
+    write ( *, '(a,g14.6)' ) '  Input value was T = ', t
+    stop*/
+  end if
+//
+//  Get an estimate for the saturation pressure.
+//
+  psat_est ( t, p )
+
+  dp = 0.0E+00
+
+  for it = 1 to it_max
+
+    corr ( t, p, p_consistent, rhol, rhov, delg )
+
+    bot = ( rhol - rhov ) / ( rhol * rhov )
+
+    if ( abs ( bot ) < errtol ) then
+//      write ( *, * ) 'PSAT - Warning, what is this?'
+//      bot = sign ( errtol, bot )
+       return
+    end if
+
+    dp = delg * gascon() * t / bot
+
+    p_old = p
+    p = p + dp
+
+    if ( abs ( dp ) <= errtol * ( abs ( p ) + 1.0E+00 ) ) then
+      return
+    end if
+
+    if ( p <= 0.0E+00 ) then
+		ls_MB_String = f_LanguageString('###_-_WARNING', '### - Warning')
+		ls_MB_String = StrTran(ls_MB_String, '###', 'PSAT')
+		ls_MB_String_2 = f_LanguageString('THE_ITERATES_HAVE_BECOME_NONPOSITIVE.__LAST_ITERATE_WAS__=_###', 'The iterates have become nonpositive.  Last iterate was  = ###')
+		ls_MB_String_2 = StrTran(ls_MB_String_2, '###', String(p))
+		MessageBox(ls_MB_String, ls_MB_String_2)
+//  	   MessageBox('PSAT - Warning','The iterates have become nonpositive.  Last iterate was  = '+string( p))
+	   return/*
+      write ( *, '(a)' ) ' '
+      write ( *, '(a)' ) 'PSAT - Warning//'
+      write ( *, '(a)' ) '  The iterates have become nonpositive.'
+      write ( *, '(a,i6)' ) '  Iteration number = ', it
+      write ( *, '(a,g14.6)' ) '  Last iterate was ', p
+      write ( *, '(a,g14.6)' ) '  Previous iterate was ', p_old
+      write ( *, '(a,g14.6)' ) '  Last correction was ', dp
+      write ( *, '(a)' ) '  Trying to recover...'*/
+      p = 0.5E+00 * p_old
+    end if
+
+    if ( p <= 0.0E+00 ) then
+		ls_MB_String = f_LanguageString('###_-_FATAL_ERROR', '### - Fatal Error')
+		ls_MB_String = StrTran(ls_MB_String, '###', 'PSAT')
+		ls_MB_String_2 = f_LanguageString('THE_ITERATES_HAVE_BECOME_NONPOSITIVE.__LAST_ITERATE_WAS__=_###', 'The iterates have become nonpositive.  Last iterate was  = ###')
+		ls_MB_String_2 = StrTran(ls_MB_String_2, '###', String(p))
+		MessageBox(ls_MB_String, ls_MB_String_2)
+//  	   MessageBox('PSAT - Fatal error','The iterates have become nonpositive.  Last iterate was  = '+string( p))
+	   return/*
+      write ( *, '(a)' ) ' '
+      write ( *, '(a)' ) 'PSAT - Fatal error//'
+      write ( *, '(a)' ) '  The iterates have become nonpositive.'
+      write ( *, '(a,i6)' ) '  Iteration number = ', it
+      write ( *, '(a,g14.6)' ) '  Last iterate was ', p
+      write ( *, '(a,g14.6)' ) '  Previous iterate was ', p_old
+      write ( *, '(a,g14.6)' ) '  Last correction was ', dp
+      stop*/
+    end if
+
+next
+		ls_MB_String = f_LanguageString('###_-_WARNING', '### - Warning')
+		ls_MB_String = StrTran(ls_MB_String, '###', 'PSAT')
+		ls_MB_String_2 = f_LanguageString('THE_ITERATION_DID_NOT_CONVERGE.__LAST_ITERATE_WAS__=_###', 'The iteration did not converge.  Last iterate was  = ###')
+		ls_MB_String_2 = StrTran(ls_MB_String_2, '###', String(p))
+		MessageBox(ls_MB_String, ls_MB_String_2)
+//  	   MessageBox('PSAT - Warning','The iteration did not converge.  Last iterate was  = '+string( p))
+	   return/*
+
+  write ( *, '(a)' ) ' '
+  write ( *, '(a)' ) 'PSAT - Warning//'
+  write ( *, '(a)' ) '  The iteration did not converge.'
+  write ( *, '(a,i6)' ) '  The number of iterations was ', it_max
+  write ( *, '(a,g14.6)' ) '  Convergence tolerance was ', errtol
+  write ( *, '(a,g14.6)' ) '  Last iterate was ', p
+  write ( *, '(a,g14.6)' ) '  Last correction was ', dp
+
+  return*/
+end subroutine
+

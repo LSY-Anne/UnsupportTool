@@ -1,0 +1,46 @@
+﻿$PBExportHeader$f_handle_scratchpad.srf
+global type f_handle_scratchpad from function_object
+end type
+
+forward prototypes
+global subroutine f_handle_scratchpad ()
+end prototypes
+
+global subroutine f_handle_scratchpad ();nvo_filetimeinfo_ce ft_temp
+string ls_moddate
+integer li_Return
+integer li_FileNum
+string ls_File
+string ls_Temp
+
+CHOOSE CASE gs_Module_Id
+	CASE 'NCCS'
+		IF gb_Platform_Is_CE THEN
+			IF gb_Allow_Note_Files THEN
+				ls_Temp = MID(gs_Scratchpad_File, 1, POS(gs_Scratchpad_File, '.') - 1)
+				ls_File = GetCurrentDirectory() + "\" + ls_Temp + ".pwi"
+				IF NOT FileExists(ls_File) THEN
+					li_FileNum = FileOpen(ls_File, LineMode!, Write!)
+					FileClose(li_FileNum)
+				END IF
+			ELSE
+				ls_File = GetCurrentDirectory() + "\" + gs_Scratchpad_File
+				IF NOT FileExists(ls_File) THEN
+					li_FileNum = FileOpen(ls_File, StreamMode!, Write!)
+					FileClose(li_FileNum)
+				END IF
+			END IF
+
+			IF IsValid(ft_temp) THEN
+				li_Return = ft_temp.getfilemoddate(ls_File, ls_moddate)
+//				MessageBox('', ls_moddate)
+			END IF
+		END IF
+	CASE 'NCS'
+	CASE 'NEDBS'
+	CASE 'NLOGS'
+	CASE 'NPTS'
+	CASE ELSE
+END CHOOSE
+end subroutine
+

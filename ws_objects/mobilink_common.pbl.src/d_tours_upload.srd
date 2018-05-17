@@ -1,0 +1,58 @@
+﻿$PBExportHeader$d_tours_upload.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=1 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no grid.lines=0 selected.mouse=no )
+header(height=64 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=68 color="536870912"  height.autosize=yes)
+table(column=(type=long updatewhereclause=yes name=tour_group dbname="tour_group" )
+ column=(type=char(50) updatewhereclause=yes name=tour_name dbname="tour_name" )
+ column=(type=long updatewhereclause=yes name=tour dbname="tour" )
+ column=(type=long updatewhereclause=yes name=rev_no dbname="rev_no" )
+ column=(type=char(10) updatewhereclause=yes name=tour_type_id dbname="tour_type_id" )
+ column=(type=char(50) updatewhereclause=yes name=rev_desc dbname="rev_desc" )
+ column=(type=long updatewhereclause=yes name=active dbname="active" )
+ column=(type=char(50) updatewhereclause=yes name=tour_group_name dbname="tour_group_name" )
+ column=(type=long updatewhereclause=yes name=selected dbname="selected" values="	1/	0" )
+ column=(type=long updatewhereclause=yes name=open_on_handheld dbname="open_on_handheld" )
+ retrieve="    SELECT tour.tour_group, 
+         tour_name, 
+         tour, 
+         rev_no, 
+         tour_type_id, 
+         rev_desc, 
+         ( SELECT COUNT(*) 
+             FROM current_tour_revision 
+            WHERE ( current_tour_revision.tour = tour.tour ) 
+              AND ( current_tour_revision.rev_no = tour.rev_no ) ) AS active, 
+         tour_group.tour_group_name, 
+         1 AS selected, 
+         0 AS open_on_handheld  
+    FROM tour, 
+         tour_group 
+   WHERE ( rev_no = 
+         ( SELECT rev_no 
+             FROM current_tour_revision 
+            WHERE ( current_tour_revision.tour = tour.tour ) ) OR ( tour_is_revision = 1 ) ) 
+     AND ( tour.tour_group = tour_group.tour_group ) 
+     AND EXISTS 
+         ( SELECT * 
+             FROM station 
+            WHERE ( station.tour = tour.tour ) 
+              AND ( station.rev_no = tour.rev_no ) ) 
+ORDER BY tour_group.sort_order,
+         tour.position,
+         tour.tour_name,
+         tour.rev_no DESC
+" )
+text(band=header alignment="2" text="" border="6" color="33554432" x="9" y="0" height="56" width="82" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Tour Group" border="6" color="33554432" x="101" y="0" height="56" width="462" html.valueishtml="0"  name=tour_group_t visible="1"  font.face="Tahoma" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Tour" border="6" color="33554432" x="571" y="0" height="56" width="462" html.valueishtml="0"  name=tour_name_t visible="1"  font.face="Tahoma" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Rev" border="6" color="33554432" x="1042" y="0" height="56" width="119" html.valueishtml="0"  name=rev_no_t visible="1"  font.face="Tahoma" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=9 alignment="2" tabsequence=32766 border="0" color="33554432" x="9" y="0" height="60" width="82" format="[general]" html.valueishtml="0"  name=selected visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=no checkbox.threed=yes  font.face="Tahoma" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="1073741824~tIF(open_on_handheld=1, RGB(255, 0, 0), RGB(255, 255, 255))" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="33554432" x="101" y="0" height="60" width="462" format="[general]" html.valueishtml="0"  name=tour_group_name visible="1" height.autosize=yes edit.limit=0 edit.case=any  edit.autoselect=yes   font.face="Tahoma" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432~tIF(active = 1, RGB(0, 0, 0), RGB(255, 0, 0))" x="571" y="0" height="60" width="462" format="[general]" html.valueishtml="0"  name=tour_name visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.focusrectangle=no  edit.autoselect=no edit.autohscroll=yes  edit.displayonly=yes  font.face="Tahoma" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=4 alignment="2" tabsequence=32766 border="0" color="33554432~tIF(active = 1, RGB(0, 0, 0), RGB(255, 0, 0))" x="1042" y="0" height="60" width="119" format="[general]" html.valueishtml="0"  name=rev_no visible="1" edit.limit=0 edit.case=any  edit.autoselect=yes   font.face="Tahoma" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+
+sparse(names="tour_group_name")htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" netscapelayers="0" )

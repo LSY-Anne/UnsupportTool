@@ -1,0 +1,199 @@
+﻿$PBExportHeader$dense.srf
+global type dense from function_object
+end type
+
+forward prototypes
+global subroutine dense (double p, double t, double rho_start, ref double rho, ref double dbdr)
+end prototypes
+
+global subroutine dense (double p, double t, double rho_start, ref double rho, ref double dbdr);//subroutine dense ( p, t, rho_start, rho, dpdr )
+//
+//
+//// DENSE computes the density for a given pressure and temperature.
+//
+//
+//  Discussion:
+//
+//    The use of the variable RHO_START for two opposing purposes is
+//    poor practice and will be corrected one of these days.  Meanwhile,
+//    the algorithms behavior, particularly in the two-phase region,
+//    is very suspect.
+//
+//  Modified:
+//
+//    19 November 1998
+//
+//  Reference:
+//
+//    Lester Haar, John Gallagher and George Kell,
+//    NBS/NRC Steam Tables:
+//    Thermodynamic and Transport Properties and Computer Programs
+//      for Vapor and Liquid States of Water in SI Units,
+//    Hemisphere Publishing Corporation, Washington, 1984,
+//    TJ270.H3
+//
+//    C A Meyer, R B McClintock, G J Silvestri, R C Spencer,
+//    ASME Steam Tables: Thermodynamic and Transport Properties of Steam,
+//    American Society of Mechanical Engineers, 1967.
+//
+//  Parameters:
+//
+//    Input, double P, the pressure, in MegaPascals.
+//
+//    Input, double T, the temperature, in degrees Kelvin.
+//
+//    Input, double RHO_START, an initial guess for the density, 
+//    in G/CM3.  The value of RHO_START also signals whether a vapor or liquid
+//    calculation is to be done.  If DPDR is computed negative, then for 
+//    0.2967 <= RHO_START, liquid is assumed, otherwise gas.
+//
+//    Output, double RHO, the density for the given
+//    pressure and temperature, in G/CM3.
+//
+//    Output, double DPDR, the partial derivative
+//    dP(T,RHO)/dRHO, with T held fixed, in (MegaPascals CM3)/G.
+//
+//
+  double ab
+  double ar
+  double cvb
+  double cvr
+  double dp
+  double dpdr
+  double dpdrb
+  double dpdrr
+  double dpdtb
+  double dpdtr
+  double dpdx
+  double errtol
+  double gb
+  double gr
+  double hb
+  double hr
+  integer it
+  integer it_max = 50
+  double pb
+  double pp
+  double pr
+  double rho_max = 1.9E+00
+  double rho_min = 1.0E-08
+  double sb
+  double sr
+  double ub
+  double ur
+  double x
+  string ls_MB_String
+  string ls_MB_String_2
+//
+   errtol = 0.0000001
+
+//
+//  Refuse to handle zero or negative temperatures.
+//
+  if ( t <= 0.0E+00 ) then
+	ls_MB_String = f_LanguageString('###_-_FATAL_ERROR', '### - Fatal Error')
+	ls_MB_String = StrTran(ls_MB_String, '###', 'DENSE')
+	ls_MB_String_2 = f_LanguageString('THE_INPUT_TEMPERATURE_T_MUST_BE_POSITIVE.__INPUT_VALUE_WAS_T_=_###', 'The input temperature T must be positive.  Input value was T = ###')
+	ls_MB_String_2 = StrTran(ls_MB_String_2, '###', String(t))
+	MessageBox(ls_MB_String, ls_MB_String_2)
+//	MessageBox('DENSE - Fatal error','The input temperature T must be positive.  Input value was T = '+String(t))
+	return 
+//    write ( *, '(a)' ) ' '
+//    write ( *, '(a)' ) 'DENSE - Fatal error//'
+//    write ( *, '(a)' ) '  The input temperature T must be positive.'
+//    write ( *, '(a,g14.6)' ) '  Input value was T = ', t
+//    stop
+  end if
+//
+//  Refuse to handle zero or negative pressures.
+//
+  if ( p <= 0.0E+00 ) then
+	ls_MB_String = f_LanguageString('###_-_FATAL_ERROR', '### - Fatal Error')
+	ls_MB_String = StrTran(ls_MB_String, '###', 'DENSE')
+	ls_MB_String_2 = f_LanguageString('THE_INPUT_PRESSURE_P_MUST_BE_POSITIVE.__INPUT_VALUE_WAS_P_=_###', 'The input pressure P must be positive.  Input value was P = ###')
+	ls_MB_String_2 = StrTran(ls_MB_String_2, '###', String(p))
+	MessageBox(ls_MB_String, ls_MB_String_2)
+//  MessageBox('DENSE - Fatal error','The input pressure P must be positive.  Input value was P = '+String(p))
+	 return 
+//    write ( *, '(a)' ) ' '
+//    write ( *, '(a)' ) 'DENSE - Fatal error//'
+//    write ( *, '(a)' ) '  The input pressure P must be positive.'
+//    write ( *, '(a,g14.6)' ) '  Input value was P = ', p
+//    stop
+  end if
+
+  rho = rho_start
+  rho = max ( rho, rho_min )
+  rho = min ( rho, rho_max )
+
+  it = 1
+
+  DO WHILE it <= it_max
+    it ++
+	
+    resid ( t, rho, ar, cvr, dpdrr, dpdtr, gr, hr, pr, sr, ur )
+
+    base ( t, rho, ab, cvb, dpdrb, dpdtb, gb, hb, pb, sb, ub )
+
+    pp = pb + pr
+    dpdr = dpdrb + dpdrr
+//
+//  Check for negative DP/DRho, which characterizes the two-phase region.
+//
+    if ( dpdr <= 0.0E+00 ) then
+
+      if ( rho_start >= 0.2967E+00 ) then
+        rho = rho * 1.02E+00
+      else
+        rho = rho * 0.98E+00
+      end if
+
+      if ( it <= 10 ) then
+        //cycle
+			continue
+      end if
+
+    end if
+
+    dpdx = 1.1E+00 * dpdr
+    dpdx = max ( dpdx, 0.01E+00 )
+
+    dp = abs ( 1.0E+00 - pp / p )
+
+    if ( dp <= errtol OR &
+       ( rho > 0.3E+00 AND dp <= errtol ) OR &
+       ( rho > 0.7E+00 AND dp <= 10.0E+00 * errtol ) ) then
+      return
+    end if
+
+    x = ( p - pp ) / dpdx
+    if ( abs ( x ) > 0.1E+00 ) then
+      x = x * 0.1E+00 / abs ( x )
+    end if
+
+    rho = rho + x
+
+    rho = max ( rho, rho_min )
+    rho = min ( rho, rho_max )
+
+	LOOP
+	ls_MB_String = f_LanguageString('###_-_WARNING', '### - Warning')
+	ls_MB_String = StrTran(ls_MB_String, '###', 'DENSE')
+	ls_MB_String_2 = f_LanguageString('THE_ITERATION_DID_NOT_CONVERGE.__NUMBER_OF_ITERATIONS_WAS_@@@__LAST_ITERATE_WAS_###', 'The iteration did not converge.  Number of iterations was @@@  Last iterate was ###')
+	ls_MB_String_2 = StrTran(ls_MB_String_2, '@@@', String(it_max))
+	ls_MB_String_2 = StrTran(ls_MB_String_2, '###', String(rho))
+	MessageBox(ls_MB_String, ls_MB_String_2)
+//	MessageBox('DENSE - Warning','The iteration did not converge.  Number of iterations was '+string(it_max)+'  Last iterate was '+string( rho))
+	return 
+
+/*
+  write ( *, '(a)' ) ' '
+  write ( *, '(a)' ) 'DENSE - Warning//'
+  write ( *, '(a)' ) '  The iteration did not converge.'
+  write ( *, '(a,i6)' ) '  Number of iterations was ', it_max
+  write ( *, '(a,g14.6)' ) '  Last iterate was ', rho
+*/
+  return
+
+end subroutine
+

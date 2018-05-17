@@ -1,0 +1,20 @@
+﻿$PBExportHeader$f_disconnect_from_db.srf
+global type f_disconnect_from_db from function_object
+end type
+
+forward prototypes
+global function integer f_disconnect_from_db ()
+end prototypes
+
+global function integer f_disconnect_from_db ();string ls_App_Name
+integer li_Return
+
+ls_App_Name = MID(gs_Window_Title, POS(gs_Window_Title, " ") + 1)
+
+li_Return = RegistrySet("HKEY_LOCAL_MACHINE\Software\TechAssist\Mobile eSOMS\" + ls_App_Name, "Connected", RegString!, 'FALSE')
+
+DISCONNECT USING SQLCA ;
+
+RETURN SQLCA.SQLCode
+end function
+

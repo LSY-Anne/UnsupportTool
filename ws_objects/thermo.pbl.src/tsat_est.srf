@@ -1,0 +1,131 @@
+﻿$PBExportHeader$tsat_est.srf
+global type tsat_est from function_object
+end type
+
+forward prototypes
+global subroutine tsat_est (double p, ref double t)
+end prototypes
+
+global subroutine tsat_est (double p, ref double t);//
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*
+//
+//// TSAT_EST makes a rough estimate of the saturation temperature.
+//
+//
+//  Discussion:
+//
+//    The saturation temperature is also called the vapor temperature.
+//
+//  Modified:
+//
+//    02 February 2002
+//
+//  Reference:
+//
+//    Lester Haar, John Gallagher and George Kell,
+//    NBS/NRC Steam Tables:
+//    Thermodynamic and Transport Properties and Computer Programs
+//      for Vapor and Liquid States of Water in SI Units,
+//    Hemisphere Publishing Corporation, Washington, 1984,
+//    TJ270.H3
+//
+//    C A Meyer, R B McClintock, G J Silvestri, R C Spencer,
+//    ASME Steam Tables: Thermodynamic and Transport Properties of Steam,
+//    American Society of Mechanical Engineers, 1967.
+//
+//  Parameters:
+//
+//    Input, double P, the pressure, in MegaPascals.  The tabulated
+//    range for P is 
+//      0.00061173 MegaPascals <= P <= P_CRIT = 22.055 MegaPascals.  
+//    The input value of P must be positive.
+//
+//    Output, double T, the saturation temperature, 
+//    in degrees Kelvin.  This value will always be in the range
+//    [ 273.15, 647.126 ].
+//
+//  implicit none
+//
+  integer npol = 4
+//
+//  double, parameter, dimension ( 0:npol ) :: c = (/     372.83E+00, 27.7589E+00, 2.3819E+00, 0.24834E+00, 0.0193855E+00 /)
+	 
+  double c[] = {372.83E+00, 27.7589E+00, 2.3819E+00, 0.24834E+00, 0.0193855E+00}
+  double dp
+  double dt
+  double errtol
+  integer it
+  integer it_max = 8
+  double pl
+  double p_crit = 22.055E+00
+  double pp
+  double t_crit = 647.126E+00
+  double t_min = 273.15E+00
+  double t_old
+//
+//  errtol = sqrt ( .000001 )
+   errtol = 0.0000001
+//
+//  Refuse to handle zero or negative pressure.
+//
+/*
+  if ( p <= 0.0E+00 ) then
+    write ( *, '(a)' ) ' '
+    write ( *, '(a)' ) 'TSAT_EST - Fatal error//'
+    write ( *, '(a)' ) '  The input pressure must be positive//'
+    write ( *, '(a,g14.6)' ) '  Your value was P = ', p
+    stop
+  end if
+*/
+  if ( p > p_crit ) then
+    t = t_crit
+    return
+  end if
+//
+//  The initial estimate for T uses a polyonmial in the logarithm of P.
+//
+  pl = 2.302585E+00 + log ( p )
+
+   dpoly_val_horner ( npol, c, pl, t )
+
+  t = min ( t, t_crit )
+  t = max ( t, t_min )
+
+  dt = 0.0E+00
+
+  FOR it = 1 TO it_max
+
+    psat_est ( t, pp )
+
+     tdpsdt ( t, dp )
+
+    if ( abs ( p - pp ) < errtol * p ) then
+      return
+    end if
+
+    dt = t * ( p - pp ) / dp
+ 
+    t_old = t
+    t = t * ( 1.0E+00 + ( p - pp ) / dp )
+    t = min ( t, t_crit )
+    t = max ( t, t_min )
+
+    if ( abs ( dt ) < errtol * ( abs ( t ) + 1.0E+00 ) ) then
+      return
+    elseif ( abs ( t - t_old ) < errtol ) then
+      return
+    end if
+
+NEXT
+/*
+  write ( *, '(a)' ) ' '
+  write ( *, '(a)' ) 'TSAT_EST - Warning//'
+  write ( *, '(a)' ) '  The iteration did not converge.'
+  write ( *, '(a,i6)' ) '  Number of iterations was ', it_max
+  write ( *, '(a,g14.6)' ) '  Convergence tolerance was ', errtol
+  write ( *, '(a,g14.6)' ) '  Last iterate was ', t
+  write ( *, '(a,g14.6)' ) '  Last correction was ', dt
+*/
+  return
+end subroutine
+

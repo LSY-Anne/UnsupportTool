@@ -1,0 +1,11 @@
+﻿$PBExportHeader$get_current_user_id.srf
+global type get_current_user_id from function_object
+end type
+
+forward prototypes
+global function string get_current_user_id ()
+end prototypes
+
+global function string get_current_user_id ();RETURN guo_user.id
+end function
+

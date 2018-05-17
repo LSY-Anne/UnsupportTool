@@ -1,0 +1,18 @@
+﻿$PBExportHeader$f_evaluate_expression.srf
+global type f_evaluate_expression from function_object
+end type
+
+forward prototypes
+global function string f_evaluate_expression (string as_expression)
+end prototypes
+
+global function string f_evaluate_expression (string as_expression);IF Empty(as_Expression) THEN
+	as_Expression = ''
+ELSE
+	as_Expression = StrTran(as_Expression, "'", '"')
+	as_Expression = f_Purge_Spaces(as_Expression)
+END IF
+
+RETURN ''//Compile(as_Expression)
+end function
+

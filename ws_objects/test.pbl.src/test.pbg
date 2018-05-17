@@ -1,0 +1,10 @@
+﻿Save Format v3.0(19990112)
+@begin Libraries
+ "test.pbl" "";
+@end;
+@begin Objects 
+ "test.sra" "test.pbl";
+ "p_test_ejbclientproxy.srj" "test.pbl";
+ "p_test_exe.srj" "test.pbl";
+ "p_test_wsproxy.srj" "test.pbl";
+@end;

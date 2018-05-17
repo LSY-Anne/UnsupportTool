@@ -1,0 +1,40 @@
+﻿$PBExportHeader$f_get_column_width.srf
+global type f_get_column_width from function_object
+end type
+
+forward prototypes
+global function long f_get_column_width (string as_table, string as_column)
+end prototypes
+
+global function long f_get_column_width (string as_table, string as_column);long ll_Num_Rows
+long ll_Data_Width
+datastore lds_temp
+string ls_SQL
+
+// Returns column width for passedtable/column, -1 if either are blank and -2 if they are not found in the system views
+
+IF Empty(as_table) OR Empty(as_column) THEN
+	ll_Data_Width = -1
+ELSE
+	lds_temp = CREATE datastore
+	ls_SQL = " &
+	SELECT a.width &
+	  FROM SYSTABCOL a, &
+			 SYSTAB b &
+	 WHERE ( a.column_name = '" + as_column + "' ) &
+		AND ( a.table_id = b.table_id ) &
+		AND ( b.table_name = '" + as_table + "' ) "
+	
+	ll_Num_Rows = f_Datastore_From_Sql(ls_Sql, lds_temp)
+	IF ( ll_Num_Rows = 1 ) THEN
+		ll_Data_Width = lds_temp.GetItemnumber(1, 1)
+	ELSE
+		ll_Data_Width = -2
+	END IF
+	lds_temp.Reset()
+	DESTROY lds_temp
+END IF
+
+RETURN ll_Data_Width
+end function
+

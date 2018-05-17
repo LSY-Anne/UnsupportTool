@@ -1,0 +1,33 @@
+﻿$PBExportHeader$f_copy_log_files.srf
+global type f_copy_log_files from function_object
+end type
+
+forward prototypes
+global subroutine f_copy_log_files (string ls_from_folder, string ls_to_folder)
+end prototypes
+
+global subroutine f_copy_log_files (string ls_from_folder, string ls_to_folder);boolean lb_Return
+string ls_From_File
+string ls_To_File
+integer li_Return
+string ls_File
+integer li_Count
+integer li_Num_Files
+string ls_Filespec
+
+IF f_Delete_Log_Files(ls_To_Folder) THEN
+	ls_Filespec = "*.LOG"
+	IF w_main.ddlb_backup.DirList(ls_From_Folder + "\" + ls_Filespec, 0) THEN
+		li_Num_Files = w_main.ddlb_backup.TotalItems()
+		FOR li_Count = 1 TO li_Num_Files
+			ls_File = w_main.ddlb_backup.Text(li_Count)
+			IF ( LEN(ls_File) = 12 ) THEN
+				ls_From_File = ls_From_Folder + "\" + ls_File
+				ls_To_File = ls_To_Folder + "\" + ls_File
+				li_Return = FileCopy(ls_From_File, ls_To_File)
+			END IF
+		NEXT
+	END IF
+END IF
+end subroutine
+

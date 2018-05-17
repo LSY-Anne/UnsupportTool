@@ -1,0 +1,11 @@
+﻿$PBExportHeader$sampstdlastx.srf
+global type sampstdlastx from function_object
+end type
+
+forward prototypes
+global function string sampstdlastx (integer sta, integer count)
+end prototypes
+
+global function string sampstdlastx (integer sta, integer count);RETURN GenLastX(sta,count,"SAMPSTD")
+end function
+

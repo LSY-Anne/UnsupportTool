@@ -1,0 +1,6 @@
+﻿$PBExportHeader$s_ulongs.srs
+global type s_ulongs from structure
+	ulong		ul_1
+	ulong		ul_2
+end type
+

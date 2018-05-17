@@ -1,0 +1,11 @@
+﻿$PBExportHeader$avemultsta.srf
+global type avemultsta from function_object
+end type
+
+forward prototypes
+global function string avemultsta (string ls_station_list)
+end prototypes
+
+global function string avemultsta (string ls_station_list);RETURN genmultsta(ls_station_list,'AVE')
+end function
+

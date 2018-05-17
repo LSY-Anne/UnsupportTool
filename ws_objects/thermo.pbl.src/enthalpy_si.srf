@@ -1,0 +1,24 @@
+﻿$PBExportHeader$enthalpy_si.srf
+global type enthalpy_si from function_object
+end type
+
+forward prototypes
+global function double enthalpy_si (double t, double p)
+end prototypes
+
+global function double enthalpy_si (double t, double p);double rho, a, cjth, cjtt, cp, cv, dpdr, dpdt, g, h, s, u , rho_start
+
+IF t = 0 OR p = 0 THEN
+	SetNull(rho)
+	RETURN rho
+END IF
+
+rho_start	= .01
+
+dense( p , t , rho_start , rho , dpdr )
+
+therm(t, rho, a, cjth, cjtt, cp, cv, dpdr, dpdt, g, h, p, s, u)
+
+RETURN h
+end function
+

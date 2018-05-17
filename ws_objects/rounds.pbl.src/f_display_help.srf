@@ -1,0 +1,100 @@
+﻿$PBExportHeader$f_display_help.srf
+global type f_display_help from function_object
+end type
+
+forward prototypes
+global subroutine f_display_help (string as_window_name)
+end prototypes
+
+global subroutine f_display_help (string as_window_name);string ls_Link
+string ls_Window_Name
+
+ls_Window_Name = as_Window_Name
+ls_Link = "#About Mobile eSOMS for Operator Rounds"
+CHOOSE CASE ls_Window_Name
+	CASE 'w_main'
+		IF IsValid(w_main) THEN
+			IF w_main.sle_login_id.Visible THEN
+				ls_Link = "#Login / Logout"
+			END IF
+		END IF
+	CASE 'w_tour_parameters'
+		IF IsValid(w_tour_parameters) THEN
+			ls_Link = "#Tour Parameters"
+		END IF
+	CASE 'w_tour'
+		IF IsValid(w_Tour) THEN
+			CHOOSE CASE w_tour.tab_tour.SelectedTab
+				CASE 1
+					ls_Link = "#Reading Tab"
+				CASE 2
+					ls_Link = "#List Tab"
+				CASE 3
+					ls_Link = "#Alerts Tab"
+				CASE 4
+					ls_Link = "#Notes Tabs"
+				CASE 5
+					ls_Link = "#History Tabs"
+				CASE 6
+					ls_Link = "#Multi-Readings Tab"
+				CASE 7
+					ls_Link = "#Documents Tab"
+			END CHOOSE
+		END IF
+	CASE 'w_multi-reading'
+		IF IsValid(w_multi_reading) THEN
+			ls_Link = "#Multi-Readings Tab"
+		END IF
+	CASE 'w_documents'
+		IF IsValid(w_documents) THEN
+			ls_Link = "#Documents Tab"
+		END IF
+	CASE 'w_scanning'
+		IF IsValid(w_scanning) THEN
+			ls_Link = "#Find By Scan Code"
+		END IF
+	CASE 'w_abnormal_equipment'
+		IF IsValid(w_abnormal_equipment) THEN
+			ls_Link = "#Abnormal Equipment"
+		END IF
+	CASE 'w_abnormal_equipment_dw'
+		IF IsValid(w_abnormal_equipment_dw) THEN
+			ls_Link = "#Abnormal Equipment"
+		END IF
+	CASE 'w_scratchpad'
+		IF IsValid(w_scratchpad) THEN
+			ls_Link = "#Scratch Pad"
+		END IF
+	CASE 'w_preferences_dw'
+		IF IsValid(w_preferences_dw) THEN
+			ls_Link = "#Preferences"
+		END IF
+	CASE 'w_backup_location'
+		IF IsValid(w_backup_location) THEN
+			ls_Link = "#Backup File Location"
+		END IF
+	CASE 'w_delete_tour'
+		IF IsValid(w_delete_tour) THEN
+			ls_Link = "#Delete Tour"
+		END IF
+	CASE 'w_select_tour'
+		IF IsValid(w_select_tour) THEN
+			ls_Link = "#Open Tour"
+		END IF
+//	CASE 'w_find_by_scanning'
+//		IF IsValid(w_find_by_scanning) THEN
+//			ls_Link = "#Find By Scan Code"
+//		END IF
+END CHOOSE
+
+//IF NOT CreateProcess_CE("PegHelp.exe", "file:\Windows\OpRoundsHelp.htm" + ls_Link, 0, 0, 0, 0, 0, '', 0, 0) THEN
+//	MessageBox('Error', 'Unable to load help.', Exclamation!)
+//END IF
+
+//Run  ("peghelp.exe \Windows\OpRoundsHelp.htm" + ls_Link)
+
+//MessageBox('1.1', 'ls_Window_Name = ' + ls_Window_Name + '~n~rls_Link = ' + ls_Link)
+Run  ("peghelp.exe file:\Windows\OpRoundsHelp.htm" + ls_Link)
+
+end subroutine
+

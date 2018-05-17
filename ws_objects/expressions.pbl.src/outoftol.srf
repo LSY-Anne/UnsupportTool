@@ -1,0 +1,77 @@
+﻿$PBExportHeader$outoftol.srf
+global type outoftol from function_object
+end type
+
+forward prototypes
+global function long outoftol (datetime ldt_dt, long ll_tour, long ll_rev_no, long ll_sta, long ll_shift_no, string ls_rd, long ll_reading_id)
+end prototypes
+
+global function long outoftol (datetime ldt_dt, long ll_tour, long ll_rev_no, long ll_sta, long ll_shift_no, string ls_rd, long ll_reading_id);boolean lb_oos
+long ll_less_than,ll_greater_than,ll_spec_setting,ll_oos
+string ls_tol,ls_etol,ls_tol_sta
+integer li_sta_count,li_sta,I,li_return,li_seq
+dec ldb_min,ldb_max,ldb_diff
+
+SELECT tol,
+       etol,
+		 tol_sta 
+  INTO :ls_tol,
+       :ls_etol,
+		 :ls_tol_sta 
+  FROM station
+ WHERE tour = :ll_tour AND
+       rev_no = :ll_rev_no AND
+       sta = :ll_sta;
+
+IF Empty(ls_tol_sta) THEN
+	return 0
+END IF
+
+li_sta_count = StringCount(",",ls_tol_sta) + 1
+
+IF NOT Empty(ls_etol) THEN
+	ls_tol = Compile(ls_etol,ldt_dt,ll_tour,ll_sta,ll_shift_no,ll_reading_id)
+END IF
+
+SELECT rd  
+  INTO :ls_rd  
+  FROM history  
+ WHERE tour = :ll_tour AND  
+	 	 sta = :ll_sta AND  
+		 shift_no = :ll_shift_no AND  
+		 dt = :ldt_dt AND
+		 reading_id = 0 ;
+
+ldb_min = dec(ls_rd)
+ldb_max = ldb_min
+
+
+FOR I = 1 TO li_sta_count
+
+	li_sta = ParseRelated(ls_tol_sta,I)
+
+  SELECT rd  
+    INTO :ls_rd  
+    FROM history  
+   WHERE tour = :ll_tour AND  
+         sta = :li_sta AND  
+         shift_no = :ll_shift_no AND  
+         dt = :ldt_dt AND
+			reading_id = 0 ;
+
+	ldb_min = Min(ldb_min,dec(ls_rd))
+	ldb_max = Max(ldb_max,dec(ls_rd))
+
+NEXT
+
+ldb_diff = ldb_max - ldb_min
+
+IF (ldb_diff) > dec(ls_tol) THEN
+	li_return = 1
+ELSE
+	li_return = 0	
+END IF
+
+RETURN li_return
+end function
+

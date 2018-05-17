@@ -1,0 +1,11 @@
+﻿$PBExportHeader$fahr2kelvin.srf
+global type fahr2kelvin from function_object
+end type
+
+forward prototypes
+global function double fahr2kelvin (double ldb_deg_fahr)
+end prototypes
+
+global function double fahr2kelvin (double ldb_deg_fahr);RETURN  rankine2kelvin(fahr2rankine(ldb_deg_fahr))
+end function
+

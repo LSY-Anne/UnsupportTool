@@ -1,0 +1,103 @@
+﻿$PBExportHeader$outofspec.srf
+global type outofspec from function_object
+end type
+
+forward prototypes
+global function long outofspec (datetime ldt_dt, long ll_tour, long ll_rev_no, long ll_sta, long ll_shift_no, string ls_rd, long ll_reading_id)
+end prototypes
+
+global function long outofspec (datetime ldt_dt, long ll_tour, long ll_rev_no, long ll_sta, long ll_shift_no, string ls_rd, long ll_reading_id);boolean lb_oos
+long ll_row,ll_less_than,ll_greater_than,ll_spec_setting,ll_oos
+string ls_minimum,ls_maximum,ls_emin,ls_emax
+
+IF Empty(ls_rd) THEN
+	RETURN 0
+END IF
+
+lb_oos	= FALSE
+SetNull(ll_spec_setting)
+
+SELECT spec_setting
+  INTO :ll_spec_setting
+  FROM quick_keys
+ WHERE tour = :ll_tour AND
+       rev_no = :ll_rev_no AND
+		 sta = :ll_sta AND
+		 reading = :ls_rd ;
+
+IF ll_spec_setting = 0 THEN
+	RETURN 0
+ELSEIF ll_spec_setting = 2 THEN
+	RETURN 1
+END IF
+
+SELECT minimum,
+       maximum,
+       emin,
+       emax,
+		 less_than,
+		 greater_than
+  INTO :ls_minimum,
+       :ls_maximum,
+       :ls_emin,
+       :ls_emax,
+		 :ll_less_than,
+		 :ll_greater_than
+  FROM station
+ WHERE tour = :ll_tour AND
+       rev_no = :ll_rev_no AND
+       sta = :ll_sta;
+
+//SQLError()
+
+IF NOT Empty(ls_emin) THEN
+//f_debug('B - outofspec call to compile for min sta: ' + String(ll_sta))
+	ls_minimum = Compile(ls_emin,ldt_dt,ll_tour,ll_sta,ll_shift_no,ll_reading_id)
+//f_debug('A - outofspec call to compile for min sta: ' + String(ll_sta))
+END IF
+
+IF NOT Empty(ls_emax) THEN
+//f_debug('B - outofspec call to compile for max sta: ' + String(ll_sta))
+	ls_maximum = Compile(ls_emax,ldt_dt,ll_tour,ll_sta,ll_shift_no,ll_reading_id)
+//f_debug('A - outofspec call to compile for max sta: ' + String(ll_sta))
+END IF
+
+IF NOT Empty(ls_minimum) AND NOT lb_oos THEN
+	IF IsNumber(ls_rd) THEN
+		IF ll_greater_than = 1 THEN
+			lb_oos = NOT N(ls_rd) > N(ls_minimum)
+		ELSE
+			lb_oos = NOT N(ls_rd) >= N(ls_minimum)
+		END IF
+	END IF		
+END IF
+
+IF NOT Empty(ls_maximum) AND NOT lb_oos THEN
+	IF IsNumber(ls_rd) THEN
+		IF ll_less_than = 1 THEN
+			lb_oos = NOT N(ls_rd) < N(ls_maximum)
+		ELSE
+			lb_oos = NOT N(ls_rd) <= N(ls_maximum)
+		END IF
+	END IF		
+END IF
+
+IF NOT lb_oos THEN
+	IF NOT IsNumber(ls_minimum) AND NOT IsNumber(ls_maximum) AND NOT Empty(ls_minimum) AND NOT Empty(ls_maximum) THEN
+		lb_oos = Trim(ls_rd) <> Trim(ls_minimum) AND Trim(ls_rd) <> Trim(ls_maximum)
+	ELSEIF NOT IsNumber(ls_minimum) AND NOT Empty(ls_minimum) THEN
+		lb_oos = Trim(ls_rd) <> Trim(ls_minimum)
+	ELSEIF NOT IsNumber(ls_maximum) AND NOT Empty(ls_maximum) THEN
+		lb_oos = Trim(ls_rd) <> Trim(ls_maximum)
+	END IF
+END IF
+
+IF lb_oos THEN
+	ll_oos = 1
+ELSE
+	ll_oos = 0
+END IF
+
+RETURN ll_oos
+end function
+

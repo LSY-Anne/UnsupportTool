@@ -1,0 +1,22 @@
+﻿$PBExportHeader$ds_multi_station.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=1 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no grid.lines=0 )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=long updatewhereclause=yes name=sta dbname="history.sta" )
+ column=(type=char(40) updatewhereclause=yes name=rd dbname="history.rd" )
+ retrieve="  SELECT sta,   
+         rd  
+    FROM history  
+   WHERE ( tour = :li_tour ) AND  
+         ( dt = :ldt_dt ) AND  
+         ( shift_no = :li_shift_no ) AND 
+         ( reading_id = 0 ) 
+ORDER BY sta ASC   
+" arguments=(("li_tour", number),("ldt_dt", datetime),("li_shift_no", number)) )
+column(band=detail id=1 alignment="1" tabsequence=32766 border="0" color="0" x="9" y="4" height="56" width="329" format="[general]" html.valueishtml="0"  name=sta visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes   font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="347" y="4" height="56" width="439" format="[general]" html.valueishtml="0"  name=rd visible="1" edit.limit=15 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes   font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="0" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" netscapelayers="0" )
+ 

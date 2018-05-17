@@ -1,0 +1,8 @@
+Save Format v3.0(19990112)
+@begin Projects
+ 0 "1&clearances_exe&clearances.pkl";
+@end;
+LibList "clearances.pkl;support.pkl;mobilink_cl.pkl;mobilink_common.pkl";
+applib "clearances.pkl";
+type "pb";
+appname "clearances";

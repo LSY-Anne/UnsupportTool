@@ -1,0 +1,257 @@
+﻿$PBExportHeader$genlastx.srf
+global type genlastx from function_object
+end type
+
+forward prototypes
+global function string genlastx (integer ll_sta, integer count, string return_type)
+end prototypes
+
+global function string genlastx (integer ll_sta, integer count, string return_type);long ll_Tour, ll_Sequence, ll_Shift_No, ll_Shift_Start, ll_Shift_End, ll_Shift, ll_count, ll_Retrieved
+string ls_user_name,ls_reading,ls_app_name
+//string ls_date,ls_end
+string ls_sql
+datetime ld_start,ld_end,ld_start_return,ld_end_return,ld_dt,ld_date
+dec ldb_reading,ldb_count,ldb_min,ldb_max,ldb_range,ldb_sum,ldb_average
+dec ldb_r2_sum,ldb_std,ldb_sampstd
+integer li_Return
+DataStore ds_lastx
+ds_lastx = CREATE datastore
+
+//**ll_Tour		= w_tour.ids_evaluate.object.tour[1]
+//**ll_Shift_No	= w_tour.ids_evaluate.object.shift_no[1]
+//**ld_date		= DateTime(Date(w_tour.ids_evaluate.object.dt[1]))
+ll_shift_no		= gsu_Tour_Parameters[gi_Current_Tour].shift_no//**
+ll_tour			= gsu_Tour_Parameters[gi_Current_Tour].tour_number//**
+ld_date 			= DateTime(gsu_Tour_Parameters[gi_Current_Tour].tour_date)//**
+
+ld_end		= DateTime(RelativeDate(Date(ld_date),0))  // Changed from 1 to 0 on 2/24/98 by SAE as per Scott Gordon
+//ls_end		= String(ld_end,date_format)
+//ls_date		= String(ld_date,date_format)
+ldb_reading	= 0
+ldb_count	= 0
+ldb_sum		= 0
+ldb_r2_sum	= 0
+ldb_max		= dec("-1E18")
+ldb_min		= dec("1E18")
+ll_count		= 1
+
+//ds_lastx.DataObject = 'dw_lastx_datastore'
+//li_Return = ds_lastx.SetTransObject( SQLCA )
+//ll_Retrieved = ds_lastx.Retrieve(ll_Tour, ll_Sta, ld_Date, ll_Shift_No)
+
+ls_Sql = " &
+  SELECT rd,dt,shift_no &
+    FROM history &
+   WHERE ( tour = " + String(ll_tour) + " ) AND &
+         ( sta = " + String(ll_sta) + " ) AND &
+         ( ( dt < '" + String(ld_Date, 'yyyy/mm/dd') + "' ) OR &
+         ( dt = '" + String(ld_Date, 'yyyy/mm/dd') + "' AND shift_no <= " + String(ll_shift_no) + " ) ) AND &
+         ( reading_id = 0 ) &
+ORDER BY dt DESC , shift_no DESC "
+
+ll_Retrieved = f_Datastore_From_Sql(ls_Sql, ds_lastx)
+//MessageBox('Test',String(ll_Tour)+' '+String(li_sta)+' '+String(ld_date,'mm-dd-yyyy')+' '+String(ll_Shift_No)+' '+String(ll_Retrieved))
+
+IF ( ll_Retrieved > 0 ) THEN
+	DO WHILE TRUE
+		IF ll_count > ds_lastx.RowCount() THEN
+			EXIT
+		ELSE
+			ls_reading	= ds_lastx.object.rd[ll_count]
+			ld_dt			= ds_lastx.object.dt[ll_count]
+			ll_Shift		= ds_lastx.object.shift_no[ll_count]
+			ll_count = ll_count + 1
+		END IF
+		
+		IF IsNumber(ls_reading) THEN
+			ldb_count	= ldb_count + 1
+			ldb_reading = N(ls_reading)
+			ldb_sum		= ldb_sum + ldb_reading
+			ldb_min		= Min(ldb_min,ldb_reading)
+			ldb_max		= Max(ldb_max,ldb_reading)
+			ldb_r2_sum	= ldb_r2_sum + ldb_reading ^ 2
+			IF ldb_count = 1 THEN
+				ld_end_return	= ld_dt
+				ll_Shift_End	= ll_Shift
+			END IF
+			ld_start_return	= ld_dt
+			ll_Shift_Start		= ll_Shift
+		END IF
+		IF ldb_count = count THEN
+			EXIT
+		END IF
+	LOOP
+END IF
+
+DESTROY ds_lastx ;
+
+//SQLError()
+
+IF ldb_count = 0 THEN
+	ls_reading	= "Reading Not Found"
+ELSEIF return_type = "MIN" THEN
+	ls_reading	= String(ldb_min)
+ELSEIF return_type = "MAX" THEN
+	ls_reading	= String(ldb_max)
+ELSEIF return_type = "COUNT" THEN
+	ls_reading	= String(ldb_count)
+ELSEIF return_type = "SUM" THEN
+	ls_reading	= String(ldb_sum)
+ELSEIF return_type = "AVERAGE"  OR return_type = "AVE" THEN
+	ldb_average	= ldb_sum/ldb_count
+	ls_reading	= String(ldb_average)
+ELSEIF return_type = "RANGE" THEN
+	ldb_range	= ldb_max - ldb_min
+	ls_reading	= String(ldb_range)
+ELSEIF return_type = "STD" OR return_type = "VAR" THEN
+	IF (ldb_count - ldb_average^2) <> 0 THEN
+		ldb_average	= ldb_sum/ldb_count
+		ldb_std		= Sqrt(ldb_r2_sum / ldb_count - ldb_average^2 )
+		IF return_type = "STD" THEN
+			ls_reading	= String(ldb_std)
+		ELSE
+			ls_reading	= String(ldb_std^2)
+		END IF
+	ELSE
+		ls_reading	= "Insufficient Data"
+	END IF
+ELSEIF return_type = "SAMPSTD" OR return_type = "SAMPVAR" THEN
+	IF ldb_count > 1 THEN
+		ldb_average	= ldb_sum/ldb_count
+		ldb_sampstd	= Sqrt( (ldb_r2_sum - ldb_sum^2/ldb_count) / (ldb_count - 1) )
+		IF  return_type = "SAMPSTD" THEN
+			ls_reading	= String(ldb_sampstd)
+		ELSE
+			ls_reading	= String(ldb_sampstd^2)
+		END IF
+	ELSE
+		ls_reading	= "Insufficient Data"
+	END IF
+ELSEIF return_type = "STARTDATE" THEN
+	ls_reading	= String(ld_start_return,"mm-dd-yyyy")+" "+String(ll_Shift_Start)
+ELSEIF return_type = "ENDDATE" THEN
+	ls_reading	= String(ld_end_return,"mm-dd-yyyy")+" "+String(ll_Shift_End)
+ELSE
+	ls_reading	= "Invalid Type"
+END IF
+
+RETURN Upper(ls_reading)
+
+//integer li_tour , ll_Sequence,li_sta , ll_Shift_No,ll_Shift_Start,ll_Shift_End,ll_Shift
+//string ls_user_name,ls_reading,ls_app_name,ls_date,ls_end,ls_sql
+//datetime ld_start,ld_end,ld_date,ld_start_return,ld_end_return,ld_dt
+//dec ldb_reading,ldb_count,ldb_min,ldb_max,ldb_range,ldb_sum,ldb_average
+//dec ldb_r2_sum,ldb_std,ldb_sampstd
+//DataStore ds_lastx
+//long ll_count,ll_Retrieved, ll_Row_Count
+//integer li_rev_no
+//
+//li_tour		= gsu_Tour_Parameters[gi_Current_Tour].tour_number
+//li_rev_no	= gsu_Tour_Parameters[gi_Current_Tour].rev_no
+//li_sta		= sta
+//ll_Shift_No	= gsu_Tour_Parameters[gi_Current_Tour].shift_no
+//ld_date		= DateTime(gsu_Tour_Parameters[gi_Current_Tour].tour_date)
+//ld_end		= DateTime(RelativeDate(Date(ld_date),0))  // Changed from 1 to 0 on 2/24/98 by SAE as per Scott Gordon
+//ls_end		= String(ld_end,date_format)
+//ls_date		= String(ld_date,date_format)
+//ldb_reading	= 0
+//ldb_count	= 0
+//ldb_sum		= 0
+//ldb_r2_sum	= 0
+//ldb_max		= dec("-1E308")
+//ldb_min		= dec("1E308")
+//ll_count		= 1
+//
+//ds_lastx = CREATE datastore
+//ds_lastx.DataObject = 'dw_lastx_datastore'
+//ds_lastx.SetTransObject( SQLCA )
+//
+//ll_Retrieved = ds_lastx.Retrieve(li_tour,li_rev_no,li_sta,ld_date,ll_Shift_No)
+//
+////MessageBox('Test',String(li_tour)+' '+String(li_sta)+' '+String(ld_date,'mm-dd-yyyy')+' '+String(ll_Shift_No)+' '+String(ll_Retrieved))
+//ll_Row_Count = ds_lastx.RowCount()
+//DO WHILE TRUE
+//	IF ll_count > ll_Row_Count THEN
+//		EXIT
+//	ELSE
+//		ls_reading	= ds_lastx.object.rd[ll_count]
+//		ld_dt			= ds_lastx.object.dt[ll_count]
+//		ll_Shift		= ds_lastx.object.shift_no[ll_count]
+//		ll_count = ll_count + 1
+//	END IF
+//	
+//	IF IsNumber(ls_reading) THEN
+//		ldb_count	= ldb_count + 1
+//		ldb_reading = N(ls_reading)
+//		ldb_sum		= ldb_sum + ldb_reading
+//		ldb_min		= Min(ldb_min,ldb_reading)
+//		ldb_max		= Max(ldb_max,ldb_reading)
+//		ldb_r2_sum	= ldb_r2_sum + ldb_reading ^ 2
+//		IF ldb_count = 1 THEN
+//			ld_end_return	= ld_dt
+//			ll_Shift_End	= ll_Shift
+//		END IF
+//		ld_start_return	= ld_dt
+//		ll_Shift_Start		= ll_Shift
+//	END IF
+//	IF ldb_count = count THEN
+//		EXIT
+//	END IF
+//LOOP
+//
+//
+//DESTROY ds_lastx ;
+//
+////SQLError()
+//
+//IF ldb_count = 0 THEN
+//	ls_reading	= "Rd Not Found"
+//ELSEIF return_type = "MIN" THEN
+//	ls_reading	= String(ldb_min)
+//ELSEIF return_type = "MAX" THEN
+//	ls_reading	= String(ldb_max)
+//ELSEIF return_type = "COUNT" THEN
+//	ls_reading	= String(ldb_count)
+//ELSEIF return_type = "SUM" THEN
+//	ls_reading	= String(ldb_sum)
+//ELSEIF return_type = "AVERAGE"  OR return_type = "AVE" THEN
+//	ldb_average	= ldb_sum/ldb_count
+//	ls_reading	= String(ldb_average)
+//ELSEIF return_type = "RANGE" THEN
+//	ldb_range	= ldb_max - ldb_min
+//	ls_reading	= String(ldb_range)
+//ELSEIF return_type = "STD" OR return_type = "VAR" THEN
+//	IF (ldb_count - ldb_average^2) <> 0 THEN
+//		ldb_average	= ldb_sum/ldb_count
+//		ldb_std		= Sqrt(ldb_r2_sum / ldb_count - ldb_average^2 )
+//		IF return_type = "STD" THEN
+//			ls_reading	= String(ldb_std)
+//		ELSE
+//			ls_reading	= String(ldb_std^2)
+//		END IF
+//	ELSE
+//		ls_reading	= "Insuff. Data"
+//	END IF
+//ELSEIF return_type = "SAMPSTD" OR return_type = "SAMPVAR" THEN
+//	IF ldb_count > 1 THEN
+//		ldb_average	= ldb_sum/ldb_count
+//		ldb_sampstd	= Sqrt( (ldb_r2_sum - ldb_sum^2/ldb_count) / (ldb_count - 1) )
+//		IF  return_type = "SAMPSTD" THEN
+//			ls_reading	= String(ldb_sampstd)
+//		ELSE
+//			ls_reading	= String(ldb_sampstd^2)
+//		END IF
+//	ELSE
+//		ls_reading	= "Insuff. Data"
+//	END IF
+//ELSEIF return_type = "STARTDATE" THEN
+//	ls_reading	= String(ld_start_return,"mm-dd-yyyy")+" "+String(ll_Shift_Start)
+//ELSEIF return_type = "ENDDATE" THEN
+//	ls_reading	= String(ld_end_return,"mm-dd-yyyy")+" "+String(ll_Shift_End)
+//ELSE
+//	ls_reading	= "Invalid Type"
+//END IF
+//
+//return ls_reading
+end function
+

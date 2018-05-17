@@ -1,0 +1,21 @@
+﻿$PBExportHeader$f_check_user.srf
+global type f_check_user from function_object
+end type
+
+forward prototypes
+global function boolean f_check_user (integer ai_tour, boolean ab_display_message)
+end prototypes
+
+global function boolean f_check_user (integer ai_tour, boolean ab_display_message);boolean lb_Return
+string ls_Right
+
+ls_Right = 'OR' + f_PadL(String(ai_Tour), 3, '0')
+lb_Return = ( guo_user.Is_Granted(ls_Right, 20) > 0 )
+
+IF NOT lb_Return AND ab_Display_Message THEN
+	MessageBox(f_LanguageString('WARNING', 'Warning'), f_LanguageString('YOU_DO_NOT_HAVE_THE_PROPER_SECURITY_RIGHT_TO_OPEN_THIS_ITEM.', 'You do not have the proper security right to open this item.'))
+END IF
+
+RETURN lb_Return
+end function
+

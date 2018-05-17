@@ -1,0 +1,67 @@
+﻿$PBExportHeader$hourdiff.srf
+global type hourdiff from function_object
+end type
+
+forward prototypes
+global function string hourdiff (string ls_start_date, string ls_end_date)
+end prototypes
+
+global function string hourdiff (string ls_start_date, string ls_end_date);double ldb_hours
+///*
+//double ldb_hours , ldb_days , ldb_seconds
+//
+//ldb_days		= DaysAfter(   Date(Mid(ls_start_date,1,10)),Date(Mid(ls_end_date,1,10)))
+//ldb_seconds	= SecondsAfter(Time(Mid(ls_start_date,12,2)+":"+Mid(ls_start_date,14,2)),Time(Mid(ls_end_date,12,2)+":"+Mid(ls_end_date,14,2)))
+//
+//ldb_hours	= ldb_days*24 + ldb_seconds/3600
+//*/
+
+ldb_hours	= Double(SecondDiff(ls_start_date,ls_end_date)) / 3600.0
+
+RETURN String(ldb_hours)
+
+//dec ldb_hours , ldb_days , ldb_seconds
+//integer li_Year
+//integer li_Month
+//integer li_Day
+//date ld_start_date, ld_end_date
+//
+//// 2009-02-18 - RPR corrected for localization WRT Date(~string~) and the string is NOT in the localized format.
+////              This is still expecting a string in the format mm-dd-yyyy
+//li_Year	= Integer(Mid(ls_start_date,7,4))
+//li_Month	= Integer(Mid(ls_start_date,1,2))
+//li_Day	= Integer(Mid(ls_start_date,4,2))
+//ld_start_date	= Date(li_Year, li_Month, li_Day)
+//
+//li_Year	= Integer(Mid(ls_end_date,7,4))
+//li_Month	= Integer(Mid(ls_end_date,1,2))
+//li_Day	= Integer(Mid(ls_end_date,4,2))
+//ld_end_date	= Date(li_Year, li_Month, li_Day)
+//
+//ldb_days		= DaysAfter(ld_start_date, ld_end_date)
+//ldb_seconds	= SecondsAfter(Time(Mid(ls_start_date,12,2)+":"+Mid(ls_start_date,14,2)),Time(Mid(ls_end_date,12,2)+":"+Mid(ls_end_date,14,2)))
+//
+//ldb_hours	= ldb_days*24 + ldb_seconds/3600
+////IF Empty(String(ldb_hours)) THEN
+////	Messagebox('hourdiff', 'NULL')
+////ELSE
+////	Messagebox('hourdiff', String(ldb_hours))
+////END IF
+//RETURN String(ldb_hours)
+//
+//
+//
+////dec ldb_hours , ldb_days , ldb_seconds
+////
+////ldb_days		= DaysAfter(   Date(Mid(ls_start_date,1,10)),Date(Mid(ls_end_date,1,10)))
+////ldb_seconds	= SecondsAfter(Time(Mid(ls_start_date,12,2)+":"+Mid(ls_start_date,14,2)),Time(Mid(ls_end_date,12,2)+":"+Mid(ls_end_date,14,2)))
+////
+////ldb_hours	= ldb_days*24 + ldb_seconds/3600
+//////IF Empty(String(ldb_hours)) THEN
+//////	Messagebox('hourdiff', 'NULL')
+//////ELSE
+//////	Messagebox('hourdiff', String(ldb_hours))
+//////END IF
+////RETURN String(ldb_hours)
+end function
+

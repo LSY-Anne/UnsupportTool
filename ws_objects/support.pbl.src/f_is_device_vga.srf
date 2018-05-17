@@ -1,0 +1,22 @@
+﻿$PBExportHeader$f_is_device_vga.srf
+global type f_is_device_vga from function_object
+end type
+
+forward prototypes
+global function boolean f_is_device_vga ()
+end prototypes
+
+global function boolean f_is_device_vga ();boolean lb_VGA
+
+CHOOSE CASE g_env.ScreenHeight
+	CASE 240, 320
+		lb_VGA = FALSE
+	CASE 480, 640
+		lb_VGA = TRUE
+	CASE ELSE
+		lb_VGA = TRUE
+END CHOOSE
+
+RETURN lb_VGA
+end function
+

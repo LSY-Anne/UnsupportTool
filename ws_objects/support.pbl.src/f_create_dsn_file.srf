@@ -1,0 +1,34 @@
+﻿$PBExportHeader$f_create_dsn_file.srf
+global type f_create_dsn_file from function_object
+end type
+
+forward prototypes
+global subroutine f_create_dsn_file ()
+end prototypes
+
+global subroutine f_create_dsn_file ();integer li_Return
+integer li_File
+string ls_DSN_Text
+string ls_DSN_File
+
+ls_DSN_File = "\Windows\eSOMS.DSN"
+//ls_DSN_File = "\eSOMS.DSN"
+
+ls_DSN_Text = "&
+[ODBC]" + CHAR(13) + CHAR(10) + "&
+uid=esoms" + CHAR(13) + CHAR(10) + "&
+pwd=abc123" + CHAR(13) + CHAR(10) + "&
+enginename=eSOMS" + CHAR(13) + CHAR(10) + "&
+databasename=eSOMS" + CHAR(13) + CHAR(10) + "&
+databasefile=" + GetCurrentDirectory() + "\eSOMS.db" + CHAR(13) + CHAR(10) + "&
+driver=dbodbc9.dll" + CHAR(13) + CHAR(10) + "&
+start=\Windows\dbsrv9.exe -q -x tcpip -n eSOMS -gd all -gp 1024 -c 4M"
+	
+FileDelete(ls_DSN_File)
+IF NOT FileExists(ls_DSN_File) THEN
+	li_File = FileOpen(ls_DSN_File, LineMode!, Write!)
+	FileWrite(li_File, ls_DSN_Text)
+	FileClose(li_File)
+END IF
+end subroutine
+

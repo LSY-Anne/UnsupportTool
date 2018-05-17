@@ -1,0 +1,11 @@
+﻿$PBExportHeader$rangelastx.srf
+global type rangelastx from function_object
+end type
+
+forward prototypes
+global function string rangelastx (integer sta, integer count)
+end prototypes
+
+global function string rangelastx (integer sta, integer count);RETURN GenLastX(sta,count,"RANGE")
+end function
+

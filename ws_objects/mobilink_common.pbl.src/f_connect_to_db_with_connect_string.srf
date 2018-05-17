@@ -1,0 +1,24 @@
+﻿$PBExportHeader$f_connect_to_db_with_connect_string.srf
+global type f_connect_to_db_with_connect_string from function_object
+end type
+
+forward prototypes
+global function boolean f_connect_to_db_with_connect_string (string as_connection)
+end prototypes
+
+global function boolean f_connect_to_db_with_connect_string (string as_connection);boolean lb_Connected
+
+DISCONNECT USING SQLCA;
+
+SQLCA.DBMS = 'ODBC'
+SQLCA.AutoCommit = False
+
+SQLCA.DBPARM = as_Connection
+
+CONNECT USING SQLCA;
+
+lb_Connected = ( SQLCA.SQLCode = 0 )
+
+RETURN lb_Connected
+end function
+

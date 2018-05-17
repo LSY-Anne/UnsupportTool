@@ -1,0 +1,15 @@
+﻿$PBExportHeader$f_dw_language_call.srf
+global type f_dw_language_call from function_object
+end type
+
+forward prototypes
+global function string f_dw_language_call (string as_key, string as_default)
+end prototypes
+
+global function string f_dw_language_call (string as_key, string as_default);IF IsValid(guo_user_settings) THEN
+	RETURN guo_user_settings.uf_LanguageString(as_Key, as_Default)
+ELSE
+	RETURN as_Default
+END IF
+end function
+

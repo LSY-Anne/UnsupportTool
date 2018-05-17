@@ -1,0 +1,11 @@
+﻿$PBExportHeader$s.srf
+global type s from function_object
+end type
+
+forward prototypes
+global function string s (dec ldb_reading)
+end prototypes
+
+global function string s (dec ldb_reading);Return String(ldb_reading)
+end function
+

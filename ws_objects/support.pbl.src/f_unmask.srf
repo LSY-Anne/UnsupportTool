@@ -1,0 +1,25 @@
+﻿$PBExportHeader$f_unmask.srf
+global type f_Unmask from function_object
+end type
+
+forward prototypes
+global function string f_unmask (string as_text, string as_mask)
+end prototypes
+
+global function string f_unmask (string as_text, string as_mask);char lc_Mask
+string ls_Temp
+integer li_Count
+integer li_Length
+
+li_Length = LEN(as_Mask)
+FOR li_Count = 1 TO li_Length
+	lc_Mask = MID(as_Mask, li_Count, 1)
+	CHOOSE CASE lc_Mask
+		CASE '!', '^', 'A', 'X', '#'
+			ls_Temp = ls_Temp + MID(as_Text, li_Count, 1)
+	END CHOOSE
+NEXT
+
+RETURN ls_Temp
+end function
+

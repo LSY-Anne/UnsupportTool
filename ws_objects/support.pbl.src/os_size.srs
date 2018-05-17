@@ -1,0 +1,6 @@
+﻿$PBExportHeader$os_size.srs
+global type os_size from structure
+	long		cx
+	long		cy
+end type
+

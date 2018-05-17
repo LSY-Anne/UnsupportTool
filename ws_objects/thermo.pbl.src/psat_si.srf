@@ -1,0 +1,20 @@
+﻿$PBExportHeader$psat_si.srf
+global type psat_si from function_object
+end type
+
+forward prototypes
+global function double psat_si (double t)
+end prototypes
+
+global function double psat_si (double t);double p, rhol, rhov
+
+IF t = 0 THEN
+	SetNull(t)
+	RETURN t
+END IF
+
+psat( t, p, rhol, rhov )
+
+RETURN p
+end function
+

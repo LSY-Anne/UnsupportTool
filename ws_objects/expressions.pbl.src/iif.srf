@@ -1,0 +1,15 @@
+﻿$PBExportHeader$iif.srf
+global type iif from function_object
+end type
+
+forward prototypes
+global function string iif (boolean lb_check, string ls_true, string ls_false)
+end prototypes
+
+global function string iif (boolean lb_check, string ls_true, string ls_false);IF lb_check THEN
+	RETURN ls_true
+ELSE
+	RETURN ls_false
+END IF
+end function
+

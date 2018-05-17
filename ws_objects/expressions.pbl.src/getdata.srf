@@ -1,0 +1,35 @@
+﻿$PBExportHeader$getdata.srf
+global type getdata from function_object
+end type
+
+forward prototypes
+global function string getdata (integer li_tour, integer li_station, string ls_date, integer li_shift_no)
+end prototypes
+
+global function string getdata (integer li_tour, integer li_station, string ls_date, integer li_shift_no);string ls_reading
+datetime ldt_date
+integer li_Rev_No
+
+ldt_date = DateTime(Date(ls_date),Time(""))
+IF IsValid(w_tour) THEN
+	li_rev_no	= w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_rev_no[w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()]
+ELSE
+	RETURN "Error"
+END IF
+
+  SELECT rd
+    INTO :ls_reading
+    FROM history
+   WHERE dt = :ldt_date AND  
+         tour = :li_tour AND 
+			sta = :li_station AND  
+         shift_no	= :li_shift_no AND 
+			reading_id = 0 ;
+
+IF SQLCA.SQLCode <> 0  THEN
+	ls_reading = "Rd Not Found"
+END IF
+
+RETURN ls_reading
+end function
+

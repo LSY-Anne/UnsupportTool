@@ -1,0 +1,17 @@
+﻿$PBExportHeader$secondsafterdatetime.srf
+global type secondsafterdatetime from function_object
+end type
+
+forward prototypes
+global function long secondsafterdatetime (datetime ldt_start, datetime ldt_end)
+end prototypes
+
+global function long secondsafterdatetime (datetime ldt_start, datetime ldt_end);long ll_seconds , ll_days
+
+ll_days		= DaysAfter(   Date(ldt_start) , Date(ldt_end) )
+ll_seconds	= SecondsAfter(Time(ldt_start) , Time(ldt_end) )
+ll_seconds	= ll_days*24*60*60 + ll_seconds
+
+RETURN ll_seconds
+end function
+

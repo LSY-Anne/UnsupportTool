@@ -1,0 +1,102 @@
+﻿$PBExportHeader$f_update_user_preferences.srf
+global type f_Update_User_Preferences from function_object
+end type
+
+forward prototypes
+global subroutine f_update_user_preferences ()
+end prototypes
+
+global subroutine f_update_user_preferences ();integer li_Enter_Button
+boolean lb_Auto_Set_Nav_Control
+
+f_Global_Update_User_Preferences()
+IF gb_Using_ML THEN
+	guo_user_settings.uf_Get_User_Settings()
+END IF
+gb_AllowLeadingAndTrailingCRLFInNotes = ( Upper(ProfileString(gs_INI_File, gs_Window_Title, "AllowLeadingAndTrailingCRLFInNotes", f_LanguageString('NO', 'No'))) = Upper(f_LanguageString('YES', 'Yes')) )
+gb_AllowEditNoteInWindow = TRUE//( Upper(ProfileString(gs_INI_File, gs_Window_Title, "AllowEditNoteInWindow", "Yes")) = Upper(f_LanguageString('YES', 'Yes')) )
+gb_RequireNoteAfterScanSkip = ( Upper(ProfileString(gs_INI_File, gs_Window_Title, "RequireNoteAfterScanSkip", f_LanguageString('NO', 'No'))) = Upper(f_LanguageString('YES', 'Yes')) )
+gb_Force_Find_By_Scan = ( Upper(ProfileString(gs_INI_File, gs_Window_Title, "ForceFindByScanCode", f_LanguageString('NO', 'No'))) = Upper(f_LanguageString('YES', 'Yes')) )
+gb_No_Scan_Loop = FileExists(GetCurrentDirectory() + '\no_scan_loop')
+gb_TourClosePromptForTourDelete = ( Upper(f_ProfileString(gs_Module_Id, "TourClosePromptForTourDelete", f_LanguageString('NO', 'No'))) = Upper(f_LanguageString('YES', 'Yes')) )
+gs_Station_Label = f_ProfileString(gs_Module_Id, 'StationLabel', 'Station')
+gb_Display_Hidden_Records = ( UPPER(ProfileString(gs_INI_File, gs_Window_Title, "DISPLAY_HIDDEN_RECORDS", f_LanguageString('NO', 'No'))) = Upper(f_LanguageString('YES', 'Yes')) )
+gb_Include_Equip_In_Scan = ( UPPER(f_ProfileString(gs_module_id, "INCLUDE_EQUIP_IN_SCAN", f_LanguageString('NO', 'No'))) = Upper(f_LanguageString('YES', 'Yes')) )
+gb_Copy_Notes_Forward = ( Upper(f_ProfileString(gs_Module_Id, 'Copy_Notes_Forward', f_LanguageString('NO', 'No'))) = Upper(f_LanguageString('YES', 'Yes')) )
+gb_Alternate_Locked_List_View = ( Upper(ProfileString(gs_INI_File, gs_Window_Title, 'Alternate_Locked_List_View', f_LanguageString('NO', 'No'))) = Upper(f_LanguageString('YES', 'Yes')) )
+IF IsValid(w_tour) THEN
+	IF ( w_tour.tab_tour.tabpage_readings.dw_readings.RowCount() > 0 ) THEN
+		w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_ShareData()
+	END IF
+END IF
+
+f_Release_Buttons()
+
+li_Enter_Button = ProfileInt(gs_INI_File, gs_Window_Title, 'ENTER_BUTTON', 0)
+CHOOSE CASE li_Enter_Button
+	CASE 0
+		gi_Hardware_Button = 99999
+		lb_Auto_Set_Nav_Control = FALSE
+	CASE 1
+		gi_Hardware_Button = APPKEY1
+		lb_Auto_Set_Nav_Control = TRUE
+	CASE 2
+		gi_Hardware_Button = APPKEY2
+		lb_Auto_Set_Nav_Control = TRUE
+	CASE 3
+		gi_Hardware_Button = APPKEY3
+		lb_Auto_Set_Nav_Control = TRUE
+	CASE 4
+		gi_Hardware_Button = APPKEY4
+		lb_Auto_Set_Nav_Control = TRUE
+	CASE 5
+		gi_Hardware_Button = APPKEY5
+		lb_Auto_Set_Nav_Control = TRUE
+	CASE 6
+		gi_Hardware_Button = APPKEY6
+		lb_Auto_Set_Nav_Control = TRUE
+END CHOOSE
+
+IF IsValid(w_tour) THEN
+	IF ( li_Enter_Button > 0 ) THEN
+		SHSetAppKeyWndAssoc(gi_Hardware_Button, Handle(w_tour))
+	END IF
+END IF
+
+//2009-05-19 Adding support for 2nd hardware button
+li_Enter_Button = ProfileInt(gs_INI_File, gs_Window_Title, 'ENTER_BUTTON_2', 0)
+CHOOSE CASE li_Enter_Button
+	CASE 0
+		gi_Hardware_Button_2 = 99999
+		lb_Auto_Set_Nav_Control = lb_Auto_Set_Nav_Control OR FALSE
+	CASE 1
+		gi_Hardware_Button_2 = APPKEY1
+		lb_Auto_Set_Nav_Control = TRUE
+	CASE 2
+		gi_Hardware_Button_2 = APPKEY2
+		lb_Auto_Set_Nav_Control = TRUE
+	CASE 3
+		gi_Hardware_Button_2 = APPKEY3
+		lb_Auto_Set_Nav_Control = TRUE
+	CASE 4
+		gi_Hardware_Button_2 = APPKEY4
+		lb_Auto_Set_Nav_Control = TRUE
+	CASE 5
+		gi_Hardware_Button_2 = APPKEY5
+		lb_Auto_Set_Nav_Control = TRUE
+	CASE 6
+		gi_Hardware_Button_2 = APPKEY6
+		lb_Auto_Set_Nav_Control = TRUE
+END CHOOSE
+IF lb_Auto_Set_Nav_Control AND NOT gb_Use_Navigation_Arrows THEN
+	SetProfileString(gs_INI_File, gs_Window_Title, "USE_NAVIGATION_ARROWS", f_LanguageString('YES', 'Yes'))
+	gb_Use_Navigation_Arrows = ( UPPER(ProfileString(gs_INI_File, gs_Window_Title, "USE_NAVIGATION_ARROWS", f_LanguageString('YES', 'Yes'))) = UPPER(f_LanguageString('YES', 'Yes')) )
+END IF
+
+IF IsValid(w_tour) THEN
+	IF ( li_Enter_Button > 0 ) THEN
+		SHSetAppKeyWndAssoc(gi_Hardware_Button_2, Handle(w_tour))
+	END IF
+END IF
+end subroutine
+

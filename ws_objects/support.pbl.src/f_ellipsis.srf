@@ -1,0 +1,200 @@
+﻿$PBExportHeader$f_ellipsis.srf
+global type f_ellipsis from function_object
+end type
+
+forward prototypes
+global function string f_ellipsis (string as_value, integer ai_col_width_in_pb_units, boolean ab_bold)
+end prototypes
+
+global function string f_ellipsis (string as_value, integer ai_col_width_in_pb_units, boolean ab_bold);boolean lb_Return
+os_SIZE lstr_size
+os_RECT lstr_clientArea
+long    ll_thisHandle
+long    ll_DCHandle
+long    ll_fontHandle
+long    ll_prevFontHandle
+boolean lb_APIok
+string  ls_textForDisplay
+integer li_charCount
+
+// start with the actual text
+w_main.st_ellipsis.Text = as_Value
+ls_textForDisplay = as_Value
+IF ab_Bold THEN
+	w_main.st_ellipsis.Weight = 700
+ELSE
+	w_main.st_ellipsis.Weight = 400
+END IF
+w_main.st_ellipsis.Width = ai_col_width_in_pb_units
+// get device context
+ll_thisHandle = Handle(w_main.st_ellipsis)
+IF gb_Platform_Is_CE THEN
+	ll_DCHandle = GetDC_CE(ll_thisHandle)
+ELSE
+	ll_DCHandle = GetDC_NT(ll_thisHandle)
+END IF
+// select current font into device context
+IF NOT IsNull(ll_DCHandle) THEN
+	ll_fontHandle = Send(ll_thisHandle, WM_GETFONT, 0, 0)
+	IF gb_Platform_Is_CE THEN
+		ll_prevFontHandle = SelectObject_CE(ll_DCHandle, ll_fontHandle)
+	ELSE
+		ll_prevFontHandle = SelectObject_NT(ll_DCHandle, ll_fontHandle)
+	END IF
+
+	// get the client area of the static text (to eliminate border issues)
+	IF gb_Platform_Is_CE THEN
+		lb_Return = GetClientRect_CE(ll_thisHandle, lstr_clientArea)
+	ELSE
+		lb_Return = GetClientRect_NT(ll_thisHandle, lstr_clientArea)
+	END IF
+	IF lb_Return THEN
+		// get initial try at fitting the text into control
+		li_charCount = Len(ls_textForDisplay)
+		IF gb_Platform_Is_CE THEN
+			lb_APIok = GetTextExtentExPoint_CE(ll_DCHandle, ls_textForDisplay, li_charCount, 0, 0, 0, lstr_size)
+		ELSE
+			lb_APIok = GetTextExtentExPoint_NT(ll_DCHandle, ls_textForDisplay, li_charCount, 0, 0, 0, lstr_size)
+		END IF
+		// keep truncating letters (and add ellipsis) until string fits
+		DO WHILE lb_APIok AND (lstr_size.cx > lstr_clientArea.right) AND (li_charCount > 1)
+			li_charCount = li_charCount - 1
+			ls_textForDisplay = Left(ls_textForDisplay, li_charCount) + "..."
+			IF gb_Platform_Is_CE THEN
+				lb_APIok = GetTextExtentExPoint_CE(ll_DCHandle, ls_textForDisplay, li_charCount + 3, 0, 0, 0, lstr_size)
+			ELSE
+				lb_APIok = GetTextExtentExPoint_NT(ll_DCHandle, ls_textForDisplay, li_charCount + 3, 0, 0, 0, lstr_size)
+			END IF
+		LOOP
+
+		// if there was some problem, just display the unabbreviated text
+		IF NOT lb_APIok THEN
+			ls_textForDisplay = w_main.st_ellipsis.Text
+		END IF
+	END IF
+
+	// restore font and release device context
+	IF NOT (IsNull(ll_prevFontHandle) /*OR ll_prevFontHandle = HGDI_ERROR*/) THEN
+		IF gb_Platform_Is_CE THEN
+			SelectObject_CE(ll_DCHandle, ll_prevFontHandle)
+		ELSE
+			SelectObject_NT(ll_DCHandle, ll_prevFontHandle)
+		END IF
+	END IF
+	IF gb_Platform_Is_CE THEN
+		ReleaseDC_CE(ll_thisHandle, ll_DCHandle)
+	ELSE
+		ReleaseDC_NT(ll_thisHandle, ll_DCHandle)
+	END IF
+END IF
+
+// finally set the text into the control
+RETURN ls_textForDisplay
+
+
+
+////RETURN as_Value
+//ULong lul_Handle, lul_hDC, lul_hFont
+//Integer li_maxwidth, li_rc, li_size
+//String ls_modify
+//Boolean lb_Return
+//integer li_Fit
+//string ls_Ellipsis_String
+//integer li_Num_Characters_To_Remove
+//StaticText lst_text
+//os_size lstr_Size
+//
+//IF ai_col_width_in_pb_units_in_pb_units = 667 THEN
+//	ai_col_width_in_pb_units_in_pb_units = ai_col_width_in_pb_units_in_pb_units
+//END IF
+//IF gb_Use_Ellipsis THEN
+//	li_Fit = 0
+//	
+//	li_rc = w_main.OpenUserObject(lst_text)
+//	If li_rc = 1 Then
+//		// give static text same font properties as column
+//		lst_text.FaceName = 'Tahoma'
+//		lst_text.TextSize = 9//15//Integer(gs_Font_Height_In_Pixels)
+//		IF ab_Bold THEN
+//			lst_text.Weight = 700
+//		ELSE
+//			lst_text.Weight = 400
+//		END IF
+//		lst_text.Italic = False
+//		lst_text.FontCharSet = Ansi!
+//		lst_text.FontFamily = Swiss!
+//		lst_text.FontPitch = Variable!
+//	
+//		// create device context for statictext
+//		lul_Handle = Handle(lst_text)
+//		If gb_Platform_Is_CE Then
+//			lul_hDC = GetDC_CE(lul_Handle)
+//		Else
+//			lul_hDC = GetDC_NT(lul_Handle)
+//		End If
+//		// get handle to the font used by statictext
+//		lul_hFont = Send(lul_Handle, WM_GETFONT, 0, 0)
+//		// Select it into the device context
+//		If gb_Platform_Is_CE Then
+//			SelectObject_CE(lul_hDC, lul_hFont)
+//		Else
+//			SelectObject_NT(lul_hDC, lul_hFont)
+//		End If
+//		
+//		li_Num_Characters_To_Remove = 0
+//		li_maxwidth = ai_col_width_in_pb_units_in_pb_units
+////		IF gb_Is_VGA THEN
+////			li_maxwidth = ai_col_width_in_pb_units_in_pb_units / 2 //PixelsToUnits(ai_col_width_in_pb_units, XPixelsToUnits!)
+////		ELSE
+////			li_maxwidth = ai_col_width_in_pb_units_in_pb_units //PixelsToUnits(ai_col_width_in_pb_units, XPixelsToUnits!)
+////		END IF
+//		ls_Ellipsis_String = as_Value
+//		IF NOT Empty(as_Value) THEN
+//			DO
+//				// determine text width
+//				If gb_Platform_Is_CE Then
+//					lb_Return = GetTextExtentExPoint_CE(lul_hDC, as_Value, &
+//										Len(ls_Ellipsis_String), 0, 0, 0, lstr_Size)
+//				Else
+//					lb_Return = GetTextExtentExPoint_NT(lul_hDC, ls_Ellipsis_String, &
+//										Len(ls_Ellipsis_String), 0, 0, 0, lstr_Size)
+//				End If
+//				If Not lb_Return Then
+//					If gb_Platform_Is_CE Then
+//						ReleaseDC_CE(lul_Handle, lul_hDC)
+//					Else
+//						ReleaseDC_NT(lul_Handle, lul_hDC)
+//					End If
+//					w_main.CloseUserObject(lst_text)
+//					Return ls_Ellipsis_String
+//				End If
+//				// convert length in pixels to PBUnits
+//				li_size = PixelsToUnits((lstr_Size.cx*2), XPixelsToUnits!)
+//				If ( li_size > li_maxwidth ) Then
+//					li_Num_Characters_To_Remove = li_Num_Characters_To_Remove + 1
+//					ls_Ellipsis_String = LEFT(as_Value, LEN(as_Value) - li_Num_Characters_To_Remove)
+//				ELSE
+//					IF ( li_Num_Characters_To_Remove > 0 ) THEN
+////						ls_Ellipsis_String = LEFT(as_Value, LEN(as_Value) - (li_Num_Characters_To_Remove + 1)) + CHAR(133)
+//						ls_Ellipsis_String = LEFT(as_Value, LEN(as_Value) - (li_Num_Characters_To_Remove + 3)) + "..."
+//					END IF
+//				End If
+//			LOOP WHILE ( li_size > li_maxwidth )
+//		END IF
+//	
+//		// release the device context
+//		If gb_Platform_Is_CE Then
+//			ReleaseDC_CE(lul_Handle, lul_hDC)
+//		Else
+//			ReleaseDC_NT(lul_Handle, lul_hDC)
+//		End If
+//		// destroy statictext
+//		w_main.CloseUserObject(lst_text)
+//	End If
+//ELSE
+//	ls_Ellipsis_String = as_Value
+//END IF
+//
+//Return ls_Ellipsis_String
+end function
+

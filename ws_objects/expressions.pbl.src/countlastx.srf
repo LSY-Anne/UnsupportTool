@@ -1,0 +1,11 @@
+﻿$PBExportHeader$countlastx.srf
+global type countlastx from function_object
+end type
+
+forward prototypes
+global function string countlastx (integer sta, integer count)
+end prototypes
+
+global function string countlastx (integer sta, integer count);RETURN GenLastX(sta,count,"COUNT")
+end function
+

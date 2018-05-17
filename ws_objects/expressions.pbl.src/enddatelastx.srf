@@ -1,0 +1,11 @@
+﻿$PBExportHeader$enddatelastx.srf
+global type enddatelastx from function_object
+end type
+
+forward prototypes
+global function string enddatelastx (integer sta, integer count)
+end prototypes
+
+global function string enddatelastx (integer sta, integer count);RETURN GenLastX(sta,count,"ENDDATE")
+end function
+

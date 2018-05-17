@@ -1,0 +1,46 @@
+﻿$PBExportHeader$curdate.srf
+global type curdate from function_object
+end type
+
+forward prototypes
+global function string curdate (integer li_days)
+end prototypes
+
+global function string curdate (integer li_days);//**datetime ldt_date
+
+//**ldt_date		= w_tour.ids_evaluate.object.dt[1]
+//**ldt_date		= DateTime(RelativeDate( Date(ldt_date) , li_days * -1 ))
+
+date ldt_date
+
+ldt_date 	= gsu_Tour_Parameters[gi_Current_Tour].tour_date
+ldt_date		= RelativeDate( ldt_date , li_days * -1 )
+
+RETURN string(ldt_date,"mm-dd-yyyy")
+
+////long li_row 
+////integer li_tour , li_sta , li_shift_no
+//date ld_date
+//string ls_Return
+////datawindow dw
+//
+////IF IsValid(w_tour) THEN
+////	dw				= w_tour.tab_tour.tabpage_readings.dw_readings
+////	li_row		= dw.GetRow()
+////	li_tour		= w_tour.isu_Tour_Parameters.tour_number
+//	ld_date 		= gsu_Tour_Parameters[gi_Current_Tour].tour_date
+////	li_sta		= dw.GetItemNumber(li_row,"history_sta")
+////	ld_date 		= dw.GetItemDateTime(li_row,"history_dt")
+////	li_shift_no	= dw.GetItemNumber(li_row,"history_shift_no")
+//	li_days		= li_days * (-1)
+//	
+//	ld_date		= RelativeDate(ld_date, li_days)
+//	
+//	ls_Return = string(ld_date,"mm-dd-yyyy")
+////ELSE
+////	ls_Return = ''
+////END IF
+//
+//RETURN ls_Return
+end function
+

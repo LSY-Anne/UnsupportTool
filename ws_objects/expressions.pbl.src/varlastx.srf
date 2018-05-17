@@ -1,0 +1,11 @@
+﻿$PBExportHeader$varlastx.srf
+global type varlastx from function_object
+end type
+
+forward prototypes
+global function string varlastx (integer sta, integer count)
+end prototypes
+
+global function string varlastx (integer sta, integer count);RETURN GenLastX(sta,count,"VAR")
+end function
+

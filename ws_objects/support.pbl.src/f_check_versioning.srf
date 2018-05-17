@@ -1,0 +1,219 @@
+﻿$PBExportHeader$f_check_versioning.srf
+global type f_check_versioning from function_object
+end type
+
+forward prototypes
+global function integer f_check_versioning (boolean ab_display)
+end prototypes
+
+global function integer f_check_versioning (boolean ab_display);integer li_Return
+string ls_name
+integer li_Required_MajVer
+integer li_Required_MinVer
+integer li_Required_FixVer
+integer li_Required_BuildVer
+Integer li_Current_MajVer
+Integer li_Current_MinVer
+Integer li_Current_FixVer
+Integer li_Current_BuildVer
+ContextInformation ci
+string ls_Temp
+string ls_MB_String
+
+IF gb_Platform_Is_CE THEN
+	// PocketBuilder Version ******************
+	ls_Temp = gs_Required_PK_Version
+	li_Required_MajVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+	ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+	li_Required_MinVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+	ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+	li_Required_FixVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+	ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+	li_Required_BuildVer = Integer(ls_Temp)
+	//w_main.GetContextService("ContextInformation", ci)
+	//ci.GetMajorVersion(li_Current_MajVer)
+	//ci.GetMinorVersion(li_Current_MinVer)
+	//ci.GetFixesVersion(li_Current_FixVer)
+	li_Current_MajVer = g_env.PBMajorRevision
+	li_Current_MinVer = g_env.PBMinorRevision
+	li_Current_FixVer = g_env.PBFixesRevision
+	li_Current_BuildVer = g_env.PBBuildNumber
+	gs_Current_PK_Version = String(li_Current_MajVer) + '.' + String(li_Current_MinVer) + '.' + String(li_Current_FixVer) + '.' + String(li_Current_BuildVer)
+	li_Return = -1
+	IF ( li_Current_MajVer > li_Required_MajVer ) THEN
+		li_Return = 1
+	ELSEIF ( li_Current_MinVer > li_Required_MinVer ) THEN
+		li_Return = 1
+	ELSEIF ( li_Current_FixVer > li_Required_FixVer ) THEN
+		li_Return = 1
+	ELSEIF ( li_Current_BuildVer >= li_Required_BuildVer ) THEN
+		li_Return = 1
+	END IF
+	IF ( li_Return = -1 ) THEN
+		IF ab_display THEN
+			ls_MB_String = 'Must be at PocketBuilder Version ### Current version @@@'
+//			ls_MB_String = f_LanguageString('MUST_BE_AT_POCKETBUILDER_VERSION_###_CURRENT_VERSION', 'Must be at PocketBuilder Version ### Current version @@@')
+			ls_MB_String = StrTran(ls_MB_String, '###', gs_Required_PK_Version) + "~n~r~n~r"
+			ls_MB_String = StrTran(ls_MB_String, '@@@', gs_Current_PK_Version)
+//			MessageBox(f_LanguageString('ERROR', 'Error'), ls_MB_String)
+			MessageBox('Error', ls_MB_String)
+		END IF
+		RETURN -1
+	END IF
+END IF
+
+IF gb_Using_ML THEN
+	ls_Temp = gs_Required_ML_ASA_Version
+ELSE
+	ls_Temp = gs_Required_ASA_Version
+END IF
+// ASA Engine Version ******************
+li_Required_MajVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+li_Required_MinVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+IF ( POS(ls_Temp, '(') > 0 ) THEN
+	li_Required_FixVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '(') - 1))
+	ls_Temp = Mid(ls_Temp, POS(ls_Temp, '(') + 1)
+	li_Required_BuildVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, ')') - 1))
+ELSEIF ( POS(ls_Temp, '.') > 0 ) THEN
+	li_Required_FixVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+	ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+	li_Required_BuildVer = Integer(ls_Temp)
+END IF
+
+f_Get_ASA_Version(gs_Current_ASA_Version)
+ls_Temp = gs_Current_ASA_Version
+li_Current_MajVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+li_Current_MinVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+IF ( POS(ls_Temp, '(') > 0 ) THEN
+	li_Current_FixVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '(') - 1))
+	ls_Temp = Mid(ls_Temp, POS(ls_Temp, '(') + 1)
+	li_Current_BuildVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, ')') - 1))
+ELSEIF ( POS(ls_Temp, '.') > 0 ) THEN
+	li_Current_FixVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+	ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+	li_Current_BuildVer = Integer(ls_Temp)
+END IF
+li_Return = -1
+IF ( li_Current_MajVer > li_Required_MajVer ) THEN
+	li_Return = 1
+ELSEIF ( li_Current_MinVer > li_Required_MinVer ) THEN
+	li_Return = 1
+ELSEIF ( li_Current_FixVer > li_Required_FixVer ) THEN
+	li_Return = 1
+ELSEIF ( li_Current_BuildVer >= li_Required_BuildVer ) THEN
+	li_Return = 1
+END IF
+IF ( li_Return = -1 ) THEN
+	IF ab_display THEN
+		ls_MB_String = 'Must be at ASA Database Engine Version ### Current version @@@'
+//		ls_MB_String = f_LanguageString('MUST_BE_AT_ASA_DATABASE_ENGINE_VERSION_###_CURRENT_VERSION', 'Must be at ASA Database Engine Version ### Current version @@@')
+		ls_MB_String = StrTran(ls_MB_String, '###', gs_Required_ASA_Version) + "~n~r~n~r"
+		ls_MB_String = StrTran(ls_MB_String, '@@@', gs_Current_ASA_Version)
+//		MessageBox(f_LanguageString('ERROR', 'Error'), ls_MB_String)
+		MessageBox('Error', ls_MB_String)
+	END IF
+	RETURN -1
+END IF
+
+// Database Schema Version ******************
+ls_Temp = gs_Required_Schema_Version
+li_Required_MajVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+li_Required_MinVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+li_Required_FixVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+li_Required_BuildVer = Integer(ls_Temp)
+
+f_Get_Schema_Version(gs_Current_Schema_Version)
+ls_Temp = gs_Current_Schema_Version
+li_Current_MajVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+li_Current_MinVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+li_Current_FixVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+li_Current_BuildVer = Integer(ls_Temp)
+li_Return = -1
+IF ( li_Current_MajVer > li_Required_MajVer ) THEN
+	li_Return = 1
+ELSEIF ( li_Current_MinVer > li_Required_MinVer ) THEN
+	li_Return = 1
+ELSEIF ( li_Current_FixVer > li_Required_FixVer ) THEN
+	li_Return = 1
+ELSEIF ( li_Current_BuildVer >= li_Required_BuildVer ) THEN
+	li_Return = 1
+END IF
+IF ( li_Return = -1 ) THEN
+	IF ab_display THEN
+		ls_MB_String = 'Must be at Database Schema Version ### Current version @@@'
+//		ls_MB_String = f_LanguageString('MUST_BE_AT_DATABASE_SCHEMA_VERSION_###_CURRENT_VERSION', 'Must be at Database Schema Version ### Current version @@@')
+		ls_MB_String = StrTran(ls_MB_String, '###', gs_Required_Schema_Version) + "~n~r~n~r"
+		ls_MB_String = StrTran(ls_MB_String, '@@@', gs_Current_Schema_Version)
+//		MessageBox(f_LanguageString('ERROR', 'Error'), ls_MB_String)
+		MessageBox('Error', ls_MB_String)
+	END IF
+	RETURN -1
+END IF
+
+// Database File Creation Version ******************
+ls_Temp = gs_Required_ASA_Version
+li_Required_MajVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+li_Required_MinVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+IF ( POS(ls_Temp, '(') > 0 ) THEN
+	li_Required_FixVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '(') - 1))
+	ls_Temp = Mid(ls_Temp, POS(ls_Temp, '(') + 1)
+	li_Required_BuildVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, ')') - 1))
+ELSEIF ( POS(ls_Temp, '.') > 0 ) THEN
+	li_Required_FixVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+	ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+	li_Required_BuildVer = Integer(ls_Temp)
+END IF
+
+f_Get_DB_Creation_Version(gs_Current_DB_Version)
+ls_Temp = gs_Current_DB_Version
+li_Current_MajVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+li_Current_MinVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+IF ( POS(ls_Temp, '(') > 0 ) THEN
+	li_Current_FixVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '(') - 1))
+	ls_Temp = Mid(ls_Temp, POS(ls_Temp, '(') + 1)
+	li_Current_BuildVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, ')') - 1))
+ELSEIF ( POS(ls_Temp, '.') > 0 ) THEN
+	li_Current_FixVer = Integer(Mid(ls_Temp, 1, POS(ls_Temp, '.') - 1))
+	ls_Temp = Mid(ls_Temp, POS(ls_Temp, '.') + 1)
+	li_Current_BuildVer = Integer(ls_Temp)
+END IF
+li_Return = -1
+IF ( li_Current_MajVer > li_Required_MajVer ) THEN
+	li_Return = 1
+ELSEIF ( li_Current_MinVer > li_Required_MinVer ) THEN
+	li_Return = 1
+ELSEIF ( li_Current_FixVer > li_Required_FixVer ) THEN
+	li_Return = 1
+ELSEIF ( li_Current_BuildVer >= li_Required_BuildVer ) THEN
+	li_Return = 1
+END IF
+IF ( li_Return = -1 ) THEN
+	IF ab_display THEN
+		ls_MB_String = 'Must be at Database Version ### Current version @@@'
+//		ls_MB_String = f_LanguageString('MUST_BE_AT_DATABASE_VERSION_###_CURRENT_VERSION', 'Must be at Database Version ### Current version @@@')
+		ls_MB_String = StrTran(ls_MB_String, '###', gs_Required_ASA_Version) + "~n~r~n~r"
+		ls_MB_String = StrTran(ls_MB_String, '@@@', gs_Current_DB_Version)
+//		MessageBox(f_LanguageString('ERROR', 'Error'), ls_MB_String)
+		MessageBox('Error', ls_MB_String)
+	END IF
+	RETURN -1
+END IF
+
+RETURN 1
+
+end function
+

@@ -1,0 +1,12 @@
+﻿$PBExportHeader$p_test_wsproxy.srj
+$PBExportComments$Generated Web Service Proxy Project
+GeneratorID:{1B1DCEE2-E514-11D1-B30A-006008925BD4}GENBC00000000
+
+WSDLLOCATION:..\..\..\Service1.wsdl	
+COMPONENT:1	Service1::Service1Soap::Service1Soap
+PACKAGE:0
+COMMENT:Web Service Proxy Generator
+DEPLOYMENT:proxy.pbl	0	0
+PROJECT:p_test_wsproxy
+PREFIX:
+ASSEMBLY:0	0	

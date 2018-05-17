@@ -1,0 +1,19 @@
+﻿$PBExportHeader$f_check_for_null.srf
+global type f_check_for_null from function_object
+end type
+
+forward prototypes
+global function string f_check_for_null (string as_passed)
+end prototypes
+
+global function string f_check_for_null (string as_passed);string ls_Return
+
+IF Empty(as_Passed) THEN
+	ls_Return = ""
+ELSE
+	ls_Return = TRIM(as_Passed)
+END IF
+
+RETURN ls_Return
+end function
+

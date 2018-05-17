@@ -1,0 +1,98 @@
+﻿$PBExportHeader$f_global_open.srf
+global type f_global_open from function_object
+end type
+
+forward prototypes
+global subroutine f_global_open ()
+end prototypes
+
+global subroutine f_global_open ();//*-----------------------------------------------------------------*/
+//*  open:  Application Open Script
+//*  1) make sure we are the only instance running
+//*  2) continue opening the application
+//*-----------------------------------------------------------------*/
+
+// Is an instance of this program already running?
+// If so, set focus to its main window and halt.
+// We can't use the "window_object.title" because the
+// object has not been created yet.
+// ***PUT CODE HERE***
+
+string ls_Commandline
+string ls_Current_Date_Time
+string ls_Filename
+
+ls_Commandline = CommandParm()
+
+gs_Temp_Folder = f_Get_Temp_Path()
+
+
+GetEnvironment(g_Env)
+/*
+gb_Platform_Is_CE = ( g_Env.OSType = windowsce! )
+IF gb_Platform_Is_CE THEN
+	f_GetIPAddress()
+END IF
+
+*/
+//f_GetSerialNumber()
+//f_Get_Current_Directory()
+//f_Get_Current_Version()
+
+/*
+IF ( POS(ls_Commandline, '|') > 0 ) THEN
+	ls_Current_Date_Time = MID(ls_Commandline, 1, POS(ls_Commandline, '|') - 1)
+	ls_Commandline = MID(ls_Commandline, POS(ls_Commandline, '|') + 1)
+ELSE
+	ls_Current_Date_Time = ls_Commandline
+//	ls_Commandline = ''
+END IF
+
+*/
+/*
+IF NOT Empty(ls_Commandline) THEN
+	CHOOSE CASE ls_Commandline
+		CASE 'REMOVE_READ_ONLY_ATTRIBUTE_FROM_ESOMS_DB'
+			ls_Filename = GetCurrentDirectory() + "\esoms.db"
+			SetFileAttributes_CE(ls_Filename, 128)
+			HALT
+		CASE 'CLOSE_ALL_ESOMS_APPLICATIONS'
+			f_Close_All_Esoms_Applications()
+			ls_Filename = GetCurrentDirectory() + "\esoms.db"
+			SetFileAttributes_CE(ls_Filename, 128)
+			HALT
+		CASE 'INSTALL_ESOMS_DB_CAB'
+			gb_Install_esoms_db_cab = TRUE
+		CASE 'AUTO_CLOSE_PRIME'
+			RegistrySet("HKEY_LOCAL_MACHINE\Software\TechAssist\Mobile eSOMS", "AutoCloseNotResponding", RegString!, 'AUTO_CLOSE_PRIME')
+			HALT
+	END CHOOSE
+END IF
+*/
+/*
+IF gb_Platform_Is_CE THEN
+	fnSetSystemTime(ls_Current_Date_Time)
+END IF
+*/
+// WORKAROUND
+//IF FocusToPreviousInstance(gs_Window_Title) THEN
+//	HALT
+//END IF
+
+SQLMain = CREATE transaction
+
+/*
+IF gb_Platform_Is_CE THEN
+	guo_date_format.uf_Get_Date_Time_Format()
+	Date_Format = guo_date_format.is_Date_Format
+	IF ( EnableHardwareKeyboard(TRUE) = FALSE ) THEN
+		MessageBox(f_LanguageString('ERROR', 'Error'), f_LanguageString('FAILED_TO_ENABLE_HARDWARE_KEYBOARD', 'Failed to enable Hardware Keyboard'))
+	END IF
+ELSE
+	guo_date_format.uf_Get_Date_Time_Format()
+	Date_Format = guo_date_format.is_Date_Format
+END IF
+
+*/
+end subroutine
+

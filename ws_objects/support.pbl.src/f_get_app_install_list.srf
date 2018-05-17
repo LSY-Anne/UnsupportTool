@@ -1,0 +1,13 @@
+﻿$PBExportHeader$f_get_app_install_list.srf
+global type f_get_app_install_list from function_object
+end type
+
+forward prototypes
+global subroutine f_get_app_install_list (ref string as_subkeylist[])
+end prototypes
+
+global subroutine f_get_app_install_list (ref string as_subkeylist[]);integer li_Return
+
+li_Return = RegistryKeys("HKEY_LOCAL_MACHINE\SOFTWARE\TECHASSIST\MOBILE ESOMS", as_SubKeyList)
+end subroutine
+

@@ -1,0 +1,12 @@
+﻿$PBExportHeader$str_capi_system_time.srs
+global type str_capi_system_time from structure
+	integer		wYear
+	integer		wMonth
+	integer		wDayOfWeek
+	integer		wDay
+	integer		wHour
+	integer		wMinute
+	integer		wSecond
+	integer		wMilliseconds
+end type
+

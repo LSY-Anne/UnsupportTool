@@ -1,0 +1,16 @@
+﻿$PBExportHeader$f_get_current_directory.srf
+global type f_get_current_directory from function_object
+end type
+
+forward prototypes
+global function string f_get_current_directory ()
+end prototypes
+
+global function string f_get_current_directory ();string ls_Current_Directory
+
+ls_Current_Directory = GetCurrentDirectory()
+RegistrySet("HKEY_LOCAL_MACHINE\Software\TechAssist\Mobile eSOMS", "ApplicationFolder", RegString!, ls_Current_Directory)
+
+RETURN ls_Current_Directory
+end function
+

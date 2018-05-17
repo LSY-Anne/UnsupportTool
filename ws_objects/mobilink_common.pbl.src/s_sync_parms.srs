@@ -1,0 +1,8 @@
+﻿$PBExportHeader$s_sync_parms.srs
+$PBExportComments$Passing arguments to and from w_rounds_sync_options
+global type s_sync_parms from structure
+	string		a_mluser
+	string		a_mlpass
+	long		a_returncode
+end type
+

@@ -1,0 +1,58 @@
+﻿$PBExportHeader$f_blob_to_file_with_blob_arg.srf
+global type f_blob_to_file_with_blob_arg from function_object
+end type
+
+forward prototypes
+global function any f_blob_to_file_with_blob_arg (ref string as_filename, blob ab_blob)
+end prototypes
+
+global function any f_blob_to_file_with_blob_arg (ref string as_filename, blob ab_blob);string ls_MB_String
+integer li_Return
+u_blob_file_handler uo_blob
+string ls_Filename
+string ls_Folder
+integer li_Count
+
+IF gb_Platform_Is_CE THEN
+	ls_Folder = '\Temp\'
+ELSE
+	ls_Folder = 'C:\Temp\'
+END IF
+
+IF ( Right(ls_Folder, 1) <> '\' ) THEN
+	ls_Folder = ls_Folder + '\'
+END IF
+ls_Filename = ls_Folder + as_Filename
+
+li_Count = 1
+DO WHILE TRUE
+	IF FileExists(ls_Filename) THEN
+		IF FileDelete(ls_Filename) THEN
+			EXIT
+		ELSE
+			ls_Filename = String(li_Count) + '_' + ls_FileName
+		END IF
+	ELSE
+		EXIT
+	END IF
+	IF ( li_Count = 50 ) THEN
+		li_Return =  -1
+		ls_MB_String = f_LanguageString('UNABLE_TO_EXTRACT_THE_DOCUMENT_TO_###.', "Unable to extract the document to '###'.")
+		ls_MB_String = StrTran(ls_MB_String, '###', ls_Filename)
+		MessageBox(f_LanguageString('ERROR', 'Error'), ls_MB_String)
+		EXIT
+	END IF
+LOOP
+IF ( li_Return <> -1 ) THEN
+	li_Return = uo_blob.uf_Put_Blob_To_File(ls_Filename, ab_blob)
+	IF ( li_Return = 1 ) THEN
+		// Return the actual path/filename to open
+		as_Filename = ls_Filename
+	ELSE
+		MessageBox(f_LanguageString('ERROR', 'Error'), f_LanguageString('UNABLE_TO_EXTRACT_DOCUMENT_FROM_THE_DATABASE.', 'Unable to extract document from the database.'))
+	END IF
+END IF
+
+RETURN li_Return
+end function
+

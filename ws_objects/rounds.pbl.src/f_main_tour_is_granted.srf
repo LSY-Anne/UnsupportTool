@@ -1,0 +1,11 @@
+﻿$PBExportHeader$f_main_tour_is_granted.srf
+global type f_main_tour_is_granted from function_object
+end type
+
+forward prototypes
+global function boolean f_main_tour_is_granted (long ll_tour, long level)
+end prototypes
+
+global function boolean f_main_tour_is_granted (long ll_tour, long level);RETURN TRUE//w_select_from_asa.uo_user_ml.Is_Granted('OR' + String(ll_tour, '000'), level) > 0 
+end function
+

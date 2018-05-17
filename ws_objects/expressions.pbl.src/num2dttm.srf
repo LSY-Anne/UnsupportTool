@@ -1,0 +1,26 @@
+﻿$PBExportHeader$num2dttm.srf
+global type num2dttm from function_object
+end type
+
+forward prototypes
+global function string num2dttm (double ldb_number)
+end prototypes
+
+global function string num2dttm (double ldb_number);datetime ldt_date_time
+date ld_date
+time lt_time
+long ll_minutes,ll_days
+
+// 6/18/2001 Is passed the number of minutes since Midnight 01-01-1980
+
+// 2009-02-23 - RPR - Change INT() to Long()
+ll_days			= Long(ldb_number/1440)
+// 2009-02-23 - RPR - Change Date(~string~) to Date(year, month, day)
+ld_date			= RelativeDate(Date(1980, 1, 1), ll_days)
+ll_minutes		= Mod(ldb_number,1440)
+lt_time			= RelativeTime(Time("00:00"),ll_minutes*60)
+ldt_date_time	= DateTime(ld_date,lt_time)
+
+RETURN String(ldt_date_time,'mm-dd-yyyy hhmm')
+end function
+

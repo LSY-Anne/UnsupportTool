@@ -1,0 +1,24 @@
+﻿$PBExportHeader$f_purge_spaces.srf
+global type f_purge_spaces from function_object
+end type
+
+forward prototypes
+global function string f_purge_spaces (string as_passed)
+end prototypes
+
+global function string f_purge_spaces (string as_passed);string as_Temp
+
+IF Empty(as_Passed) THEN
+	RETURN ""
+ELSE
+	DO
+		as_Temp = as_Passed
+		as_Passed = StrTran(as_Passed, ', ', ',')
+		as_Passed = StrTran(as_Passed, ' ,', ',')
+		as_Passed = StrTran(as_Passed, '( ', '(')
+		as_Passed = StrTran(as_Passed, ' )', ')')
+	LOOP UNTIL ( as_Temp = as_Passed )
+	RETURN as_Passed
+END IF
+end function
+

@@ -1,0 +1,16 @@
+﻿$PBExportHeader$f_test.srf
+global type f_test from function_object
+end type
+
+forward prototypes
+global function string f_test (string as_default)
+end prototypes
+
+global function string f_test (string as_default);string ls_Return
+
+
+ls_Return = as_Default
+
+RETURN ls_Return
+end function
+

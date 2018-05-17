@@ -1,0 +1,108 @@
+﻿$PBExportHeader$prev.srf
+global type prev from function_object
+end type
+
+forward prototypes
+global function string prev (integer al_sta, integer ll_back)
+end prototypes
+
+global function string prev (integer al_sta, integer ll_back);//// 09-06-2005 - Found this in the npts309.pbl code, 
+//// Scott never informed me of the change
+//RETURN RDInfo(al_sta,ll_back,'RD')
+
+long ll_Tour
+long ll_Sta
+long ll_Shift_No
+long ll_Rev_No
+string ls_Reading
+date ldt_Date
+string ls_Sql
+datastore lds_temp
+long ll_Count
+long ll_Num_Rows
+
+//**IF w_tour.ids_evaluate.RowCount() > 0 THEN
+//**	ll_tour		= w_tour.ids_evaluate.object.tour[1]
+//**	ll_rev_no	= w_tour.ids_evaluate.object.rev_no[1]
+//**	ll_sta		= w_tour.ids_evaluate.object.sta[1]
+//**	ldt_date 	= DATE(w_tour.ids_evaluate.object.dt[1])
+//**	ll_shift_no	= w_tour.ids_evaluate.object.shift_no[1]
+//**END IF
+ll_shift_no		= gsu_Tour_Parameters[gi_Current_Tour].shift_no//**
+ll_tour			= gsu_Tour_Parameters[gi_Current_Tour].tour_number//**
+ldt_date 		= gsu_Tour_Parameters[gi_Current_Tour].tour_date//**
+ll_rev_no		= gsu_Tour_Parameters[gi_Current_Tour].rev_no//**
+
+ls_Sql = " &
+	SELECT rd, dt, shift_no &
+	  FROM history &
+	 WHERE ( ( dt < '" + String(ldt_Date, 'yyyy/mm/dd') + "' ) &
+	 			OR &
+				( ( dt = '" + String(ldt_Date, 'yyyy/mm/dd') + "' ) &
+				  AND ( shift_no <= " + String(ll_shift_No) + " ) ) ) &
+		AND ( sta = " + String(al_Sta) + " ) &
+		AND ( tour = " + String(ll_tour) + " ) &
+		AND ( reading_id = 0 ) &
+	ORDER BY dt DESC, shift_no DESC "
+
+lds_temp = CREATE datastore
+ll_Num_Rows = f_Datastore_From_Sql(ls_Sql, lds_temp)
+IF ( ll_Num_Rows > 0 ) THEN
+	IF ( DATE(lds_temp.GetItemDateTime(1, 2)) = ldt_date ) AND ( lds_temp.GetItemNumber(1, 3) = ll_Shift_No ) THEN
+		ll_Back = ll_Back + 1
+	ELSEIF ( ll_Back = 0 ) THEN
+		ll_Back = 1
+	ELSE
+		ll_Back = ll_Back
+	END IF
+	IF ( ll_Back <= ll_Num_Rows )THEN
+		ls_Reading = lds_temp.GetItemString(ll_Back, 1)
+	ELSE
+		ls_Reading = "Reading Not Found"
+	END IF
+ELSE
+	ls_Reading = "Reading Not Found"
+END IF
+
+RETURN Upper(ls_reading)
+
+//long ll_row , ll_tour , ll_sta , ll_shift_no , ll_rev_no , I
+//string ls_reading
+//date ldt_date
+//
+//IF w_tour.ids_evaluate.RowCount() > 0 THEN
+//	ll_tour		= w_tour.ids_evaluate.object.tour[1]
+//	ll_rev_no	= w_tour.ids_evaluate.object.rev_no[1]
+//	ll_sta		= w_tour.ids_evaluate.object.sta[1]
+//	ldt_date 	= DATE(w_tour.ids_evaluate.object.dt[1])
+//	ll_shift_no	= w_tour.ids_evaluate.object.shift_no[1]
+//END IF
+//
+//DECLARE prev_cursor CURSOR FOR 
+//	SELECT   rd
+//		 FROM history
+//		WHERE (dt < :ldt_date OR
+//				 (dt = :ldt_date AND
+//				  shift_no <= :ll_shift_no)) AND
+//				sta = :al_sta AND
+//				tour = :ll_tour AND
+//				reading_id = 0
+//	ORDER BY dt DESC,
+//				shift_no DESC;
+//
+//OPEN prev_cursor ;
+//
+//FOR I = 0 TO ll_back
+//	FETCH NEXT prev_cursor INTO :ls_reading ;
+//NEXT
+//
+//IF SQLCA.SQLCode <> 0  THEN
+//	ls_reading = "Reading Not Found"
+//END IF
+//
+//CLOSE prev_cursor ;
+//
+//RETURN Upper(ls_reading)
+//
+end function
+

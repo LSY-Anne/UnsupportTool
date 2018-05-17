@@ -1,0 +1,11 @@
+﻿$PBExportHeader$f_get_datetime_format.srf
+global type f_get_datetime_format from function_object
+end type
+
+forward prototypes
+global function string f_get_datetime_format ()
+end prototypes
+
+global function string f_get_datetime_format ();RETURN guo_date_format.is_DateTime_Format
+end function
+

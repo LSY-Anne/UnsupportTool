@@ -1,0 +1,23 @@
+﻿$PBExportHeader$s_tour_parameters.srs
+global type s_tour_parameters from structure
+	string		tour_filename
+	integer		station
+	date		tour_date
+	integer		shift_no
+	string		sort_order
+	integer		tour_number
+	integer		menu_number
+	string		filter
+	string		last_location
+	boolean		scanning_required
+	string		scanned_code
+	integer		rev_no
+	string		tour_type_id
+	integer		selectedtab
+	integer		reading_id
+	string		normal_start_time
+	long		normal_start_day
+	string		tour_alert_description
+	string		filter_text
+end type
+

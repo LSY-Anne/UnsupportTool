@@ -1,0 +1,558 @@
+﻿$PBExportHeader$rdinfo.srf
+global type rdinfo from function_object
+end type
+
+forward prototypes
+global function string rdinfo (integer al_sta, integer back, string return_type)
+end prototypes
+
+global function string rdinfo (integer al_sta, integer back, string return_type);integer li_Scan
+long ll_row , ll_tour , ll_sequence, ll_shift_no , I,ll_rev_no,ll_reading_id,ll_sta
+long ll_spec,ll_tol,ll_shift_return,ll_normal_start_day
+string ls_user_name,ls_reading,ls_app_name,ls_user_id,ls_shift_desc,ls_normal_start_time,ls_name,ls_emin,ls_emax,ls_min,ls_max,ls_tol,ls_etol
+datetime ldt_clock_date,ldt_return_date
+date ldt_date
+time lt_shift_time
+string ls_Sql
+long ll_Count
+long ll_Num_Rows
+string ls_Filter
+integer li_Return
+string ls_Replacement_Sql
+datastore lds_temp
+
+//**IF ( w_tour.ids_evaluate.RowCount() > 0 ) THEN
+ll_shift_no		= gsu_Tour_Parameters[gi_Current_Tour].shift_no//**
+ll_tour			= gsu_Tour_Parameters[gi_Current_Tour].tour_number//**
+ldt_date 		= gsu_Tour_Parameters[gi_Current_Tour].tour_date//**
+ll_rev_no		= gsu_Tour_Parameters[gi_Current_Tour].rev_no//**
+//**	ll_shift_no	= w_tour.ids_evaluate.object.shift_no[1]
+//**	ll_tour		= w_tour.ids_evaluate.object.tour[1]
+//**	ll_rev_no	= w_tour.ids_evaluate.object.rev_no[1]
+//**	ldt_date		= DATE(w_tour.ids_evaluate.object.dt[1])
+	IF ll_sta = al_sta AND back = 0 THEN
+ll_reading_id	= gsu_Tour_Parameters[gi_Current_Tour].reading_id//**
+//**		ll_reading_id	= w_tour.ids_evaluate.object.reading_id[1]
+	ELSE
+		ll_reading_id	= 0
+	END IF
+//**ELSE
+//**	RETURN 'Error'
+//**END IF
+
+SELECT minimum,
+       maximum,
+		 tol,
+		 emin,
+		 emax,
+		 etol
+  INTO :ls_min,
+       :ls_max,
+		 :ls_tol,
+		 :ls_emin,
+		 :ls_emax,
+		 :ls_etol
+  FROM station
+ WHERE tour = :ll_tour AND
+       rev_no = :ll_rev_no AND
+		 sta = :al_sta ;
+
+ls_Sql = " &
+  SELECT history.rd ,&
+         history.shift_no ,&
+         history.user_id ,&
+         history.dt ,&
+         history.cdt ,&
+         history.spec ,&
+         history.tol ,&
+         shift_time.normal_start_time ,&
+         shift_time.normal_start_day ,&
+         shift_time.shift_desc ,&
+			userlog.name, &
+			history.scan &
+    FROM history,&
+         shift_time,&
+			userlog&
+   WHERE ( history.user_id = userlog.user_id ) &
+	  AND ( history.tour = shift_time.tour ) &
+	  AND ( history.rev_no = shift_time.rev_no ) &
+	  AND ( history.shift_no = shift_time.shift_no ) &
+/*SQL*/&
+	  AND ( history.rd IS NOT NULL ) &
+	  AND ( RTRIM(history.rd) <> '' ) &
+ORDER BY history.dt DESC,&
+         history.shift_no DESC"
+
+IF ( Back = 0 ) THEN
+// For STA() use only
+	ls_Replacement_Sql = " &
+	  AND ( history.dt = '" + String(ldt_Date, 'yyyy/mm/dd') + "' ) &
+	  AND ( history.shift_no = " + String(ll_shift_no) + " ) &
+	  AND ( history.sta = " + String(al_sta) + " ) &
+	  AND ( history.tour = " + String(ll_tour) + " ) "
+ELSE
+	ls_Replacement_Sql = " &
+	  AND ( history.dt < '" + String(ldt_Date, 'yyyy/mm/dd') + "' &
+           OR ( history.dt = '" + String(ldt_Date, 'yyyy/mm/dd') + "' &
+          AND history.shift_no <= " + String(ll_shift_no) + " ) ) &
+	  AND ( history.sta = " + String(al_sta) + " ) &
+	  AND ( history.tour = " + String(ll_tour) + " ) &
+	  AND NOT ( ( history.shift_no = " + String(ll_Shift_No) + " ) &
+			AND ( history.dt = '" + String(ldt_Date, 'yyyy/mm/dd') + "' ) ) "
+END IF
+
+ls_Sql = StrTran(ls_Sql, '/*SQL*/', ls_Replacement_Sql)
+lds_temp = CREATE datastore
+ll_Num_Rows = f_Datastore_From_Sql(ls_Sql, lds_temp)
+IF ( ll_Num_Rows > 0 ) THEN
+	IF ( DATE(lds_temp.GetItemDateTime(1, 4)) = ldt_Date ) AND ( lds_temp.GetItemNumber(1, 2) = ll_Shift_No ) THEN
+		Back = Back + 1
+	ELSEIF ( Back = 0 ) THEN
+		Back = 1
+	ELSE
+		Back = Back
+	END IF
+	IF ( Back <= ll_Num_Rows ) AND ( ll_Num_Rows > 0 ) THEN
+		ls_reading = lds_temp.GetItemString(Back, 1)
+		ll_shift_return = lds_temp.GetItemNumber(Back, 2)
+		ls_user_id = lds_temp.GetItemString(Back, 3)
+		ldt_return_date = lds_temp.GetItemDateTime(Back, 4)
+		ldt_clock_date = lds_temp.GetItemDateTime(Back, 5)
+		ll_spec = lds_temp.GetItemNumber(Back, 6)
+		ll_tol = lds_temp.GetItemNumber(Back, 7)
+		ls_normal_start_time = lds_temp.GetItemString(Back, 8)
+		ll_normal_start_day = lds_temp.GetItemNumber(Back, 9)
+		ls_shift_desc = lds_temp.GetItemstring(Back, 10)
+		ls_name = lds_temp.GetItemstring(Back, 11)
+		li_scan = lds_temp.GetItemNumber(Back, 12)
+	ELSE
+		ls_reading = "Reading Not Found"
+	END IF
+	
+	DESTROY lds_temp
+ELSE
+	ls_reading = "Reading Not Found"
+END IF
+IF ( ls_reading = "Reading Not Found" ) THEN
+	RETURN Upper(ls_reading)
+END IF
+
+//f_debug('B - rdinfo call to outofspec sta: ' + String(al_sta))
+ll_spec	= OutOfSpec(ldt_return_date,ll_tour,ll_rev_no,al_sta,ll_shift_return,ls_reading,ll_reading_id)
+//f_debug('A - rdinfo call to outofspec sta: ' + String(al_sta))
+//f_debug('B - rdinfo call to outoftol sta: ' + String(al_sta))
+ll_tol	= OutOfTol(ldt_return_date,ll_tour,ll_rev_no,al_sta,ll_shift_return,ls_reading,ll_reading_id)
+//f_debug('A - rdinfo call to outoftol sta: ' + String(al_sta))
+
+IF UPPER(return_type) = "RD" THEN
+ELSEIF UPPER(return_type) = "SD" THEN
+	ls_reading = String(ldt_return_date, "mm-dd-yyyy")
+ELSEIF UPPER(return_type) = "CD" THEN
+	ls_reading = String(ldt_clock_date,"mm-dd-yyyy hh:mm:ss")
+ELSEIF UPPER(return_type) = "ND" THEN
+	ls_reading = String(RelativeDate(Date(ldt_return_date),ll_normal_start_day),"mm-dd-yyyy")+" "+ls_normal_start_time
+ELSEIF UPPER(return_type) = "SPEC" THEN
+	IF ll_spec = 1 THEN
+		ls_reading = "YES"
+	ELSE
+		ls_reading = "NO"
+	END IF
+ELSEIF UPPER(return_type) = "OOT" THEN
+	IF ll_tol = 1 THEN
+		ls_reading = "YES"
+	ELSE
+		ls_reading = "NO"
+	END IF
+ELSEIF UPPER(return_type) = "ID" THEN
+	ls_reading = ls_user_id
+ELSEIF UPPER(return_type) = "NAME" THEN
+	ls_reading = ls_name
+ELSEIF UPPER(return_type) = "SCAN" THEN
+	IF li_Scan = 1 THEN
+		ls_reading = "YES"
+	ELSE
+		ls_reading = "NO"
+	END IF
+ELSEIF UPPER(return_type) = "MIN" THEN
+	IF Empty(ls_emin) THEN
+		ls_reading	= ls_min
+	ELSE
+//f_debug('B - rdinfo call to compile for min sta: ' + String(al_sta))
+		ls_reading	= Compile(ls_emin,ldt_return_date,ll_tour,al_sta,ll_shift_return,ll_reading_id)
+//f_debug('A - rdinfo call to compile for min sta: ' + String(al_sta))
+	END IF
+ELSEIF UPPER(return_type) = "MAX" THEN
+	IF Empty(ls_emax) THEN
+		ls_reading	= ls_max
+	ELSE
+//f_debug('B - rdinfo call to compile for max sta: ' + String(al_sta))
+		ls_reading	= Compile(ls_emax,ldt_return_date,ll_tour,al_sta,ll_shift_return,ll_reading_id)
+//f_debug('A - rdinfo call to compile for max sta: ' + String(al_sta))
+	END IF
+ELSEIF UPPER(return_type) = "TOL" THEN
+	IF Empty(ls_etol) THEN
+		ls_reading	= ls_tol
+	ELSE
+//f_debug('B - rdinfo call to compile for tol sta: ' + String(al_sta))
+		ls_reading	= Compile(ls_etol,ldt_return_date,ll_tour,al_sta,ll_shift_return,ll_reading_id)
+//f_debug('A - rdinfo call to compile for tol sta: ' + String(al_sta))
+	END IF
+ELSE
+	ls_reading = "Type not found"
+END IF
+
+RETURN Upper(ls_reading)
+
+//long ll_row , ll_tour , ll_sequence, ll_shift_no , I,ll_rev_no,ll_reading_id,ll_sta
+//long ll_spec,ll_tol,ll_shift_return,ll_normal_start_day
+//string ls_user_name,ls_reading,ls_app_name,ls_user_id,ls_shift_desc,ls_normal_start_time,ls_name,ls_emin,ls_emax,ls_min,ls_max,ls_tol,ls_etol
+//datetime ldt_clock_date,ldt_return_date
+//date ldt_date
+//time lt_shift_time
+//
+//IF w_tour.ids_evaluate.RowCount() > 0 THEN
+//	ll_shift_no	= w_tour.ids_evaluate.object.shift_no[1]
+//	ll_tour		= w_tour.ids_evaluate.object.tour[1]
+//	ll_rev_no	= w_tour.ids_evaluate.object.rev_no[1]
+//	ldt_date		= DATE(w_tour.ids_evaluate.object.dt[1])
+//	IF ll_sta = al_sta AND back = 0 THEN
+//		ll_reading_id	= w_tour.ids_evaluate.object.reading_id[1]
+//	ELSE
+//		ll_reading_id	= 0
+//	END IF
+//ELSE
+//	RETURN 'Error'
+//END IF
+//
+//SELECT minimum,
+//       maximum,
+//		 tol,
+//		 emin,
+//		 emax,
+//		 etol
+//  INTO :ls_min,
+//       :ls_max,
+//		 :ls_tol,
+//		 :ls_emin,
+//		 :ls_emax,
+//		 :ls_etol
+//  FROM station
+// WHERE tour = :ll_tour AND
+//       rev_no = :ll_rev_no AND
+//		 sta = :al_sta ;
+//
+// DECLARE prev_cursor CURSOR FOR 
+//  SELECT history.rd,
+//         history.shift_no,
+//         history.user_id,
+//         history.dt,
+//         history.cdt,
+//         history.spec,
+//         history.tol,
+//         shift_time.normal_start_time,
+//         shift_time.normal_start_day,
+//         shift_time.shift_desc,
+//			userlog.name
+//    FROM history,
+//         shift_time,
+//			userlog
+//   WHERE history.user_id = userlog.user_id AND
+//	      history.tour = shift_time.tour AND
+//         history.rev_no = shift_time.rev_no AND
+//         history.shift_no = shift_time.shift_no AND
+//         (history.dt < :ldt_date OR
+//          (history.dt = :ldt_date AND
+//           history.shift_no <= :ll_shift_no)) AND
+//         history.sta = :al_sta AND
+//         history.tour = :ll_tour
+//ORDER BY history.dt DESC,
+//         history.shift_no DESC;
+//			
+////SQLError()
+//
+//OPEN prev_cursor ;
+//
+////SQLError()
+//
+//// 2005-09-06 - Commented out the below code when I found the change in 
+//// npts309.pbl, Scott never informed me of the change
+////FETCH NEXT prev_cursor INTO 
+////	:ls_reading,
+////	:ll_shift_return,
+////	:ls_user_id,
+////	:ldt_return_date,
+////	:ldt_clock_date,
+////	:ll_spec,
+////	:ll_tol,
+////	:ls_normal_start_time,
+////	:ll_normal_start_day,
+////	:ls_shift_desc,
+////	:ls_name;
+//
+////SQLError()
+//
+//// 2005-09-06 - Made the below change when I found the change in 
+//// npts309.pbl, Scott never informed me of the change
+////FOR I = 1 TO BACK
+//FOR I = 0 TO BACK
+//	FETCH NEXT prev_cursor INTO 
+//		:ls_reading,
+//		:ll_shift_return,
+//		:ls_user_id,
+//		:ldt_return_date,
+//		:ldt_clock_date,
+//		:ll_spec,
+//		:ll_tol,
+//		:ls_normal_start_time,
+//		:ll_normal_start_day,
+//		:ls_shift_desc,
+//		:ls_name ;
+//
+//// 2005-09-06 - Added the below code when I found the change in 
+//// npts309.pbl, Scott never informed me of the change
+//	IF SQLCA.SQLCode <> 0  THEN
+//		ls_reading = "Reading Not Found"
+//		EXIT
+//	END IF
+//	
+//NEXT
+//
+//IF SQLCA.SQLCode <> 0  THEN
+//	ls_reading = "Reading Not Found"
+//END IF
+//
+//CLOSE prev_cursor ;
+//
+//IF ls_reading = "Reading Not Found" THEN
+//	RETURN Upper(ls_reading)
+//END IF
+//
+//ll_spec	= OutOfSpec(ldt_return_date,ll_tour,ll_rev_no,al_sta,ll_shift_return,ls_reading,ll_reading_id)
+//ll_tol	= OutOfTol(ldt_return_date,ll_tour,ll_rev_no,al_sta,ll_shift_return,ls_reading,ll_reading_id)
+//
+//IF UPPER(return_type) = "RD" THEN
+//ELSEIF UPPER(return_type) = "SD" THEN
+//	ls_reading = String(DateTime(Date(ldt_return_date),lt_shift_time),"mm-dd-yyyy")
+//ELSEIF UPPER(return_type) = "CD" THEN
+//	ls_reading = String(ldt_clock_date,"mm-dd-yyyy hh:mm:ss")
+//ELSEIF UPPER(return_type) = "ND" THEN
+//	ls_reading = String(RelativeDate(Date(ldt_return_date),ll_normal_start_day),"mm-dd-yyyy")+" "+ls_normal_start_time
+//ELSEIF UPPER(return_type) = "SPEC" THEN
+//	IF ll_spec = 1 THEN
+//		ls_reading = "YES"
+//	ELSE
+//		ls_reading = "NO"
+//	END IF
+//ELSEIF UPPER(return_type) = "OOT" THEN
+//	IF ll_tol = 1 THEN
+//		ls_reading = "YES"
+//	ELSE
+//		ls_reading = "NO"
+//	END IF
+//ELSEIF UPPER(return_type) = "ID" THEN
+//	ls_reading = ls_user_id
+//ELSEIF UPPER(return_type) = "NAME" THEN
+//	ls_reading = ls_name
+//ELSEIF UPPER(return_type) = "MIN" THEN
+//	IF Empty(ls_emin) THEN
+//		ls_reading	= ls_min
+//	ELSE
+//		ls_reading	= Compile(ls_emin,ldt_return_date,ll_tour,al_sta,ll_shift_return,ll_reading_id)
+//	END IF
+//ELSEIF UPPER(return_type) = "MAX" THEN
+//	IF Empty(ls_emax) THEN
+//		ls_reading	= ls_max
+//	ELSE
+//		ls_reading	= Compile(ls_emax,ldt_return_date,ll_tour,al_sta,ll_shift_return,ll_reading_id)
+//	END IF
+//ELSEIF UPPER(return_type) = "TOL" THEN
+//	IF Empty(ls_etol) THEN
+//		ls_reading	= ls_tol
+//	ELSE
+//		ls_reading	= Compile(ls_etol,ldt_return_date,ll_tour,al_sta,ll_shift_return,ll_reading_id)
+//	END IF
+//ELSE
+//	ls_reading = "Type not found"
+//END IF
+//
+//RETURN Upper(ls_reading)
+//
+//
+////long ll_row , ll_tour , ll_sequence, ll_shift_no , I,ll_rev_no
+////long ll_spec,ll_tol,ll_shift_return,ll_normal_start_day
+////string ls_user_name,ls_reading,ls_app_name,ls_user_id,ls_shift_desc,ls_normal_start_time,ls_name,ls_emin,ls_emax,ls_min,ls_max,ls_tol,ls_etol
+////datetime ldt_date,ldt_clock_date,ldt_return_date
+////time lt_shift_time
+////
+////IF IsValid(w_tour) THEN
+////	ll_rev_no	= w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_rev_no[w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()]
+////ELSE
+////	RETURN "Error"
+////END IF
+////	
+////ll_shift_no		= gsu_Tour_Parameters[gi_Current_Tour].shift_no
+////ll_tour			= gsu_Tour_Parameters[gi_Current_Tour].tour_number
+////ldt_date 		= DateTime(gsu_Tour_Parameters[gi_Current_Tour].tour_date)
+////
+////SELECT minimum,
+////       maximum,
+////		 tol,
+////		 emin,
+////		 emax,
+////		 etol
+////  INTO :ls_min,
+////       :ls_max,
+////		 :ls_tol,
+////		 :ls_emin,
+////		 :ls_emax,
+////		 :ls_etol
+////  FROM station
+//// WHERE tour = :ll_tour AND
+////       rev_no = :ll_rev_no AND
+////		 sta = :ll_sta ;
+////
+//// DECLARE prev_cursor CURSOR FOR 
+////  SELECT history.rd,
+////         history.shift_no,
+////         history.user_id,
+////         history.dt,
+////         history.cdt,
+////         history.spec,
+////         history.tol,
+////         shift_time.normal_start_time,
+////         shift_time.normal_start_day,
+////         shift_time.shift_desc,
+////			( SELECT userlog.name FROM userlog WHERE ( userlog.user_id = history.user_id ) ) 
+////    FROM history,
+////         shift_time
+////   WHERE history.tour = shift_time.tour AND
+////         history.rev_no = shift_time.rev_no AND
+////         history.shift_no = shift_time.shift_no AND
+////         (history.dt < :ldt_date OR
+////          (history.dt = :ldt_date AND
+////           history.shift_no <= :ll_shift_no)) AND
+////         history.sta = :ll_sta AND
+////         history.tour = :ll_tour
+////ORDER BY history.dt DESC,
+////         history.shift_no DESC;
+////
+////
+//////  SELECT history.rd,
+//////         history.shift_no,
+//////         history.user_id,
+//////         history.dt,
+//////         history.cdt,
+//////         history.spec,
+//////         history.tol,
+//////         shift_time.normal_start_time,
+//////         shift_time.normal_start_day,
+//////         shift_time.shift_desc,
+//////			userlog.name
+//////    FROM history,
+//////         shift_time,
+//////			userlog
+//////   WHERE history.user_id = userlog.user_id AND
+//////	      history.tour = shift_time.tour AND
+//////         history.rev_no = shift_time.rev_no AND
+//////         history.shift_no = shift_time.shift_no AND
+//////         (history.dt < :ldt_date OR
+//////          (history.dt = :ldt_date AND
+//////           history.shift_no <= :ll_shift_no)) AND
+//////         history.sta = :ll_sta AND
+//////         history.tour = :ll_tour
+//////ORDER BY history.dt DESC,
+//////         history.shift_no DESC;
+////
+//////SQLError()
+////
+////OPEN prev_cursor ;
+////
+//////SQLError()
+////
+////FETCH NEXT prev_cursor INTO 
+////	:ls_reading,
+////	:ll_shift_return,
+////	:ls_user_id,
+////	:ldt_return_date,
+////	:ldt_clock_date,
+////	:ll_spec,
+////	:ll_tol,
+////	:ls_normal_start_time,
+////	:ll_normal_start_day,
+////	:ls_shift_desc,
+////	:ls_name;
+////
+//////SQLError()
+////
+////FOR I = 1 TO BACK
+////	FETCH NEXT prev_cursor INTO 
+////		:ls_reading,
+////		:ll_shift_return,
+////		:ls_user_id,
+////		:ldt_return_date,
+////		:ldt_clock_date,
+////		:ll_spec,
+////		:ll_tol,
+////		:ls_normal_start_time,
+////		:ll_normal_start_day,
+////		:ls_shift_desc,
+////		:ls_name ;
+////NEXT
+////
+////IF Empty(ls_user_id) THEN
+////	ls_user_id = ''
+////END IF
+////
+////IF SQLCA.SQLCode <> 0  THEN
+////	ls_reading = "Reading Not Found"
+//////	ls_reading	= Left(sqlca.sqlerrtext,40)
+////ELSEIF UPPER(return_type) = "RD" THEN
+////ELSEIF UPPER(return_type) = "SD" THEN
+////	ls_reading = String(DateTime(Date(ldt_return_date),lt_shift_time),"mm-dd-yyyy")
+////ELSEIF UPPER(return_type) = "CD" THEN
+////	ls_reading = String(ldt_clock_date,"mm-dd-yyyy hh:mm:ss")
+////ELSEIF UPPER(return_type) = "ND" THEN
+////	ls_reading = String(RelativeDate(Date(ldt_return_date),ll_normal_start_day),"mm-dd-yyyy")+" "+ls_normal_start_time
+////ELSEIF UPPER(return_type) = "SPEC" THEN
+////	IF ll_spec = 1 THEN
+////		ls_reading = "YES"
+////	ELSE
+////		ls_reading = "NO"
+////	END IF
+////ELSEIF UPPER(return_type) = "OOT" THEN
+////	IF ll_tol = 1 THEN
+////		ls_reading = "YES"
+////	ELSE
+////		ls_reading = "NO"
+////	END IF
+////ELSEIF UPPER(return_type) = "ID" THEN
+////	ls_reading = ls_user_id
+////ELSEIF UPPER(return_type) = "NAME" THEN
+////	ls_reading = ls_name
+////ELSEIF UPPER(return_type) = "MIN" THEN
+////	IF Empty(ls_emin) THEN
+////		ls_reading	= ls_min
+////	ELSE
+////		ls_reading	= Compile(ls_emin,ldt_return_date,ll_tour,ll_sta,ll_shift_no)
+////	END IF
+////ELSEIF UPPER(return_type) = "MAX" THEN
+////	IF Empty(ls_emax) THEN
+////		ls_reading	= ls_max
+////	ELSE
+////		ls_reading	= Compile(ls_emax,ldt_return_date,ll_tour,ll_sta,ll_shift_no)
+////	END IF
+////ELSEIF UPPER(return_type) = "TOL" THEN
+////	IF Empty(ls_etol) THEN
+////		ls_reading	= ls_tol
+////	ELSE
+////		ls_reading	= Compile(ls_etol,ldt_return_date,ll_tour,ll_sta,ll_shift_no)
+////	END IF
+////ELSE
+////	ls_reading = "Type not found"
+////END IF
+////
+////CLOSE prev_cursor ;
+////
+////return ls_reading
+end function
+

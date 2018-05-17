@@ -1,0 +1,71 @@
+﻿$PBExportHeader$seconddiff.srf
+global type seconddiff from function_object
+end type
+
+forward prototypes
+global function string seconddiff (string ls_start_date, string ls_end_date)
+end prototypes
+
+global function string seconddiff (string ls_start_date, string ls_end_date);string ls_time
+long ll_seconds , ll_days
+integer li_Year
+integer li_Month
+integer li_Day
+integer li_Hour
+integer li_Minute
+integer li_Second
+date ld_start_date, ld_end_date
+time lt_start_time, lt_end_time
+
+// 2009-02-18 - RPR corrected for localization WRT Date(~string~) and the string is NOT in the localized format.
+//              This is still expecting a string in the format mm-dd-yyyy
+
+li_Year	= Integer(Mid(ls_start_date,7,4))
+li_Month	= Integer(Mid(ls_start_date,1,2))
+li_Day	= Integer(Mid(ls_start_date,4,2))
+ld_start_date	= Date(li_Year, li_Month, li_Day)
+
+ls_Time = MID(ls_start_date,12)
+IF ( POS(ls_Time, ':') > 0 ) THEN
+	li_Hour	= Integer(Mid(ls_Time,1,2))
+	li_Minute	= Integer(Mid(ls_Time,4,2))
+	li_Second	= Integer(Mid(ls_Time,7,2))
+ELSE
+	li_Hour	= Integer(Mid(ls_Time,1,2))
+	li_Minute	= Integer(Mid(ls_Time,3,2))
+	li_Second	= Integer(Mid(ls_Time,5,2))
+END IF
+lt_Start_Time = Time(li_Hour, li_Minute, li_Second)
+
+li_Year	= Integer(Mid(ls_end_date,7,4))
+li_Month	= Integer(Mid(ls_end_date,1,2))
+li_Day	= Integer(Mid(ls_end_date,4,2))
+ld_end_date	= Date(li_Year, li_Month, li_Day)
+
+ls_Time = MID(ls_end_date,12)
+IF ( POS(ls_Time, ':') > 0 ) THEN
+	li_Hour	= Integer(Mid(ls_Time,1,2))
+	li_Minute	= Integer(Mid(ls_Time,4,2))
+	li_Second	= Integer(Mid(ls_Time,7,2))
+ELSE
+	li_Hour	= Integer(Mid(ls_Time,1,2))
+	li_Minute	= Integer(Mid(ls_Time,3,2))
+	li_Second	= Integer(Mid(ls_Time,5,2))
+END IF
+lt_End_Time = Time(li_Hour, li_Minute, li_Second)
+
+ll_days		= DaysAfter(ld_start_date, ld_end_date)
+ll_seconds	= SecondsAfter(lt_start_time,lt_end_time)
+ll_seconds	= ll_days*24*60*60 + ll_seconds
+
+RETURN String(ll_seconds)
+
+//long ll_seconds , ll_days
+//
+//ll_days		= DaysAfter(   Date(Mid(ls_start_date,1,10)),Date(Mid(ls_end_date,1,10)))
+//ll_seconds	= SecondsAfter(Time(Mid(ls_start_date,12)),Time(Mid(ls_end_date,12)))
+//ll_seconds	= ll_days*24*60*60 + ll_seconds
+//
+//RETURN String(ll_seconds)
+end function
+

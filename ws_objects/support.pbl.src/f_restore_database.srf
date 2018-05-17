@@ -1,0 +1,116 @@
+﻿$PBExportHeader$f_restore_database.srf
+global type f_restore_database from function_object
+end type
+
+forward prototypes
+global subroutine f_restore_database (string as_filename)
+end prototypes
+
+global subroutine f_restore_database (string as_filename);integer li_Return
+string ls_RegPath_ASA
+string ls_Backup_Folder
+string ls_Restore_Folder
+string ls_ASA_Path
+string ls_Connection
+string ls_Command
+pointer l_pointer
+
+IF gb_Platform_Is_CE THEN
+	ls_Restore_Folder = GetCurrentDirectory()
+	
+	//ls_ASA_Path = f_Determine_ASA_Reg_Path()
+//	ls_ASA_Path = '\Program Files\ASA9'
+	IF ( FileExists(GetCurrentDirectory() + "\dbsrv9.exe") AND gb_Platform_Is_CE ) OR NOT gb_Platform_Is_CE THEN
+		ls_ASA_Path = GetCurrentDirectory()
+		ls_RegPath_ASA = 'Software\Sybase\SQL Anywhere\11.0'
+		li_Return = RegistryGet("HKEY_LOCAL_MACHINE\" + ls_RegPath_ASA, "Location", RegString!, ls_ASA_Path)
+		IF NOT Empty(ls_ASA_Path) THEN
+			gb_SA11 = TRUE
+		ELSE
+			gb_SA11 = FALSE
+			ls_RegPath_ASA = 'Software\Sybase\Adaptive Server Anywhere\9.0'
+			li_Return = RegistryGet("HKEY_LOCAL_MACHINE\" + ls_RegPath_ASA, "Location", RegString!, ls_ASA_Path)
+		END IF
+	ELSE
+		ls_RegPath_ASA = 'Software\Sybase\SQL Anywhere\11.0'
+		li_Return = RegistryGet("HKEY_CURRENT_USER\" + ls_RegPath_ASA, "Location", RegString!, ls_ASA_Path)
+		IF NOT Empty(ls_ASA_Path) THEN
+			gb_SA11 = TRUE
+		ELSE
+			gb_SA11 = FALSE
+			ls_RegPath_ASA = 'Software\Sybase\Adaptive Server Anywhere\9.0'
+			li_Return = RegistryGet("HKEY_CURRENT_USER\" + ls_RegPath_ASA, "Location", RegString!, ls_ASA_Path)
+		END IF
+	END IF
+	IF NOT Empty(ls_ASA_Path) THEN
+		ls_Backup_Folder = ProfileString(gs_Ini_File, "Common", "BackupFolder", '')
+		IF NOT Empty(ls_Backup_Folder) AND DirectoryExists(ls_Backup_Folder) AND FileExists(ls_Backup_Folder + "\esoms.db") THEN
+			l_pointer = SetPointer(HourGlass!)
+			IF gb_SA11 THEN
+				SQLCA.dbparm = "ConnectString='Driver=dbodbc11.dll;UID=dba;PWD=sql;ENG=eSOMS;DBN=eSOMS;START=" + ls_ASA_Path + "\dbsrv11.exe -q;DBF=" + ls_Backup_Folder + "\eSOMS.db'"
+			ELSE
+				SQLCA.dbparm = "ConnectString='Driver=dbodbc9.dll;UID=dba;PWD=sql;ENG=eSOMS;DBN=eSOMS;START=" + ls_ASA_Path + "\dbsrv9.exe -q;DBF=" + ls_Backup_Folder + "\eSOMS.db'"
+			END IF
+		
+			f_Disconnect_From_DB()
+			f_Disconnect_From_DB_Main()
+			Sleep(2)
+			
+			CONNECT USING SQLCA ;
+		
+//			// Copy any additional log files over
+//			f_Copy_Log_Files(ls_Backup_Folder, ls_Restore_Folder)
+
+			ls_Restore_Folder = StrTran(ls_Restore_Folder, '\', '\\')
+			ls_Command = "call proc_backup('" + ls_Restore_Folder + "')"
+	
+			EXECUTE IMMEDIATE :ls_Command USING SQLCA ;
+		
+			DISCONNECT USING SQLCA ;
+		
+			Sleep(2)
+			f_Connect_To_DB_Main(FALSE)
+			f_Connect_To_DB(FALSE)
+		
+			SetPointer(l_pointer)
+		END IF
+	ELSE
+		MessageBox(f_LanguageString('ERROR', 'Error'), f_LanguageString('UNABLE_TO_LOCATE_ASA_DATABASE_ENGINE.', 'Unable to locate ASA database engine.'))
+	END IF
+ELSE
+	ls_Restore_Folder = "\NomsV3\eSOMS.db\NPTS"
+	ls_Backup_Folder = ProfileString(gs_Ini_File, "Common", "BackupFolder", '')
+	IF NOT Empty(ls_Backup_Folder) AND DirectoryExists(ls_Backup_Folder) AND FileExists(ls_Backup_Folder + "\esoms.db") THEN
+		l_pointer = SetPointer(HourGlass!)
+		ls_Connection = "ConnectString='Driver=Adaptive Server Anywhere 9.0;UID=dba;PWD=sql;ENG=eSOMS;DBN=eSOMS;START=dbsrv9.exe -q -x tcpip(dobroadcast=no;port=2638) -gp 1024 -c 4M;DBF=" + ls_Backup_Folder + "\eSOMS.db',ConnectOption='SQL_DRIVER_CONNECT,SQL_DRIVER_NOPROMPT',DisableBind=1"
+		SQLCA.dbparm = ls_Connection
+	
+		f_Disconnect_From_DB()
+		f_Disconnect_From_DB_Main()
+		Sleep(2)
+		
+		CONNECT USING SQLCA ;
+	
+		// Copy any additional log files over
+		f_Copy_Log_Files(ls_Backup_Folder, ls_Restore_Folder)
+		ls_Restore_Folder = StrTran(ls_Restore_Folder, '\', '\\')
+		ls_Command = "call proc_backup('" + ls_Restore_Folder + "')"
+
+		EXECUTE IMMEDIATE :ls_Command USING SQLCA ;
+		
+		DISCONNECT USING SQLCA ;
+	
+		Sleep(2)
+		f_Connect_To_DB_Main(FALSE)
+		f_Connect_To_DB(FALSE)
+	
+//		// Copy any additional log files over
+//		ls_Restore_Folder = StrTran(ls_Restore_Folder, '\\', '\')
+//		f_Copy_Log_Files(ls_Backup_Folder, ls_Restore_Folder)
+
+		SetPointer(l_pointer)
+	END IF
+END IF
+
+end subroutine
+

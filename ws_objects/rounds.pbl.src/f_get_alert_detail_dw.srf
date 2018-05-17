@@ -1,0 +1,50 @@
+﻿$PBExportHeader$f_get_alert_detail_dw.srf
+global type f_get_alert_detail_dw from function_object
+end type
+
+forward prototypes
+global subroutine f_get_alert_detail_dw (datawindow adw_passed, integer ai_reading_id, integer ai_alert_id, string as_alert_description, string as_alert_text, string as_alert_expression)
+end prototypes
+
+global subroutine f_get_alert_detail_dw (datawindow adw_passed, integer ai_reading_id, integer ai_alert_id, string as_alert_description, string as_alert_text, string as_alert_expression);string ls_Return
+long ll_Count
+integer li_Row
+string ls_User
+datetime ldt_Temp
+
+adw_passed.SetRedraw(FALSE)
+li_Row = adw_passed.InsertRow(0)
+adw_passed.Object.header[li_Row] = 'Description:'
+adw_passed.Object.text[li_Row] = as_Alert_Description
+
+li_Row = adw_passed.InsertRow(0)
+adw_passed.Object.header[li_Row] = 'Text:'
+adw_passed.Object.text[li_Row] = as_Alert_Text
+
+li_Row = adw_passed.InsertRow(0)
+adw_passed.Object.header[li_Row] = 'Expression:'
+adw_passed.Object.text[li_Row] = as_Alert_Expression
+
+SELECT name, 
+       accept_dt 
+  INTO :ls_User, 
+       :ldt_temp 
+  FROM alert_accept, userlog 
+ WHERE ( tour = :gsu_tour_parameters[gi_Current_Tour].Tour_Number ) 
+   AND ( rev_no = :gsu_tour_parameters[gi_Current_Tour].rev_no ) 
+	AND ( dt = :gsu_tour_parameters[gi_Current_Tour].tour_date ) 
+	AND ( sta = :gsu_tour_parameters[gi_Current_Tour].station ) 
+	AND ( shift_no = :gsu_tour_parameters[gi_Current_Tour].shift_no ) 
+	AND ( reading_id = :ai_Reading_Id ) 
+	AND ( alert_id = :ai_Alert_Id ) 
+	AND ( alert_accept.user_id = userlog.user_id ) ;
+			
+IF ( SQLCA.SQLNRows = 1 ) THEN
+	li_Row = adw_passed.InsertRow(0)
+	adw_passed.Object.header[li_Row] = 'Acceptance:'
+	adw_passed.Object.text[li_Row] = ls_User + ' - ' + String(ldt_temp, date_format + ' hh:mm:ss')
+END IF
+
+adw_passed.SetRedraw(TRUE)
+end subroutine
+

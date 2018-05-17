@@ -1,0 +1,7 @@
+﻿Save Format v3.0(19990112)
+@begin Libraries
+ "mobilink_or.pbl" "";
+@end;
+@begin Objects 
+ "f_upload_scratchpad.srf" "mobilink_or.pbl";
+@end;

@@ -1,0 +1,53 @@
+﻿$PBExportHeader$curnormstarttime.srf
+global type curnormstarttime from function_object
+end type
+
+forward prototypes
+global function string curnormstarttime ()
+end prototypes
+
+global function string curnormstarttime ();long ll_row, ll_tour , ll_shift_no , ll_rev_no
+string	ls_shift_desc
+
+//**IF w_tour.ids_evaluate.RowCount() > 0 THEN
+//**	ll_shift_no	= w_tour.ids_evaluate.object.shift_no[1]
+//**	ll_tour		= w_tour.ids_evaluate.object.tour[1]
+//**	ll_rev_no	= w_tour.ids_evaluate.object.rev_no[1]
+//**ELSE
+//**	RETURN 'Error'
+//**END IF
+ll_shift_no		= gsu_Tour_Parameters[gi_Current_Tour].shift_no//**
+ll_tour			= gsu_Tour_Parameters[gi_Current_Tour].tour_number//**
+ll_rev_no		= gsu_Tour_Parameters[gi_Current_Tour].rev_no//**
+
+SELECT normal_start_time 
+  INTO :ls_shift_desc 
+  FROM shift_time 
+ WHERE tour = :ll_tour AND 
+       shift_no = :ll_shift_no AND
+		 rev_no = :ll_rev_no ;
+
+RETURN Trim(ls_shift_desc)
+
+//long ll_row, ll_tour , ll_shift_no , ll_rev_no
+//string	ls_shift_desc
+//
+//IF IsValid(w_tour) THEN
+//	ll_rev_no	= w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_rev_no[w_tour.tab_tour.tabpage_readings.dw_readings.GetRow()]
+//ELSE
+//	RETURN "Error"
+//END IF
+//	
+//ll_shift_no		= gsu_Tour_Parameters[gi_Current_Tour].shift_no
+//ll_tour			= gsu_Tour_Parameters[gi_Current_Tour].tour_number
+//
+//SELECT normal_start_time 
+//  INTO :ls_shift_desc 
+//  FROM shift_time 
+// WHERE tour = :ll_tour AND 
+//       shift_no = :ll_shift_no AND
+//		 rev_no = :ll_rev_no ;
+//
+//RETURN Trim(ls_shift_desc)
+end function
+

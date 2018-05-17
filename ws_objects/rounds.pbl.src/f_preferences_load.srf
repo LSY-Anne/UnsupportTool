@@ -1,0 +1,313 @@
+﻿$PBExportHeader$f_preferences_load.srf
+global type f_preferences_load from function_object
+end type
+
+forward prototypes
+global subroutine f_preferences_load (datawindow adw_passed)
+end prototypes
+
+global subroutine f_preferences_load (datawindow adw_passed);string ls_Current
+integer li_Row
+
+//li_Row = adw_passed.InsertRow(0)
+//IF ( li_Row > 0 ) THEN
+//	ls_Current = ProfileString(gs_INI_File, 'Common', "ml_server", "")
+//	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+//	adw_passed.Object.key_id[li_Row] = "ml_server"
+//	adw_passed.Object.description[li_Row] = "MobiLink server name/IP address?"
+//	adw_passed.Object.value_id[li_Row] = ls_Current
+//	adw_passed.Object.default_value[li_Row] = ""
+//	adw_passed.Object.preference_list[li_Row] = ""
+//	adw_passed.Object.module_id[li_Row] = 'Common'
+//END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "AUTOKEYBOARDWINCE", f_LanguageString('NO', 'No'))
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "AUTOKEYBOARDWINCE"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_AUTO_DISPLAY_KEYBOARD?', "Auto-display keyboard?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = f_LanguageString('NO', 'No')
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "HISTORY_GRAPH_ORDER", f_LanguageString('ASC', "Asc"))
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "HISTORY_GRAPH_ORDER"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_DEFAULT_HISTORY_GRAPH_ORDER?', "Default history graph order?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = f_LanguageString('ASC', "Asc")
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('ASC', "Asc") + "|" + f_LanguageString('DESC', "Desc")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "USE_NAVIGATION_ARROWS", f_LanguageString('NO', 'No'))
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "USE_NAVIGATION_ARROWS"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_USE_NAVIGATION_CONTROL?', "Use navigation control?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = f_LanguageString('NO', 'No')
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "ALLOW_NOTE_FILES", f_LanguageString('YES', 'Yes'))
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "ALLOW_NOTE_FILES"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_USE_POCKET_NOTES?', "Use Pocket Notes?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = f_LanguageString('YES', 'Yes')
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "Prompt_For_Missed", f_LanguageString('YES', 'Yes'))
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "Prompt_For_Missed"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_PROMPT_FOR_MISSED_READINGS_ON_TOUR_CLOSE?', "Prompt for Missed Readings on Tour Close?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = f_LanguageString('YES', 'Yes')
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "CHECKREQUIREDREADINGS", f_LanguageString('YES', 'Yes'))
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "CHECKREQUIREDREADINGS"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_PROMPT_FOR_REQUIRED_READINGS_ON_TOUR_CLOSE?', "Prompt for Required Readings on Tour Close?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = f_LanguageString('YES', 'Yes')
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "Prompt_For_Unscanned", f_LanguageString('YES', 'Yes'))
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "Prompt_For_Unscanned"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_PROMPT_FOR_UNSCANNED_READINGS_ON_TOUR_CLOSE?', "Prompt for Unscanned Readings on Tour Close?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = f_LanguageString('YES', 'Yes')
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "Prompt_For_Abnormal", f_LanguageString('YES', 'Yes'))
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "Prompt_For_Abnormal"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_PROMPT_FOR_ABNORMAL_READINGS_ON_TOUR_CLOSE?', "Prompt for Abnormal Readings on Tour Close?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = f_LanguageString('YES', 'Yes')
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "Ignore_EAPP_In_Stations_DW", f_LanguageString('YES', 'Yes'))
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "Ignore_EAPP_In_Stations_DW"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_IGNORE_APPLICABILITY_EXPRESSIONS', "Ignore applicability expressions when hiding rows on List tab? (Increased List tab performance if 'Yes')")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = f_LanguageString('YES', 'Yes')
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+//li_Row = adw_passed.InsertRow(0)
+//IF ( li_Row > 0 ) THEN
+//	ls_Current = ProfileString(gs_INI_File, "Common", "VGA_DEVICE", f_LanguageString('NO', 'No'))
+//	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+//	adw_passed.Object.key_id[li_Row] = "VGA_DEVICE"
+//	adw_passed.Object.description[li_Row] = "Is device VGA enabled?"
+//	adw_passed.Object.value_id[li_Row] = ls_Current
+//	adw_passed.Object.default_value[li_Row] = f_LanguageString('NO', 'No')
+//	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+//	adw_passed.Object.module_id[li_Row] = "Common"
+//END IF
+//
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "USE_ELLIPSES", f_LanguageString('NO', 'No'))
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "USE_ELLIPSES"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_USE_ELLIPSES_FOR_LONG_STRINGS?', "Use Ellipses for long strings?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = f_LanguageString('NO', 'No')
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "AUTOMATIC_BACKUP_TIMING", "10")
+	adw_passed.Object.key_id[li_Row] = "AUTOMATIC_BACKUP_TIMING"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_NUMBER_OF_MINUTES_FOR_AUTOMATIC_BACKUP_EVENT?', "Number of minutes for automatic backup event?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = "10"
+	adw_passed.Object.preference_list[li_Row] = "0|5|10|15|20|25|30|35|40|45|50|55|60|90|120"
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "DISPLAY_HIDDEN_RECORDS", f_LanguageString('NO', 'No'))
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "DISPLAY_HIDDEN_RECORDS"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_DISPLAY_HIDDEN_RECORDS?', "Display hidden records?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = f_LanguageString('NO', 'No')
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "Show_Tour_Close_Progress", f_LanguageString('NO', 'No'))
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "Show_Tour_Close_Progress"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_DISPLAY_THE_PROGRESS_OF_THE_TOUR_CLOSE_PROCESS?', "Display the progress of the tour close process?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = f_LanguageString('NO', 'No')
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "ENTER_BUTTON", "0")
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "ENTER_BUTTON"
+	adw_passed.Object.description[li_Row] = '1 - ' +f_LanguageString('PREF_HARDWARE_BUTTON?', "Hardware Button?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = "0"
+	adw_passed.Object.preference_list[li_Row] = "0|1|2|3|4"
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "HARDWARE_BUTTON_ACTION", "")
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "HARDWARE_BUTTON_ACTION"
+	adw_passed.Object.description[li_Row] = '1 - ' +f_LanguageString('PREF_ACTION_TO_PERFORM_WHEN_HARDWARE_BUTTON_IS_PRESSED?', "Action to perform when hardware button is pressed?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = ""
+	adw_passed.Object.preference_list[li_Row] = "|" + f_LanguageString('ENTER', "Enter") + "|" + f_LanguageString('FIND_BY_SCAN', "Find By Scan")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+//Copied - need to adjust for button 2
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "ENTER_BUTTON_2", "0")
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "ENTER_BUTTON_2"
+	adw_passed.Object.description[li_Row] = '2 - ' +f_LanguageString('PREF_HARDWARE_BUTTON?', "Hardware Button?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = "0"
+	adw_passed.Object.preference_list[li_Row] = "0|1|2|3|4"
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "HARDWARE_BUTTON_2_ACTION", "")
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "HARDWARE_BUTTON_2_ACTION"
+	adw_passed.Object.description[li_Row] = '2 - ' +f_LanguageString('PREF_ACTION_TO_PERFORM_WHEN_HARDWARE_BUTTON_IS_PRESSED?', "Action to perform when hardware button is pressed?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = ""
+	adw_passed.Object.preference_list[li_Row] = "|" + f_LanguageString('ENTER', "Enter") + "|" + f_LanguageString('FIND_BY_SCAN', "Find By Scan")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "MakeScanSkipButtonDefault", "")
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "MakeScanSkipButtonDefault"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_DEFAULT_THE_SKIP_BUTTON_ON_SCAN_SCREEN_TO_THE_ENTER_KEY?', "Default the Skip button on scan screen to the Enter key?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = ""
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "ForceFindByScanCode", f_LanguageString('NO', 'No'))
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "ForceFindByScanCode"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_WHEN_PROMPTED_FOR_SCANNING,_USE_FIND_BY_SCANCODE?', "When prompted for scanning, use 'Find By Scancode'?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = f_LanguageString('NO', 'No')
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "RequireNoteAfterScanSkip", f_LanguageString('NO', 'No'))
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "RequireNoteAfterScanSkip"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_REQUIRE_A_NOTE_WHEN_RECORD_SCAN_IS_SKIPPED?', "Require a note when record scan is skipped?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = f_LanguageString('NO', 'No')
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+//li_Row = adw_passed.InsertRow(0)
+//IF ( li_Row > 0 ) THEN
+//	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "AllowEditNoteInWindow", f_LanguageString('YES', 'Yes'))
+//	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+//	adw_passed.Object.key_id[li_Row] = "AllowEditNoteInWindow"
+//	adw_passed.Object.description[li_Row] = "Allow editing notes full-screen?"
+//	adw_passed.Object.value_id[li_Row] = ls_Current
+//	adw_passed.Object.default_value[li_Row] = f_LanguageString('YES', 'Yes')
+//	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+//	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+//END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "AllowLeadingAndTrailingCRLFInNotes", f_LanguageString('NO', 'No'))
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "AllowLeadingAndTrailingCRLFInNotes"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_ALLOW_LEADING_&_TRAILING_CRLFS_IN_NOTES?', "Allow leading & trailing CRLFs in notes?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = f_LanguageString('NO', 'No')
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+li_Row = adw_passed.InsertRow(0)
+IF ( li_Row > 0 ) THEN
+	ls_Current = ProfileString(gs_INI_File, gs_Window_Title, "Alternate_Locked_List_View", f_LanguageString('NO', 'No'))
+	//	ls_Current = Upper(MID(ls_Current, 1, 1)) + Lower(MID(ls_Current, 2))
+	adw_passed.Object.key_id[li_Row] = "Alternate_Locked_List_View"
+	adw_passed.Object.description[li_Row] = f_LanguageString('PREF_USE_ALTERNATE_LOCKED_RECORD_LIST_VIEW?', "Use alternate locked Record List view?")
+	adw_passed.Object.value_id[li_Row] = ls_Current
+	adw_passed.Object.default_value[li_Row] = f_LanguageString('NO', 'No')
+	adw_passed.Object.preference_list[li_Row] = f_LanguageString('YES', "Yes") + "|" + f_LanguageString('NO', "No")
+	adw_passed.Object.module_id[li_Row] = gs_Window_Title
+END IF
+
+end subroutine
+

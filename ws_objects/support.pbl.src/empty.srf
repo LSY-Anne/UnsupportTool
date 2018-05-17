@@ -1,0 +1,11 @@
+﻿$PBExportHeader$empty.srf
+global type empty from function_object
+end type
+
+forward prototypes
+global function boolean empty (string ls_string)
+end prototypes
+
+global function boolean empty (string ls_string);RETURN ( TRIM(ls_string) = '' ) OR IsNull(ls_string)
+end function
+

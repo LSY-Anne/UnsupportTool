@@ -1,0 +1,32 @@
+﻿$PBExportHeader$f_free_db_locks_all_esoms_applications.srf
+global type f_free_db_locks_all_esoms_applications from function_object
+end type
+
+forward prototypes
+global subroutine f_free_db_locks_all_esoms_applications ()
+end prototypes
+
+global subroutine f_free_db_locks_all_esoms_applications ();boolean lb_Kill_Applications
+integer li_Count
+integer li_Return
+string ls_Open_Application_List
+string ls_Temp[]
+ulong lul_Temp
+
+f_Get_All_Running_Esoms_App_List(ls_Temp)
+FOR li_Count = 1 TO UpperBound(ls_Temp)
+	ls_Open_Application_List = ls_Open_Application_List + ls_Temp[li_Count] + ', '
+NEXT
+ls_Open_Application_List = MID(ls_Open_Application_List, 1, LEN(ls_Open_Application_List) - 2)
+lb_Kill_Applications = NOT Empty(ls_Open_Application_List)
+IF lb_Kill_Applications THEN
+	FOR li_Count = 1 TO UpperBound(ls_Temp)
+		li_Return = RegistryGet("HKEY_LOCAL_MACHINE\Software\TechAssist\Mobile eSOMS\" + ls_Temp[li_Count], "Main_Handle", ReguLong!, lul_Temp)
+		IF ( li_Return = 1 ) THEN
+			// Send 2 (release db locks - ROLLBACK) to the application's w_main window
+			li_Return = Send(lul_Temp, PBM_CUSTOM01, 0, 2)
+		END IF
+	NEXT
+END IF
+end subroutine
+

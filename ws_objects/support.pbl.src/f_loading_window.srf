@@ -1,0 +1,21 @@
+﻿$PBExportHeader$f_loading_window.srf
+global type f_loading_window from function_object
+end type
+
+forward prototypes
+global subroutine f_loading_window (string as_command)
+end prototypes
+
+global subroutine f_loading_window (string as_command);CHOOSE CASE UPPER(as_command)
+	CASE 'OPEN'
+		Open(w_loading)
+		guo_window.uf_resize(w_loading)
+	CASE 'CLOSE'
+		IF IsValid(w_loading) THEN
+			Close(w_loading)
+		END IF
+END CHOOSE
+
+
+end subroutine
+

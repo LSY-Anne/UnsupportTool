@@ -1,0 +1,11 @@
+﻿$PBExportHeader$avelastx.srf
+global type avelastx from function_object
+end type
+
+forward prototypes
+global function string avelastx (integer sta, integer count)
+end prototypes
+
+global function string avelastx (integer sta, integer count);RETURN GenLastX(sta,count,"AVE")
+end function
+

@@ -1,0 +1,54 @@
+﻿$PBExportHeader$f_getflashcards.srf
+global type f_getflashcards from function_object
+end type
+
+forward prototypes
+global subroutine f_getflashcards (ref string asa_data[])
+end prototypes
+
+global subroutine f_getflashcards (ref string asa_data[]);//string ls_Data
+//integer li_Count
+//
+////ls_Data = fnGetStorageCards()
+//ls_Data = f_Get_Nonvolatile_Storage_Locations()
+//
+//li_Count = 1
+//DO WHILE NOT Empty(ls_Data)
+//	IF ( POS(ls_Data, '|') > 0 ) THEN
+//		asa_Data[li_Count] = MID(ls_Data, 1, POS(ls_Data, '|') - 1)
+//		ls_Data = MID(ls_Data, POS(ls_Data, '|') + 1)
+//	ELSE
+//		asa_Data[li_Count] = ls_Data
+//		ls_Data = ''
+//	END IF
+//	li_Count ++
+//LOOP
+
+string lsa_Data[]
+integer li_Position
+integer li_Count
+integer li_File
+long ll_Bytes_Read
+integer li_Return
+integer li_Num_Flashcards
+string ls_Temp_File
+
+ls_Temp_File = "\temp\storagecards.dat"
+IF gb_platform_is_ce THEN
+	IF ( fnGetStorageCards2(ls_Temp_File) = 0 ) THEN
+		li_File = FileOpen(ls_Temp_File, StreamMode!)
+		ll_Bytes_Read = FileReadEX(li_File, asa_Data[1])
+		li_Num_Flashcards = (ll_Bytes_Read/260)/2
+		FOR li_Count = 2 TO li_Num_Flashcards
+			li_Position = (li_Count - 1) * 260 * 2
+			FileSeek(li_File, li_Position, FromBeginning!)
+			FileRead(li_File, asa_Data[li_Count])
+		NEXT
+		li_Return = FileClose(li_File)
+	END IF
+ELSE
+	asa_Data[1] = "temp"
+END IF
+
+end subroutine
+

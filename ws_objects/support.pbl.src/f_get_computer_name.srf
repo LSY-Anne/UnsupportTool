@@ -1,0 +1,25 @@
+﻿$PBExportHeader$f_get_computer_name.srf
+global type f_get_computer_name from function_object
+end type
+
+forward prototypes
+global subroutine f_get_computer_name ()
+end prototypes
+
+global subroutine f_get_computer_name ();//long ll_size = 255
+gs_Computer_Name = f_Get_OS_Environment_Variable('CLIENTNAME')
+
+IF Empty(gs_Computer_Name) THEN
+	gs_Computer_Name = f_Get_OS_Environment_Variable('COMPUTERNAME')
+//	gs_Computer_Name	= Space(ll_size)
+//	IF NOT GetComputerNameA(gs_Computer_Name, ll_size) THEN
+//		gs_Computer_Name = 'MACHINE->Unknown'
+//	ELSE
+		gs_Computer_Name = LEFT('MACHINE->' + gs_Computer_Name, 220)
+//	END IF
+ELSE
+	gs_Computer_Name = LEFT('MACHINE->' + gs_Computer_Name, 220)
+END IF
+
+end subroutine
+

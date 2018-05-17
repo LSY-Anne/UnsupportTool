@@ -1,0 +1,11 @@
+﻿$PBExportHeader$vardaterange.srf
+global type vardaterange from function_object
+end type
+
+forward prototypes
+global function string vardaterange (integer sta, string start_date, string end_date)
+end prototypes
+
+global function string vardaterange (integer sta, string start_date, string end_date);RETURN GenDateRange(sta,start_date,end_date,"VAR")
+end function
+

@@ -1,0 +1,83 @@
+﻿$PBExportHeader$tdpsdt.srf
+global type tdpsdt from function_object
+end type
+
+forward prototypes
+global subroutine tdpsdt (double t, ref double dp)
+end prototypes
+
+global subroutine tdpsdt (double t, ref double dp);//
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*
+//
+//// TDPSDT computes the quantity T * dP(Sat)/dT.
+//
+//
+//  Discussion:
+//
+//    Here T is the temperature and P(Sat) is the vapor pressure.  
+//    It is used by TSAT_EST and TSAT.
+//
+//  Reference:
+//
+//    Lester Haar, John Gallagher and George Kell,
+//    NBS/NRC Steam Tables:
+//    Thermodynamic and Transport Properties and Computer Programs
+//      for Vapor and Liquid States of Water in SI Units,
+//    Hemisphere Publishing Corporation, Washington, 1984,
+//    TJ270.H3
+//
+//    C A Meyer, R B McClintock, G J Silvestri, R C Spencer,
+//    ASME Steam Tables: Thermodynamic and Transport Properties of Steam,
+//    American Society of Mechanical Engineers, 1967.
+//
+//  Parameters:
+//
+//    Input, double T, the temperature, in degrees Kelvin.
+//
+//    Output, double DP, the value T*(dP(Sat)/dT), 
+//    in MegaPascals.
+//
+//  implicit none
+//
+//  double, parameter, dimension ( 8 ) :: a = (/       -7.8889166E+00,   2.5514255E+00,   -6.716169E+00, 33.239495E+00,     -105.38479E+00,   174.35319E+00,   -148.39348E+00,  48.631602E+00 /)
+	 
+  double a[] = {-7.8889166E+00,   2.5514255E+00,   -6.716169E+00, 33.239495E+00, -105.38479E+00,   174.35319E+00,   -148.39348E+00,  48.631602E+00}
+  double b
+  double c
+  integer i
+  double q
+  double t_ref = 647.25E+00
+  double v
+  double w
+  double y
+  double z
+//
+//  Refuse to handle zero or negative temperatures.
+//
+/*
+  if ( t <= 0.0E+00 ) then
+    write ( *, '(a)' ) ' '
+    write ( *, '(a)' ) 'TDPSDT - Fatal error//'
+    write ( *, '(a)' ) '  The input temperature T must be positive.'
+    write ( *, '(a,g14.6)' ) '  Input value was T = ', t
+    stop
+  end if
+*/
+  v = t / t_ref
+  w = 1.0E+00 - v
+  b = 0.0E+00
+  c = 0.0E+00
+  FOR I = 1 TO 8
+    z = double( i + 1 ) / 2.0E+00
+    y = a[i] * w^z
+    c = c + ( y / w ) * ( 0.5E+00 - 0.5E+00 * double( i ) - 1.0E+00 / v )
+    b = b + y
+	NEXT
+
+  q = b / v
+  dp = 22.093E+00 * exp ( q ) * c
+
+  return
+
+end subroutine
+

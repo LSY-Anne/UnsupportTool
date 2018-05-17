@@ -1,0 +1,129 @@
+﻿$PBExportHeader$tsat.srf
+global type tsat from function_object
+end type
+
+forward prototypes
+global subroutine tsat (double p, ref double t, ref double rhol, ref double rhov)
+end prototypes
+
+global subroutine tsat (double p, ref double t, ref double rhol, ref double rhov);//
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*
+//
+//// TSAT calculates the saturation temperature for a given pressure.
+//
+//
+//  Discussion:
+//
+//    The corresponding liquid and vapor densities are also computed.
+//    The saturation temperature is also known as the "vapor temperature".
+//
+//  Modified:
+//
+//    04 February 2002
+//
+//  Reference:
+//
+//    Lester Haar, John Gallagher and George Kell,
+//    NBS/NRC Steam Tables:
+//    Thermodynamic and Transport Properties and Computer Programs
+//      for Vapor and Liquid States of Water in SI Units,
+//    Hemisphere Publishing Corporation, Washington, 1984,
+//    TJ270.H3
+//
+//    C A Meyer, R B McClintock, G J Silvestri, R C Spencer,
+//    ASME Steam Tables: Thermodynamic and Transport Properties of Steam,
+//    American Society of Mechanical Engineers, 1967.
+//
+//  Parameters:
+//
+//    Input, double P, the vapor pressure, in MegaPascals.
+//
+//    Output, double T, the vapor temperature, in degrees Kelvin.
+//
+//    Output, double RHOL, the liquid density, in G/CM3.
+//
+//    Output, double RHOV, the vapor density, in G/CM3.
+//
+//  implicit none
+//
+  boolean debug = FALSE
+  double delg
+  double dp
+  double dp2
+  double errtol
+  double gascon
+  integer it
+  integer it_max = 50
+//  double p
+  double p_consistent
+//  double rhol
+//  double rhov
+//  double t
+//
+//  Initialize output quantities, obliterating any input value.
+//
+  t = 0.0E+00
+  rhol = 0.0E+00
+  rhov = 0.0E+00
+//
+//  Set the error tolerance.
+//
+//  errtol = sqrt ( epsilon ( errtol ) )
+   errtol = 0.0000001
+//
+//  Refuse to handle zero or negative pressure.
+//
+
+  if ( p <= 0.0E+00 ) then
+//    write ( *, '(a)' ) ' '
+//    write ( *, '(a)' ) 'TSAT - Fatal error//'
+//    write ( *, '(a)' ) '  The input pressure must be positive//'
+//    write ( *, '(a,g14.6)' ) '  Your value was P = ', p
+//    stop
+    t = 1
+  end if
+
+//
+//  Estimate the saturation temperature.
+//
+
+  tsat_est( p, t )
+  
+/*
+  if ( debug ) then
+    write ( *, * ) ' '
+    write ( *, * ) 'TSAT:'
+    write ( *, '(2g14.6)' ) p, t, rhol, rhov
+  end if
+*/
+  FOR it = 1 TO it_max
+
+    corr( t, p, p_consistent, rhol, rhov, delg )
+
+    dp = delg * gascon ( ) * t  * rhol * rhov / ( rhol - rhov )
+
+    tdpsdt( t, dp2 )
+
+    t = t * ( 1.0E+00 - dp / dp2 )
+/*
+    if ( debug ) then
+      write ( *, '(2g14.6)' ) p, t, rhol, rhov
+    end if
+*/
+    if ( abs ( delg ) < errtol ) then
+      return
+    end if
+
+	NEXT
+/*
+  write ( *, '(a)' ) ' '
+  write ( *, '(a)' ) 'TSAT - Warning//'
+  write ( *, '(a)' ) '  The iteration did not converge.'
+  write ( *, '(a,i6)' ) '  Number of iterations was ', it_max
+  write ( *, '(a,g14.6)' ) '  Last iterate was ', t
+  write ( *, '(a,g14.6)' ) '  Last DELG was ', delg
+*/   
+  return
+
+end subroutine
+

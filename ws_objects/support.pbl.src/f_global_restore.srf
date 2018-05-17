@@ -1,0 +1,56 @@
+﻿$PBExportHeader$f_global_restore.srf
+global type f_global_restore from function_object
+end type
+
+forward prototypes
+global subroutine f_global_restore ()
+end prototypes
+
+global subroutine f_global_restore ();string ls_MB_String
+boolean lb_Kill_Applications
+integer li_Count
+integer li_Return
+string ls_Open_Application_List
+string ls_Temp[]
+string ls_Blank[]
+ulong lul_Temp
+
+f_Get_Running_Esoms_App_List(ls_Temp)
+FOR li_Count = 1 TO UpperBound(ls_Temp)
+	ls_Open_Application_List = ls_Open_Application_List + ls_Temp[li_Count] + ', '
+NEXT
+ls_Open_Application_List = MID(ls_Open_Application_List, 1, LEN(ls_Open_Application_List) - 2)
+lb_Kill_Applications = NOT Empty(ls_Open_Application_List)
+IF lb_Kill_Applications THEN
+	ls_MB_String = f_LanguageString('CONNECTED_MODULES_WILL_BE_CLOSED', 'The following modules are connected to the database and they will be automatically closed.  ### Are you sure you want to restore the database?')
+	ls_MB_String = StrTran(ls_MB_String, '###', ls_Open_Application_List)
+	li_Return = MessageBox(f_LanguageString('RESTORE_DATABASE?', 'Restore Database?'), ls_MB_String, Question!, Yesno!)
+ELSE
+	li_Return = MessageBox(f_LanguageString('RESTORE_DATABASE?', 'Restore Database?'), f_LanguageString('ARE_YOU_SURE_YOU_WANT_TO_RESTORE_THE_DATABASE?', 'Are you sure you want to restore the database?'), Question!, Yesno!)
+END IF
+IF ( li_Return = 1 ) THEN
+	IF lb_Kill_Applications THEN
+		FOR li_Count = 1 TO UpperBound(ls_Temp)
+			li_Return = RegistryGet("HKEY_LOCAL_MACHINE\Software\TechAssist\Mobile eSOMS\" + ls_Temp[li_Count], "Main_Handle", ReguLong!, lul_Temp)
+			IF ( li_Return = 1 ) THEN
+				// Send 1 (close the application) to the application's w_main window
+				li_Return = Send(lul_Temp, PBM_CUSTOM01, 0, 1)
+			END IF
+		NEXT
+		ls_Temp = ls_Blank
+		ls_Open_Application_List = ''
+		f_Get_Running_Esoms_App_List(ls_Temp)
+		FOR li_Count = 1 TO UpperBound(ls_Temp)
+			ls_Open_Application_List = ls_Open_Application_List + ls_Temp[li_Count] + ', '
+		NEXT
+		ls_Open_Application_List = MID(ls_Open_Application_List, 1, LEN(ls_Open_Application_List) - 2)
+		IF NOT Empty(ls_Open_Application_List) THEN
+			MessageBox(f_LanguageString('ERROR', 'Error'), f_LanguageString('PLEASE_CLOSE_APPLICATIONS', 'One ore more of the open Mobile eSOMS applications could not be closed.  Please close these applications and then perform a restore again.'), Exclamation!)
+			RETURN
+		END IF
+	END IF
+	f_Restore_Database("eSOMS.db")
+END IF
+w_main.Post Event ue_Post_Restore()
+end subroutine
+

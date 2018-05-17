@@ -1,0 +1,30 @@
+﻿$PBExportHeader$compile_test.srf
+global type compile_test from function_object
+end type
+
+forward prototypes
+global function string compile_test (string ls_expr)
+end prototypes
+
+global function string compile_test (string ls_expr);string ls_MB_String
+string ls_result
+string ls_eval
+
+w_tour.ids_evaluate.Reset()
+ls_eval = StrTran(ls_expr, "'", '"')
+ls_eval = "Evaluate('" + ls_eval + "',0)"
+TRY
+	ls_result = w_tour.ids_evaluate.Describe(ls_eval)
+CATCH (runtimeerror er)   
+   MessageBox("Expression Evaluation Error", 'Error: '+ er.GetMessage()+'~n~nExpression: '+ls_expr+'~n~nResult: '+ls_result)
+	ls_MB_String = f_LanguageString('ERROR:_@@@_EXPRESSION:_$$$_RESULT:_###', 'Error: @@@ Expression: $$$ Result: ###')
+	ls_MB_String = StrTran(ls_MB_String, '@@@', er.GetMessage())
+	ls_MB_String = StrTran(ls_MB_String, '$$$', ls_expr)
+	ls_MB_String = StrTran(ls_MB_String, '###', ls_result)
+   MessageBox(F_lANGUAGEsTRING('EXPRESSION_EVALUATION_ERROR', "Expression Evaluation Error"), ls_MB_String)
+	ls_result = ''
+END TRY   
+
+RETURN ls_result
+end function
+

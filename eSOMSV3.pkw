@@ -1,0 +1,11 @@
+Save Format v3.0(19990112)
+@begin Targets
+ 0 "clearances.pkt";
+ 1 "rounds.pkt";
+ 2 "logs.pkt";
+ 3 "config.pkt";
+@end;
+@begin Unchecked
+@end;
+DefaultTarget "rounds.pkt";
+DefaultRemoteTarget "rounds.pkt";

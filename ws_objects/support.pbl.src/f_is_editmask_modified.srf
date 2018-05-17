@@ -1,0 +1,40 @@
+﻿$PBExportHeader$f_is_editmask_modified.srf
+global type f_is_editmask_modified from function_object
+end type
+
+forward prototypes
+global function boolean f_is_editmask_modified (editmask aem_temp_1, editmask aem_temp_2)
+end prototypes
+
+global function boolean f_is_editmask_modified (editmask aem_temp_1, editmask aem_temp_2);boolean lb_Return
+string ls_Text
+string ls_Reading
+
+aem_temp_2.SetMask(aem_temp_1.MaskDataType, aem_temp_1.Mask)
+aem_temp_2.Text = ''
+ls_Text = aem_temp_2.Text
+ls_Reading = aem_temp_1.Text
+lb_Return = ( ls_Text <> ls_Reading )
+
+RETURN lb_Return
+
+//CHOOSE CASE amdt
+//	CASE DateMask!, DateTimeMask!, TimeMask!
+//		ls_Mask = StrTran(UPPER(ls_Mask), 'M', ' ') // for (M)onth and (m)inute
+//		ls_Mask = StrTran(UPPER(ls_Mask), 'D', ' ')
+//		ls_Mask = StrTran(UPPER(ls_Mask), 'Y', ' ')
+//		ls_Mask = StrTran(UPPER(ls_Mask), 'H', ' ')
+//		ls_Mask = StrTran(UPPER(ls_Mask), 'S', ' ')
+//	CASE DecimalMask!, NumericMask!
+//		ls_Mask = StrTran(UPPER(ls_Mask), '#', '0')
+//	CASE StringMask!
+//		ls_Mask = StrTran(UPPER(ls_Mask), '!', ' ')
+//		ls_Mask = StrTran(UPPER(ls_Mask), '^', ' ')
+//		ls_Mask = StrTran(UPPER(ls_Mask), 'X', ' ')
+//		ls_Mask = StrTran(UPPER(ls_Mask), 'A', ' ')
+//		ls_Mask = StrTran(UPPER(ls_Mask), '#', ' ')
+//END CHOOSE
+//
+//RETURN ( ls_Mask <> as_Reading )
+end function
+

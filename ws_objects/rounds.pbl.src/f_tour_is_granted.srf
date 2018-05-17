@@ -1,0 +1,19 @@
+﻿$PBExportHeader$f_tour_is_granted.srf
+global type f_tour_is_granted from function_object
+end type
+
+forward prototypes
+global function boolean f_tour_is_granted (long ll_tour, long level)
+end prototypes
+
+global function boolean f_tour_is_granted (long ll_tour, long level);boolean lb_Return
+
+//IF IsValid(w_select_from_asa) THEN
+//	lb_Return = ( w_select_from_asa.uo_user_ml.Is_Granted(ll_site_code, 'OR' + String(ll_tour, '000'), level) > 0 )
+//ELSE
+	lb_Return = ( guo_user.Is_Granted('OR' + String(ll_tour, '000'), level) > 0 )
+//END IF
+
+RETURN lb_Return
+end function
+

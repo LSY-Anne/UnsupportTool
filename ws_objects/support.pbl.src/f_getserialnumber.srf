@@ -1,0 +1,72 @@
+﻿$PBExportHeader$f_getserialnumber.srf
+global type f_getserialnumber from function_object
+end type
+
+forward prototypes
+global function string f_getserialnumber ()
+end prototypes
+
+global function string f_getserialnumber ();//string ls_Serial_Number
+//
+//ls_Serial_Number = g_env.deviceid //fnGetSerialNumber()
+//RegistrySet("HKEY_LOCAL_MACHINE\Software\TechAssist\Mobile eSOMS", "SerialNumber", RegString!, ls_Serial_Number)
+//
+//ls_Serial_Number = StrTran(ls_Serial_Number, '{', '')
+//ls_Serial_Number = StrTran(ls_Serial_Number, '}', '')
+//ls_Serial_Number = StrTran(ls_Serial_Number, '-', '')
+//RETURN ls_Serial_Number
+
+// 2010-01-26 - The below code was added because iPAQ 214 devices had the same value returned by env.deviceid
+string ls_Serial_Number
+string ls_Serial_Number_Temp
+integer li_Return
+string ls_IPAQ_Serial
+string ls_Location
+ulong ul_size
+
+// WORKAROUND getting serialnumber
+//IF gb_platform_is_ce THEN
+//	u_ipaq_serial_number ul_ipaq
+//	ls_IPAQ_Serial = ul_ipaq.f_get_uuid( )
+//	IF Empty(ls_IPAQ_Serial) THEN
+//		ls_Serial_Number = g_env.deviceid
+//	ELSE
+//		ls_Serial_Number = ls_IPAQ_Serial + '_' + g_env.deviceid
+//	END IF
+//	
+//	ls_Serial_Number = StrTran(ls_Serial_Number, '{', '')
+//	ls_Serial_Number = StrTran(ls_Serial_Number, '}', '')
+//	ls_Serial_Number = StrTran(ls_Serial_Number, '-', '')
+//	ls_Serial_Number = /*'ml_' + */ ls_Serial_Number
+//	
+//	//li_Return = RegistryGet("HKEY_LOCAL_MACHINE\Software\TechAssist\Mobile eSOMS", "SerialNumber", RegString!, ls_Serial_Number)
+//	//
+//	//// If not set yet or if it's the old type of serialnumber
+//	//IF Empty(ls_Serial_Number) OR ( ls_Serial_Number = ls_Serial_Number_Temp ) THEN
+//	//
+//	//	DECLARE my_cursor DYNAMIC CURSOR FOR SQLSA ;
+//	//	string sqlstatement
+//	//	sqlstatement = "SELECT UUIDTOSTR(NewID()) "
+//	//	PREPARE SQLSA FROM :sqlstatement ;
+//	//	OPEN DYNAMIC my_cursor ;
+//	//	FETCH my_cursor INTO :ls_Serial_Number ;
+//	//	CLOSE my_cursor ;
+//	//
+//	//	ls_Serial_Number = StrTran(ls_Serial_Number, '{', '')
+//	//	ls_Serial_Number = StrTran(ls_Serial_Number, '}', '')
+//	//	ls_Serial_Number = StrTran(ls_Serial_Number, '-', '')
+//	//	ls_Serial_Number = 'ml_' + ls_Serial_Number
+//	//END IF
+//	
+//ELSE
+	f_Get_Computer_Name()
+	ls_Serial_Number = gs_Computer_Name //'TestSerial12345678901234567890123456789012345678901234567890'
+//END IF
+IF gb_Using_ML THEN
+	ls_Serial_Number = 'ml_' + ls_Serial_Number
+END IF
+li_Return = RegistrySet("HKEY_LOCAL_MACHINE\Software\TechAssist\Mobile eSOMS", "SerialNumber", RegString!, ls_Serial_Number)
+
+RETURN ls_Serial_Number
+end function
+

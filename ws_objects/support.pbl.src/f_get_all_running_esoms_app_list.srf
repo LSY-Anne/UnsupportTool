@@ -1,0 +1,34 @@
+﻿$PBExportHeader$f_get_all_running_esoms_app_list.srf
+global type f_get_all_running_esoms_app_list from function_object
+end type
+
+forward prototypes
+global subroutine f_get_all_running_esoms_app_list (ref string as_return[])
+end prototypes
+
+global subroutine f_get_all_running_esoms_app_list (ref string as_return[]);ulong lul_Handle
+string ls_Window_Title
+integer li_Return
+string ls_Temp[]
+integer li_Count
+string ls_App_Name
+
+li_Return = RegistryKeys("HKEY_LOCAL_MACHINE\SOFTWARE\TECHASSIST\MOBILE ESOMS", ls_Temp)
+li_Return = 1
+FOR li_Count = 1 TO UpperBound(ls_Temp)
+	ls_Window_Title = 'eSOMS ' + ls_Temp[li_Count]
+	IF gb_Platform_Is_CE THEN
+		lul_Handle = FindWindow_CE(0, ls_Window_Title)
+	ELSE
+		lul_Handle = FindWindow_NT(0, ls_Window_Title)
+	END IF
+	IF (lul_Handle = 0) THEN
+//		MessageBox(ls_Temp[li_Count] + ' NOT Open', '')
+	ELSE
+		as_Return[li_Return] = ls_Temp[li_Count]
+		li_Return++
+//		MessageBox(ls_Temp[li_Count] + ' Open', '')
+	END IF
+NEXT
+end subroutine
+

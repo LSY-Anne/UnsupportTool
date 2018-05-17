@@ -1,0 +1,105 @@
+﻿$PBExportHeader$f_blob_to_file.srf
+global type f_blob_to_file from function_object
+end type
+
+forward prototypes
+global function any f_blob_to_file (ref string as_filename, integer ai_reading_id, integer ai_document_number, integer ai_station)
+end prototypes
+
+global function any f_blob_to_file (ref string as_filename, integer ai_reading_id, integer ai_document_number, integer ai_station);string ls_MB_String
+integer li_Return
+blob  input_blob
+u_blob_file_handler uo_blob
+
+string ls_Filename
+string ls_Folder
+integer li_Count
+
+integer li_Tour
+integer li_Rev_No
+date ld_Shift_Date
+integer li_Shift_No
+integer li_Sta
+	
+li_Tour			= gsu_tour_parameters[gi_Current_Tour].Tour_Number
+//li_Rev_No		= gsu_tour_parameters[gi_Current_Tour].Rev_No
+ld_Shift_Date	= gsu_tour_parameters[gi_Current_Tour].Tour_Date
+li_Shift_No		= gsu_tour_parameters[gi_Current_Tour].Shift_No
+li_Sta			= ai_Station //gsu_tour_parameters[gi_Current_Tour].Station
+
+ls_Folder = '\Temp\'
+
+IF ( Right(ls_Folder, 1) <> '\' ) THEN
+	ls_Folder = ls_Folder + '\'
+END IF
+//TRY
+	
+	SELECTBLOB document_blob 
+			INTO :input_blob 
+			FROM tour_documents 
+		  WHERE ( tour = :li_Tour ) 
+			 AND ( dt = :ld_Shift_Date ) 
+			 AND ( sta = :li_Sta ) 
+			 AND ( shift_no = :li_Shift_No ) 
+			 AND ( reading_id = :ai_Reading_Id ) 
+			 AND ( document_number = :ai_Document_Number ) ;
+
+//FINALLY
+//	MessageBox('Error', 'There was an error reading the file from the db.  Please check available memory and try again.')
+//	RETURN -1
+//END TRY
+
+SQLError()
+
+    SELECT document_filename 
+		INTO :ls_Filename 
+		FROM tour_documents 
+	  WHERE ( tour = :li_Tour ) 
+		 AND ( dt = :ld_Shift_Date ) 
+		 AND ( sta = :li_Sta ) 
+		 AND ( shift_no = :li_Shift_No ) 
+		 AND ( reading_id = :ai_Reading_Id ) 
+		 AND ( document_number = :ai_Document_Number ) ;
+
+SQLError()
+
+IF NOT IsNull(input_blob) THEN
+	ls_Filename = ls_Folder + ls_Filename
+		
+	li_Count = 1
+	DO WHILE TRUE
+		IF FileExists(ls_Filename) THEN
+			IF FileDelete(ls_Filename) THEN
+				EXIT
+			ELSE
+				ls_Filename = String(li_Count) + '_' + ls_FileName
+			END IF
+		ELSE
+			EXIT
+		END IF
+		IF ( li_Count = 50 ) THEN
+			li_Return =  -1
+			ls_MB_String = f_LanguageString('', 'Unable to extract the document to ###.')
+			ls_MB_String = StrTran(ls_MB_String, '###', ls_Filename)
+			MessageBox(f_LanguageString('ERROR', 'Error'), ls_MB_String)
+			EXIT
+		END IF
+	LOOP
+	IF ( li_Return <> -1 ) THEN
+		li_Return = uo_blob.uf_Put_Blob_To_File(ls_Filename, input_blob)
+		IF ( li_Return = 1 ) THEN
+			// Return the actual path/filename to open
+			as_Filename = ls_Filename
+		ELSE
+			MessageBox(f_LanguageString('ERROR', 'Error'), f_LanguageString('UNABLE_TO_EXTRACT_DOCUMENT_FROM_THE_DATABASE.', 'Unable to extract document from the database.'))
+		END IF
+	END IF
+ELSE
+	MessageBox(f_LanguageString('ERROR', 'Error'), f_LanguageString('DOCUMENT_IS_NULL.', 'Document is NULL.'))
+	li_Return = -1
+END IF
+SetNull(input_blob)
+
+RETURN li_Return
+end function
+

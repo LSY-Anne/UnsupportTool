@@ -1,0 +1,25 @@
+﻿$PBExportHeader$parserelated.srf
+global type parserelated from function_object
+end type
+
+forward prototypes
+global function integer parserelated (string ls_sta, integer li_sta)
+end prototypes
+
+global function integer parserelated (string ls_sta, integer li_sta);integer li_Start, li_End, li_Len, li_Sta_Start
+
+ls_Sta = ls_Sta + ","
+li_Sta_Start = li_Sta - 1
+IF ( li_Sta = 1 ) THEN
+	li_Start	= 1
+	li_End	= FindPos(ls_Sta,",",1)-1
+ELSE
+	li_Start	= FindPos(ls_Sta, ",", li_Sta_Start) + 1
+	li_End	= FindPos(ls_Sta, ",", li_Sta) - 1
+END IF
+li_Len = li_End - li_Start + 1
+ls_Sta = Mid(ls_Sta, li_Start, li_Len)
+
+RETURN Integer(ls_Sta)
+end function
+

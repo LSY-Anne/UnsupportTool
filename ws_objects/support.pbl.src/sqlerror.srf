@@ -1,0 +1,21 @@
+﻿$PBExportHeader$sqlerror.srf
+global type sqlerror from function_object
+end type
+
+forward prototypes
+global function integer sqlerror ()
+end prototypes
+
+global function integer sqlerror ();string ls_MB_String
+
+IF ( SQLCA.SQLCode <> 0 ) THEN
+	ls_MB_String = f_LanguageString('$$$_-_DATABASE_ERROR_NUMBER:###.', '$$$ - Database error number:###.')
+	ls_MB_String = StrTran(ls_MB_String, '$$$', SQLCA.SQLErrText)
+	ls_MB_String = StrTran(ls_MB_String, '###', String(SQLCA.SQLDBCode))
+	MessageBox(f_LanguageString('ERROR', 'Error'), ls_MB_String)
+END IF
+
+RETURN SQLCA.SQLCode
+
+end function
+

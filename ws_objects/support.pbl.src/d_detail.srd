@@ -1,0 +1,24 @@
+﻿$PBExportHeader$d_detail.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=0 color="536870912"  height.autosize=yes)
+table(column=(type=char(2000) updatewhereclause=yes name=header dbname="header" )
+ column=(type=char(2000) updatewhereclause=yes name=text dbname="text" )
+ retrieve="  SELECT 'ABC asfd saf asdf sdf sadf asdf sdaf sadf asd ' AS header, 
+         'ABC in long form asdf sadf sadf asdf asdf asdf asdf asdf asdf ' AS text
+    FROM dummy
+UNION
+  SELECT 'DEF' AS header, 
+         'DEF in long form' AS text
+    FROM dummy
+UNION
+  SELECT 'GHI' AS header, 
+         'GHI in long form' AS text
+    FROM dummy" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="27" y="4" height="56" width="919" format="[general]" html.valueishtml="0"  name=header visible="1" height.autosize=yes edit.limit=2000 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes  edit.displayonly=yes  font.face="Arial" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="87" y="64" height="56" width="859" format="[general]" html.valueishtml="0"  name=text visible="1"  slideup=allabove height.autosize=yes edit.limit=0 edit.case=any edit.focusrectangle=no  edit.autoselect=no  edit.displayonly=yes  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" netscapelayers="0" )
+ 

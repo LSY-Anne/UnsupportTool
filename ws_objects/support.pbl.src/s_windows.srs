@@ -1,0 +1,6 @@
+﻿$PBExportHeader$s_windows.srs
+global type s_windows from structure
+	string		window_name
+	string		window_title
+end type
+

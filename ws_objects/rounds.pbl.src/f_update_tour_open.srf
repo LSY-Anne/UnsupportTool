@@ -1,0 +1,49 @@
+﻿$PBExportHeader$f_update_tour_open.srf
+global type f_Update_Tour_Open from function_object
+end type
+
+forward prototypes
+global subroutine f_update_tour_open (integer ai_tour, integer ai_rev_no, integer ai_open)
+end prototypes
+
+global subroutine f_update_tour_open (integer ai_tour, integer ai_rev_no, integer ai_open);UPDATE tour 
+	SET open_on_handheld = :ai_Open 
+ WHERE ( tour = :ai_Tour ) 
+	AND ( rev_no = :ai_Rev_No ) ;
+
+COMMIT ;
+
+//string ls_Sql
+//
+//CHOOSE CASE ai_Open
+//	CASE 0
+//		ls_Sql = 'STOP SYNCHRONIZATION DELETE'
+//		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+//
+//		DELETE FROM tour_open 
+//		 WHERE ( tour = :ai_Tour ) 
+//			AND ( rev_no = :ai_Rev_No ) ;
+//
+//		ls_Sql = 'START SYNCHRONIZATION DELETE'
+//		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+//	CASE 1
+//
+//		INSERT INTO tour_open 
+//				 ( tour, 
+//				 	rev_no, 
+//					open_on_handheld ) 
+//		VALUES ( :ai_Tour, 
+//					:ai_Rev_No, 
+//					:ai_Open ) ;
+//
+//		UPDATE tour_open 
+//			SET open_on_handheld = :ai_Open 
+//		 WHERE ( tour = :ai_Tour ) 
+//			AND ( rev_no = :ai_Rev_No ) ;
+//
+//END CHOOSE
+//		
+//COMMIT ;
+
+end subroutine
+

@@ -1,0 +1,11 @@
+﻿$PBExportHeader$gramspercc2lbpercft.srf
+global type gramspercc2lbpercft from function_object
+end type
+
+forward prototypes
+global function double gramspercc2lbpercft (double ldb_density)
+end prototypes
+
+global function double gramspercc2lbpercft (double ldb_density);return ldb_density * 62.43
+end function
+

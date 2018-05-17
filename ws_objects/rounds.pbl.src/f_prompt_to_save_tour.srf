@@ -1,0 +1,181 @@
+﻿$PBExportHeader$f_prompt_to_save_tour.srf
+global type f_prompt_to_save_tour from function_object
+end type
+
+forward prototypes
+global function integer f_prompt_to_save_tour ()
+end prototypes
+
+global function integer f_prompt_to_save_tour ();string ls_MB_String
+boolean lb_Return
+integer li_Return
+string ls_Message
+string ls_Tour
+string ls_Shift
+string ls_Date
+integer li_Tour
+integer li_Rev_No
+integer li_Shift_No
+date ld_Date
+boolean lb_Some_Readings_Taken
+
+// No readings taken - delete the tour - li_Return = 1
+// Wants to save - close the tour - li_Return = 2
+// Does not want to save, does not want to delete - return to the tour - li_Return = 3
+// Does not want to save, wants to delete - delete the tour - li_Return = 4
+
+li_Tour			= gsu_tour_parameters[gi_Current_Tour].tour_number
+li_Rev_No		= gsu_tour_parameters[gi_Current_Tour].rev_no
+li_Shift_No		= gsu_tour_parameters[gi_Current_Tour].shift_no
+ld_Date			= gsu_tour_parameters[gi_Current_Tour].tour_date
+
+lb_Some_Readings_Taken = w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Verify_Tour_Was_Taken()
+IF NOT lb_Some_Readings_Taken THEN
+	li_Return = 1
+ELSEIF gb_TourClosePromptForTourDelete THEN
+	
+	SELECT tour_name 
+	  INTO :ls_Tour 
+	  FROM tour 
+	 WHERE ( tour = :li_Tour ) 
+		AND ( rev_no = :li_Rev_No ) ;
+	
+	SELECT shift_desc 
+	  INTO :ls_Shift 
+	  FROM shift_time 
+	 WHERE ( tour = :li_Tour ) 
+		AND ( rev_no = :li_Rev_No ) 
+		AND ( shift_no = :li_Shift_No ) ;
+	
+	ls_Date = String(ld_Date, date_format)
+	
+	ls_MB_String = f_LanguageString('DO_YOU_WANT_TO_DELETE_ALL_THE_READINGS_FOR_...?~N~R~N~RTOUR:_$$$~N~RSHIFT:_@@@~N~RDATE:_###', 'Do you want to delete all the readings for ...?~n~r~n~rTour: $$$~n~rShift: @@@~n~rDate: ###')
+	ls_MB_String = StrTran(ls_MB_String, '$$$', ls_Tour)
+	ls_MB_String = StrTran(ls_MB_String, '@@@', ls_Shift)
+	ls_MB_String = StrTran(ls_MB_String, '###', ls_Date)
+//	ls_Message = 'Do you want to delete all the readings for ...?~n~r~n~rTour: ' + ls_Tour + '~n~rShift: ' + ls_Shift + '~n~rDate: ' + ls_Date
+	li_Return = MessageBox(f_LanguageString('DELETE_READINGS?', 'Delete readings?'), ls_MB_String, Question!, YesNo!)
+	IF ( li_Return = 2 ) THEN
+		li_Return = 2
+	ELSE
+		ls_MB_String = f_LanguageString('ALL_DATA_ASSOCIATED_WITH_...~N~R~N~RTOUR:_$$$~N~RSHIFT:_@@@~N~RDATE:_###', 'All the data associated with ...~n~r~n~rTour: $$$~n~rShift: @@@~n~rDate: ###')
+		ls_MB_String = StrTran(ls_MB_String, '$$$', ls_Tour)
+		ls_MB_String = StrTran(ls_MB_String, '@@@', ls_Shift)
+		ls_MB_String = StrTran(ls_MB_String, '###', ls_Date)
+//		ls_Message = 'All the data associated with ...~n~r~n~rTour: ' + ls_Tour + '~n~rShift: ' + ls_Shift + '~n~rDate: ' + ls_Date + '~n~r~n~rwill be deleted, are you sure you want to continue?'
+		li_Return = MessageBox(f_LanguageString('DELETE_READINGS?', 'Delete readings?'), ls_MB_String, Question!, YesNo!)
+		IF ( li_Return = 1 ) THEN
+			li_Return = 4
+		ELSE
+			li_Return = 3
+		END IF
+	END IF
+ELSE
+	li_Return = 2
+END IF
+
+CHOOSE CASE li_Return
+	CASE 1, 4 // delete the tour
+		w_main.wf_Release_Menu(gsu_tour_parameters[gi_Current_Tour].menu_number)
+		string ls_Sql
+		
+//		ls_Sql = 'STOP SYNCHRONIZATION DELETE'
+//		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+					
+		DELETE FROM history 
+		 WHERE ( tour = :li_Tour ) 
+			AND ( shift_no = :li_Shift_No ) 
+			AND ( dt = :ld_Date ) ;
+		
+//		ls_Sql = 'START SYNCHRONIZATION DELETE'
+//		EXECUTE IMMEDIATE :ls_Sql USING SQLCA ;
+
+		f_Update_Tour_Open(gsu_tour_parameters[gi_Current_Tour].tour_number, gsu_tour_parameters[gi_Current_Tour].rev_no, 0)
+	CASE 2 // save the tour
+	CASE 3 // return to the tour
+END CHOOSE
+
+RETURN li_Return
+
+
+//boolean lb_Return
+//integer li_Return
+//string ls_Message
+//string ls_Tour
+//string ls_Shift
+//string ls_Date
+//integer li_Tour
+//integer li_Rev_No
+//integer li_Shift_No
+//date ld_Date
+//boolean lb_Some_Readings_Taken
+//
+//// No readings taken - delete the tour - li_Return = 1
+//// Wants to save - close the tour - li_Return = 2
+//// Does not want to save, does not want to delete - return to the tour - li_Return = 3
+//// Does not want to save, wants to delete - delete the tour - li_Return = 4
+//
+//li_Tour			= gsu_tour_parameters[gi_Current_Tour].tour_number
+//li_Rev_No		= gsu_tour_parameters[gi_Current_Tour].rev_no
+//li_Shift_No		= gsu_tour_parameters[gi_Current_Tour].shift_no
+//ld_Date			= gsu_tour_parameters[gi_Current_Tour].tour_date
+//
+//lb_Some_Readings_Taken = w_tour.tab_tour.tabpage_readings.dw_readings.EVENT ue_Verify_Tour_Was_Taken()
+//IF NOT lb_Some_Readings_Taken THEN
+//	li_Return = 1
+//ELSEIF gb_TourClosePromptForTourSave THEN
+//	
+//	SELECT tour_name 
+//	  INTO :ls_Tour 
+//	  FROM tour 
+//	 WHERE ( tour = :li_Tour ) 
+//		AND ( rev_no = :li_Rev_No ) ;
+//	
+//	SELECT shift_desc 
+//	  INTO :ls_Shift 
+//	  FROM shift_time 
+//	 WHERE ( tour = :li_Tour ) 
+//		AND ( rev_no = :li_Rev_No ) 
+//		AND ( shift_no = :li_Shift_No ) ;
+//	
+//	ls_Date = String(ld_Date, 'mm/dd/yy')
+//	
+//	ls_Message = 'Do you want to save the readings taken for ...?~n~r~n~rTour: ' + ls_Tour + '~n~rShift: ' + ls_Shift + '~n~rDate: ' + ls_Date
+//	li_Return = MessageBox('Save readings?', ls_Message, Question!, YesNo!)
+//	IF ( li_Return = 1 ) THEN
+//		li_Return = 2
+//	ELSE
+//		ls_Message = 'All the data associated with ...~n~r~n~rTour: ' + ls_Tour + '~n~rShift: ' + ls_Shift + '~n~rDate: ' + ls_Date + '~n~r~n~rwill be deleted, are you sure you want to continue with not saving the data?'
+//		li_Return = MessageBox('Delete readings?', ls_Message, Question!, YesNo!)
+//		IF ( li_Return = 1 ) THEN
+//			li_Return = 4
+//		ELSE
+//			li_Return = 3
+//		END IF
+//	END IF
+//ELSE
+//	li_Return = 2
+//END IF
+//
+//CHOOSE CASE li_Return
+//	CASE 1, 4 // delete the tour
+//		w_main.wf_Release_Menu(gsu_tour_parameters[gi_Current_Tour].menu_number)
+//					
+//		DELETE FROM history 
+//		 WHERE ( tour = :li_Tour ) 
+//			AND ( shift_no = :li_Shift_No ) 
+//			AND ( dt = :ld_Date ) ;
+//		
+//		UPDATE tour 
+//			SET open_on_handheld = 0 
+//		 WHERE ( tour = :gsu_tour_parameters[gi_Current_Tour].tour_number ) 
+//			AND ( rev_no = :gsu_tour_parameters[gi_Current_Tour].rev_no );
+//		
+//		 COMMIT ;
+//	CASE 2 // save the tour
+//	CASE 3 // return to the tour
+//END CHOOSE
+//
+//RETURN li_Return
+end function
+

@@ -1,0 +1,13 @@
+﻿$PBExportHeader$rtod.srf
+global type rtod from function_object
+end type
+
+forward prototypes
+global function dec rtod (dec radians)
+end prototypes
+
+global function dec rtod (dec radians);dec degrees
+degrees = radians * 180 / pi(1)
+return degrees
+end function
+

@@ -1,0 +1,11 @@
+﻿$PBExportHeader$minlastx.srf
+global type minlastx from function_object
+end type
+
+forward prototypes
+global function string minlastx (integer sta, integer count)
+end prototypes
+
+global function string minlastx (integer sta, integer count);RETURN GenLastX(sta,count,"MIN")
+end function
+

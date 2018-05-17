@@ -1,0 +1,52 @@
+﻿$PBExportHeader$f_datastore_from_sql_with_trans.srf
+global type f_datastore_from_sql_with_trans from function_object
+end type
+
+forward prototypes
+global function integer test (ref string as_sql_passed, datastore ads_passed)
+global function integer f_datastore_from_sql_with_trans (ref string as_sql_passed, datastore ads_passed, transaction sql_passed)
+end prototypes
+
+global function integer test (ref string as_sql_passed, datastore ads_passed);string ls_Sql_Syntax, ls_Errors
+long ll_Num_Rows
+integer li_Error
+
+ll_Num_Rows = -1
+
+ls_Sql_Syntax = SQLCA.SyntaxFromSql(as_Sql_Passed, '', ls_Errors)
+
+IF ( LEN(ls_Errors) = 0 ) THEN
+	ads_passed.Create(ls_Sql_Syntax, ls_Errors)
+	IF ( LEN(ls_Errors) = 0 ) THEN
+		li_Error = ads_passed.SetTransObject(SQLCA)
+		IF ( li_Error = 1 ) THEN
+			ll_Num_Rows = ads_passed.Retrieve()
+		END IF
+	END IF
+END IF
+
+RETURN ll_Num_Rows
+end function
+
+global function integer f_datastore_from_sql_with_trans (ref string as_sql_passed, datastore ads_passed, transaction sql_passed);string ls_Sql_Syntax
+string ls_Errors
+long ll_Num_Rows
+integer li_Error
+
+ll_Num_Rows = -1
+
+ls_Sql_Syntax = SQL_Passed.SyntaxFromSQL(as_Sql_Passed, 'Style(Type=Form)', ls_Errors)
+ls_Sql_Syntax = StrTran(ls_Sql_Syntax, 'char(2147483646)', 'char(2000)')
+IF ( LEN(ls_Errors) = 0 ) THEN
+	ads_passed.Create(ls_Sql_Syntax, ls_Errors)
+	IF ( LEN(ls_Errors) = 0 ) THEN
+		li_Error = ads_passed.SetTransObject(SQL_Passed)
+		IF ( li_Error = 1 ) THEN
+			ll_Num_Rows = ads_passed.Retrieve()
+		END IF
+	END IF
+END IF
+
+RETURN ll_Num_Rows
+end function
+

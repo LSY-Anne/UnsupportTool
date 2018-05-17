@@ -1,0 +1,59 @@
+﻿$PBExportHeader$f_file_to_blob_scratchpad.srf
+global type f_file_to_blob_scratchpad from function_object
+end type
+
+forward prototypes
+global function integer f_file_to_blob_scratchpad (string as_filename, integer li_tour, date ld_shift_date, integer li_shift_no, integer ai_reading_id, integer ai_document_number, integer ai_station)
+end prototypes
+
+global function integer f_file_to_blob_scratchpad (string as_filename, integer li_tour, date ld_shift_date, integer li_shift_no, integer ai_reading_id, integer ai_document_number, integer ai_station);string ls_MB_String
+integer li_Return
+blob  output_blob
+u_blob_file_handler uo_blob
+
+integer li_Sta
+
+li_Sta			= ai_Station //gsu_tour_parameters[gi_Current_Tour].Station
+
+output_blob = BLOB('')
+//GarbageCollect()
+li_Return = uo_blob.uf_Get_Blob_From_File(as_Filename, output_blob)
+IF ( li_Return = 1 ) THEN
+	IF ISNULL(output_blob) THEN
+		MessageBox(f_LanguageString('WARNING', 'Warning'), f_LanguageString('FILE_MUST_HAVE_A_FILESIZE_>_0_CURRENTLY_NULL', 'File must have a filesize > 0, it is currently NULL.'))
+		li_Return = -1
+	ELSEIF ( LEN(output_blob) = 0 ) THEN
+		MessageBox(f_LanguageString('WARNING', 'Warning'), f_LanguageString('FILE_MUST_HAVE_A_FILESIZE_>_0.', 'File must have a filesize > 0.'))
+		li_Return = -1
+	ELSE
+	
+		UPDATEBLOB tour_documents 
+				 SET document_blob = :output_blob 
+			  WHERE ( tour = :li_Tour ) 
+				 AND ( dt = :ld_Shift_Date ) 
+				 AND ( sta = :li_Sta ) 
+				 AND ( shift_no = :li_Shift_No ) 
+				 AND ( reading_id = :ai_Reading_Id ) 
+				 AND ( document_number = :ai_Document_Number ) 
+				 AND ( document_type = 1 ) ;
+						
+		IF ( SQLCA.SQLNRows > 0 ) THEN
+			// All is well
+		ELSE
+			ls_MB_String = f_LanguageString('UNABLE_TO_UPDATE_DATABASE_WITH_THE_BLOB.###', 'Unable to update database with the blob.~n~r~n~r###')
+			ls_MB_String = StrTran(ls_MB_String, '###', SQLCA.SQLErrText)
+			MessageBox(f_LanguageString('ERROR', 'Error'), ls_MB_String)
+			ROLLBACK ;
+			li_Return = -1
+		END IF
+	END IF
+ELSE
+	MessageBox(f_LanguageString('ERROR', 'Error'), f_LanguageString('UNABLE_TO_CREATE_A_BLOB_FROM_THE_DOCUMENT.', 'Unable to create a blob from the document.'))
+	ROLLBACK ;
+	li_Return = -1
+END IF
+SetNull(output_blob)
+
+RETURN li_Return
+end function
+

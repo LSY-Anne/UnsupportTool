@@ -1,0 +1,119 @@
+﻿$PBExportHeader$f_check_if_reading_changed.srf
+global type f_Check_If_Reading_Changed from function_object
+end type
+
+forward prototypes
+global function boolean f_check_if_reading_changed (long al_row_passed)
+end prototypes
+
+global function boolean f_check_if_reading_changed (long al_row_passed);boolean lb_Return
+string ls_Rd
+string ls_Previous_Rd
+dwitemstatus ldwi_temp
+
+IF FALSE THEN
+	ls_Rd = w_tour.tab_tour.tabpage_readings.dw_readings.GetItemString(al_Row_Passed, 'history_rd')
+	IF Empty(ls_Rd) THEN
+		ls_Rd = ''
+	END IF
+	ls_Previous_Rd = w_tour.tab_tour.tabpage_readings.dw_readings.GetItemString(al_Row_Passed, 'previous_rd')
+	IF Empty(ls_Previous_Rd) THEN
+		ls_Previous_Rd = ''
+	END IF
+	RETURN NOT ( TRIM(ls_Rd) = TRIM(ls_Previous_Rd) )
+ELSE
+	integer li_Tour
+	integer li_Rev_No
+	integer li_Sta
+	datetime ld_Tour_Date
+	integer li_Shift_No
+	
+	li_Tour = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_tour[al_Row_Passed]
+	li_Rev_No = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_rev_no[al_Row_Passed]
+	li_Sta = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_sta[al_Row_Passed]
+	ld_Tour_Date = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_dt[al_Row_Passed]
+	li_Shift_No = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_shift_no[al_Row_Passed]
+	ls_Rd = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_rd[al_Row_Passed]
+	
+	IF Empty(ls_Rd) THEN
+		ls_Rd = ''
+	END IF
+		
+	SELECT ISNULL(a.rd, '') 
+	  INTO :ls_Previous_Rd 
+	  FROM history a 
+	 WHERE ( a.tour = :li_Tour ) 
+		AND ( a.rev_no = :li_Rev_No ) 
+		AND ( a.dt = :ld_Tour_Date ) 
+		AND ( a.sta = :li_Sta ) 
+		AND ( a.shift_no = :li_Shift_No ) 
+		AND ( a.reading_id = 0 ) ;
+		
+	IF ( TRIM(ls_Rd) <> TRIM(ls_Previous_Rd) ) THEN
+		lb_Return = TRUE
+	ELSE
+		// 2010-10-25 - RPR - Added this because I noticed when a reading is accepted as OOS and the station is navigated to and changed to an in spec value without saving
+		// the reading is marked as in spec but hcanging the value back to the original OOS value did not put the OOS condition back.  This will capture it.
+		ldwi_temp = w_tour.tab_tour.tabpage_readings.dw_readings.GetItemStatus(al_Row_Passed, 'history_rd', Primary!)
+		IF ( ldwi_temp = DataModified! ) THEN
+			lb_Return = TRUE
+		ELSE
+			lb_Return = FALSE
+		END IF
+	END IF
+	
+	RETURN lb_Return
+END IF
+
+//boolean lb_Return
+//string ls_Rd
+//string ls_Previous_Rd
+//
+//IF TRUE THEN
+//	ls_Rd = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_rd[al_Row_Passed]
+//	IF Empty(ls_Rd) THEN
+//		ls_Rd = ''
+//	END IF
+//	ls_Previous_Rd = w_tour.tab_tour.tabpage_readings.dw_readings.Object.previous_rd[al_Row_Passed]
+//	IF Empty(ls_Previous_Rd) THEN
+//		ls_Previous_Rd = ''
+//	END IF
+//	RETURN NOT ( TRIM(ls_Rd) = TRIM(ls_Previous_Rd) )
+//ELSE
+//	integer li_Tour
+//	integer li_Rev_No
+//	integer li_Sta
+//	datetime ld_Tour_Date
+//	integer li_Shift_No
+//	
+//	li_Tour = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_tour[al_Row_Passed]
+//	li_Rev_No = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_rev_no[al_Row_Passed]
+//	li_Sta = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_sta[al_Row_Passed]
+//	ld_Tour_Date = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_dt[al_Row_Passed]
+//	li_Shift_No = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_shift_no[al_Row_Passed]
+//	ls_Rd = w_tour.tab_tour.tabpage_readings.dw_readings.Object.history_rd[al_Row_Passed]
+//	
+//	IF Empty(ls_Rd) THEN
+//		ls_Rd = ''
+//	END IF
+//		
+//		SELECT ISNULL(a.rd, '') 
+//		  INTO :ls_Previous_Rd 
+//		  FROM history a 
+//		 WHERE ( a.tour = :li_Tour ) 
+//			AND ( a.rev_no = :li_Rev_No ) 
+//			AND ( a.dt = :ld_Tour_Date ) 
+//			AND ( a.sta = :li_Sta ) 
+//			AND ( a.shift_no = :li_Shift_No ) 
+//			AND ( a.reading_id = 0 ) ;
+//		
+//	IF ( TRIM(ls_Rd) <> TRIM(ls_Previous_Rd) ) THEN
+//		lb_Return = TRUE
+//	ELSE
+//		lb_Return = FALSE
+//	END IF
+//	
+//	RETURN lb_Return
+//END IF
+end function
+

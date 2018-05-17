@@ -1,0 +1,75 @@
+﻿$PBExportHeader$compile.srf
+global type compile from function_object
+end type
+
+forward prototypes
+global function string compile (string ls_expr, datetime ldt_dt, long ll_tour, long ll_sta, long ll_shift_no, long ll_reading_id)
+end prototypes
+
+global function string compile (string ls_expr, datetime ldt_dt, long ll_tour, long ll_sta, long ll_shift_no, long ll_reading_id);//string ls_result, ls_eval
+//pointer l_pointer
+//
+//l_pointer = SetPointer(HourGlass!)
+//ls_eval = "Evaluate('" + ls_expr + "', 0)"
+//
+//TRY
+//	ls_result	= w_tour.ids_evaluate.Describe(ls_eval)
+//CATCH (runtimeerror er)
+//   MessageBox("Expression Evaluation Error", 'Error: '+ er.GetMessage()+'~n~nExpression: '+ls_expr+'~n~nResult: '+ls_result)
+//	ls_result = ''
+//END TRY   
+//
+//SetPointer(l_pointer)
+//RETURN ls_result
+
+string ls_MB_String
+string ls_result,ls_eval
+long ll_row,ll_rev_no
+long ll_Num_Rows
+
+SELECT rev_no 
+  INTO :ll_rev_no 
+  FROM current_tour_revision 
+ WHERE tour = :ll_tour ;
+
+w_tour.ids_evaluate.Reset()
+w_tour.ids_evaluate.Retrieve(ldt_dt,ll_tour,ll_sta,ll_shift_no,ll_reading_id)
+
+IF w_tour.ids_evaluate.RowCount() = 0 THEN
+	ll_row														= w_tour.ids_evaluate.InsertRow(0)
+	w_tour.ids_evaluate.object.dt[ll_row] 				= ldt_dt
+	w_tour.ids_evaluate.object.tour[ll_row]			= ll_tour
+	w_tour.ids_evaluate.object.rev_no[ll_row]			= ll_rev_no
+	w_tour.ids_evaluate.object.sta[ll_row]				= ll_sta
+	w_tour.ids_evaluate.object.shift_no[ll_row]		= ll_shift_no
+	w_tour.ids_evaluate.object.reading_id[ll_row]	= ll_reading_id
+	w_tour.ids_evaluate.object.user_id[ll_row]		= guo_user.id
+	w_tour.ids_evaluate.object.rd[ll_row]				= ''
+	w_tour.ids_evaluate.object.notes[ll_row]			= ''
+	w_tour.ids_evaluate.object.cdt[ll_row]				= DateTime(Today(),Now())
+	w_tour.ids_evaluate.object.spec[ll_row]			= 0
+	w_tour.ids_evaluate.object.tol[ll_row]				= 0
+	w_tour.ids_evaluate.object.scan[ll_row]			= 0
+END IF
+
+ls_eval		= "Evaluate('"+ls_expr+"',"+String(ll_row)+")"
+
+TRY
+	ls_result	= w_tour.ids_evaluate.Describe(ls_eval)
+CATCH (runtimeerror er)   
+//   MessageBox("Expression Evaluation Error", 'Error: '+ er.GetMessage()+'~n~nExpression: '+ls_expr+'~n~nResult: '+ls_result)
+	ls_MB_String = f_LanguageString('ERROR:_@@@_EXPRESSION:_$$$_RESULT:_###', 'Error: @@@ Expression: $$$ Result: ###')
+	ls_MB_String = StrTran(ls_MB_String, '@@@', er.GetMessage())
+	ls_MB_String = StrTran(ls_MB_String, '$$$', ls_expr)
+	ls_MB_String = StrTran(ls_MB_String, '###', ls_result)
+   MessageBox(f_LanguageString('EXPRESSION_EVALUATION_ERROR', "Expression Evaluation Error"), ls_MB_String)
+	ls_result = ''
+END TRY   
+
+IF ( TRIM(ls_Result) = '!' ) THEN
+	ls_Result = ''
+END IF
+
+RETURN ls_Result
+end function
+

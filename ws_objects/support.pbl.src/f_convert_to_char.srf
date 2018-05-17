@@ -1,0 +1,14 @@
+﻿$PBExportHeader$f_convert_to_char.srf
+global type f_Convert_To_Char from function_object
+end type
+
+forward prototypes
+global function string f_convert_to_char (unsignedlong aul_passed)
+end prototypes
+
+global function string f_convert_to_char (unsignedlong aul_passed);IF ( aul_Passed > 96 ) AND ( aul_Passed < 123 ) THEN
+	aul_Passed = aul_Passed - 32
+END IF
+RETURN CHAR(aul_Passed)
+end function
+

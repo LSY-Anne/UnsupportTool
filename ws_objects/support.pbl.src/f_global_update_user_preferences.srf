@@ -1,0 +1,46 @@
+﻿$PBExportHeader$f_global_update_user_preferences.srf
+global type f_global_update_user_preferences from function_object
+end type
+
+forward prototypes
+global subroutine f_global_update_user_preferences ()
+end prototypes
+
+global subroutine f_global_update_user_preferences ();//guo_user_settings.uf_get_language_settings( )
+
+gs_Hardware_Button_Action = Upper(ProfileString(gs_INI_FILE, gs_Window_Title, 'HARDWARE_BUTTON_ACTION', ''))
+gs_Hardware_Button_2_Action = Upper(ProfileString(gs_INI_FILE, gs_Window_Title, 'HARDWARE_BUTTON_2_ACTION', ''))
+gb_Auto_SIP = FALSE//( Upper(ProfileString(gs_INI_FILE, gs_Window_Title, 'AUTOKEYBOARDWINCE', f_LanguageString('No', 'No'))) = Upper(f_LanguageString('YES', 'Yes')) )
+
+integer li_Return
+//li_Return = SetRuntimeProperty("SIPOnFocusDown_AlternateTechnique", TRUE)
+//li_Return = SetRuntimeProperty("SIPOnFocusUp_AlternateTechnique", TRUE)
+
+IF gb_platform_is_ce THEN
+	// PK version 2.0
+	TRY
+		li_Return = SetRuntimeProperty("AutomaticSIPHandling", gb_Auto_SIP)
+	CATCH ( runtimeerror er)
+	//	Messagebox('f_global_update_user_preferences()', er.text)
+	END TRY
+	
+	// PK version 2.5
+	TRY
+		li_Return = SetRuntimeProperty_25("AutomaticSIPHandling", gb_Auto_SIP)
+	CATCH ( runtimeerror er2)
+	//	Messagebox('f_global_update_user_preferences()', er2.text)
+	END TRY
+END IF
+
+gb_Use_Navigation_Arrows = ( UPPER(ProfileString(gs_INI_File, gs_Window_Title, "USE_NAVIGATION_ARROWS", f_LanguageString('YES', 'Yes'))) = Upper(f_LanguageString('YES', 'Yes')) )
+gb_Allow_Note_Files = ( Upper(ProfileString(gs_INI_File, gs_Window_Title, "ALLOW_NOTE_FILES", f_LanguageString('NO', 'No'))) = Upper(f_LanguageString('YES', 'Yes')) )
+gb_Use_Ellipsis = ( Upper(ProfileString(gs_INI_File, gs_Window_Title, "USE_ELLIPSES", f_LanguageString('NO', 'No'))) = Upper(f_LanguageString('YES', 'Yes')) )
+gb_Is_VGA = f_Is_Device_VGA()
+gi_Automatic_Backup_Timing = Integer(ProfileString(gs_INI_File, gs_Window_Title, "AUTOMATIC_BACKUP_TIMING", "10"))
+IF IsValid(w_main) THEN
+	Timer(gi_Automatic_Backup_Timing * 60, w_main)
+END IF
+
+
+end subroutine
+

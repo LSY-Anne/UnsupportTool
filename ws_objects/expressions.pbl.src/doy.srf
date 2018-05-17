@@ -1,0 +1,34 @@
+﻿$PBExportHeader$doy.srf
+global type doy from function_object
+end type
+
+forward prototypes
+global function integer doy (string ls_date)
+end prototypes
+
+global function integer doy (string ls_date);integer li_Year
+integer li_Month
+integer li_Day
+date ld_new_year,ld_date
+
+// 2009-02-18 - RPR corrected for localization WRT Date(~string~) and the string is NOT in the localized format.
+//              This is still expecting a string in the format mm-dd-yyyy
+
+li_Year	= Integer(Mid(ls_date,7,4))
+li_Month	= Integer(Mid(ls_date,1,2))
+li_Day	= Integer(Mid(ls_date,4,2))
+
+ld_date		= Date(li_Year, li_Month, li_Day)
+ld_new_year	= Date(li_Year, 1, 1)
+
+return DaysAfter(ld_new_year,ld_date) + 1
+
+//string ls_date_temp
+//date ld_new_year,ld_date
+//
+//ls_date_temp	= '01-01-'+Mid(ls_date,7,4)
+//ld_date			= Date(Mid(ls_date,1,10))
+//ld_new_year		= Date(ls_date_temp)
+//return DaysAfter(ld_new_year,ld_date) + 1
+end function
+

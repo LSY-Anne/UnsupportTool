@@ -1,0 +1,22 @@
+﻿$PBExportHeader$tsat_eng.srf
+global type tsat_eng from function_object
+end type
+
+forward prototypes
+global function double tsat_eng (double p)
+end prototypes
+
+global function double tsat_eng (double p);double t, rhol, rhov
+
+IF p = 0 THEN
+	SetNull(p)
+	RETURN p
+END IF
+
+p	= psi2mpa(p)
+
+tsat( p, t, rhol, rhov )
+
+RETURN kelvin2fahr(t)
+end function
+

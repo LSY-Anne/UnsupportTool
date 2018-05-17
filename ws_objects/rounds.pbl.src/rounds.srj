@@ -1,0 +1,18 @@
+﻿$PBExportHeader$rounds.srj
+EXE:pb_rounds.exe,rounds_resource.pbr,0,1,1
+CMP:0,0,0,2,0,0,1
+COM:Ventyx, an ABB company
+DES:Mobile Operator Rounds Module
+CPY:© 2010-2012 Ventyx, an ABB company
+PRD:Mobile eSOMS - Enterprise Shift Operations System
+PVS:Desktop POC 3.9
+PVN:3,9,0,7
+FVS:Desktop POC 3.9
+FVN:3,9,0,7
+MAN:0,asInvoker,0
+PBD:rounds.pbl,rounds_resource.pbr,0
+PBD:expressions.pbl,,1
+PBD:support.pbl,,0
+PBD:Thermo.pbl,,1
+PBD:mobilink_or.pbl,,0
+PBD:mobilink_common.pbl,,0

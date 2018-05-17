@@ -1,0 +1,57 @@
+﻿$PBExportHeader$mnu_blank.srm
+forward
+global type mnu_blank from menu
+end type
+type m_0 from menu within mnu_blank
+end type
+type m_1 from menu within mnu_blank
+end type
+global type mnu_blank from menu
+m_0 m_0
+m_1 m_1
+end type
+end forward
+
+global type mnu_blank from menu
+m_0 m_0
+m_1 m_1
+end type
+global mnu_blank mnu_blank
+
+on mnu_blank.create
+mnu_blank=this
+call super::create
+this.m_0=create m_0
+this.m_1=create m_1
+this.Item[UpperBound(this.Item)+1]=this.m_0
+this.Item[UpperBound(this.Item)+1]=this.m_1
+end on
+
+on mnu_blank.destroy
+call super::destroy
+destroy(this.m_0)
+destroy(this.m_1)
+end on
+
+type m_0 from menu within mnu_blank
+end type
+
+on m_0.create
+call super::create
+end on
+
+on m_0.destroy
+call super::destroy
+end on
+
+type m_1 from menu within mnu_blank
+end type
+
+on m_1.create
+call super::create
+end on
+
+on m_1.destroy
+call super::destroy
+end on
+

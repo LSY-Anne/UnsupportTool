@@ -1,0 +1,11 @@
+﻿$PBExportHeader$stddevlastx.srf
+global type stddevlastx from function_object
+end type
+
+forward prototypes
+global function string stddevlastx (integer sta, integer count)
+end prototypes
+
+global function string stddevlastx (integer sta, integer count);RETURN GenLastX(sta,count,"STD")
+end function
+

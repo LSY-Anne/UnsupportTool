@@ -1,0 +1,21 @@
+﻿$PBExportHeader$stringcount.srf
+global type stringcount from function_object
+end type
+
+forward prototypes
+global function integer stringcount (string ls_find, string ls_search)
+end prototypes
+
+global function integer stringcount (string ls_find, string ls_search);int li_Pos, li_Count
+
+li_Count	= 0
+li_Pos	= Pos(ls_Search, ls_Find)
+
+DO WHILE ( li_Pos > 0 )
+	li_Count ++
+	li_Pos = POS(ls_Search, ls_Find, li_Pos + 1)
+LOOP
+
+RETURN li_Count
+end function
+

@@ -1,0 +1,31 @@
+﻿$PBExportHeader$f_languagestring_one_parm.srf
+global type f_languagestring_one_parm from function_object
+end type
+
+forward prototypes
+global function string f_languagestring_one_parm (string as_default)
+end prototypes
+
+global function string f_languagestring_one_parm (string as_default);string ls_Key
+long ll_Num_Rows
+string ls_Return
+string ls_Find
+long ll_Found_Row
+
+ls_Return = as_Default
+IF NOT guo_user_settings.ib_No_Language AND IsValid(guo_user_settings.ids_language_settings) THEN
+	ls_Key = Upper(StrTran(as_Default, ' ', '_'))
+	ls_Find = " key = '" + ls_Key + "'"
+	ll_Num_Rows = guo_user_settings.ids_language_settings.RowCount()
+	ll_Found_Row = guo_user_settings.ids_language_settings.Find(ls_Find, 1, ll_Num_Rows + 1)
+	IF ( ll_Found_Row > 0 ) THEN
+		ls_Return = guo_user_settings.ids_language_settings.Object.value[ll_Found_Row]
+	END IF
+	IF IsNull(ls_Return) THEN
+		ls_Return = ''
+	END IF
+END IF
+
+RETURN gs_Language_Test_Character + ls_Return + gs_Language_Test_Character
+end function
+

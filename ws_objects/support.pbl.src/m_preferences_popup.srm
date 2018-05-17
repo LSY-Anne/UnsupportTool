@@ -1,0 +1,90 @@
+﻿$PBExportHeader$m_preferences_popup.srm
+forward
+global type m_preferences_popup from menu
+end type
+type m_file from menu within m_preferences_popup
+end type
+type m_resetpreference from menu within m_file
+end type
+type m_resetallpreferencestodefault from menu within m_file
+end type
+type m_file from menu within m_preferences_popup
+m_resetpreference m_resetpreference
+m_resetallpreferencestodefault m_resetallpreferencestodefault
+end type
+global type m_preferences_popup from menu
+m_file m_file
+end type
+end forward
+
+global type m_preferences_popup from menu
+m_file m_file
+end type
+global m_preferences_popup m_preferences_popup
+
+on m_preferences_popup.create
+m_preferences_popup=this
+call super::create
+this.text = "m_preferences_popup"
+this.m_file=create m_file
+this.Item[UpperBound(this.Item)+1]=this.m_file
+end on
+
+on m_preferences_popup.destroy
+call super::destroy
+destroy(this.m_file)
+end on
+
+type m_file from menu within m_preferences_popup
+m_resetpreference m_resetpreference
+m_resetallpreferencestodefault m_resetallpreferencestodefault
+end type
+
+on m_file.create
+call super::create
+this.text = "File"
+this.m_resetpreference=create m_resetpreference
+this.m_resetallpreferencestodefault=create m_resetallpreferencestodefault
+this.Item[UpperBound(this.Item)+1]=this.m_resetpreference
+this.Item[UpperBound(this.Item)+1]=this.m_resetallpreferencestodefault
+end on
+
+on m_file.destroy
+call super::destroy
+destroy(this.m_resetpreference)
+destroy(this.m_resetallpreferencestodefault)
+end on
+
+type m_resetpreference from menu within m_file
+end type
+
+on m_resetpreference.create
+call super::create
+this.text = "Reset preference to default"
+end on
+
+event clicked;w_testing_preferences.wf_Reset_Current_Preference_To_Default()
+end event
+
+on m_resetpreference.destroy
+call super::destroy
+end on
+
+type m_resetallpreferencestodefault from menu within m_file
+event clicked ( )
+event create ( )
+event destroy ( )
+end type
+
+event clicked;w_testing_preferences.wf_Reset_All_Preferences_To_Default()
+end event
+
+on m_resetallpreferencestodefault.create
+call super::create
+this.text = "Reset ALL preferences to default"
+end on
+
+on m_resetallpreferencestodefault.destroy
+call super::destroy
+end on
+

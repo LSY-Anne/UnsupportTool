@@ -1,0 +1,20 @@
+﻿$PBExportHeader$tsat_si.srf
+global type tsat_si from function_object
+end type
+
+forward prototypes
+global function double tsat_si (double p)
+end prototypes
+
+global function double tsat_si (double p);double t, rhol, rhov
+
+IF p = 0 THEN
+	SetNull(p)
+	RETURN p
+END IF
+
+tsat( p, t, rhol, rhov )
+
+RETURN t
+end function
+

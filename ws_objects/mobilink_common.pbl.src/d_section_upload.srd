@@ -1,0 +1,57 @@
+﻿$PBExportHeader$d_section_upload.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=1 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no grid.lines=0 selected.mouse=no )
+header(height=64 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=68 color="536870912~tif(NOT ISNULL(rec_lock_user_id), RGB(192,192,192), if(currentrow()=getrow(), rgb(255,255,0), rgb(255,255,255)))"  height.autosize=yes)
+table(column=(type=char(25) updatewhereclause=yes name=tagout_type_desc dbname="tagout_types.tagout_type_desc" )
+ column=(type=char(3) updatewhereclause=yes name=tagout_type_id dbname="act_tagout_sections.tagout_type_id" )
+ column=(type=char(25) updatewhereclause=yes name=act_tagout_number dbname="act_tagout_sections.act_tagout_number" )
+ column=(type=char(50) updatewhereclause=yes name=act_tagout_section_number dbname="act_tagout_sections.act_tagout_section_number" )
+ column=(type=char(150) updatewhereclause=yes name=equip_operator_id dbname="act_tagout_sections.equip_operator_id" )
+ column=(type=char(2000) updatewhereclause=yes name=act_tagout_section_description dbname="act_tagout_sections.act_tagout_section_description" )
+ column=(type=char(2000) updatewhereclause=yes name=act_tagout_section_reason dbname="act_tagout_sections.act_tagout_section_reason" )
+ column=(type=char(2000) updatewhereclause=yes name=act_tagout_section_hazards dbname="act_tagout_sections.act_tagout_section_hazards" )
+ column=(type=char(2000) updatewhereclause=yes name=act_tagout_section_completion dbname="act_tagout_sections.act_tagout_section_completion" )
+ column=(type=char(12) updatewhereclause=yes name=act_tagout_sections_sign_on_lock_user_id dbname="act_tagout_sections.sign_on_lock_user_id" )
+ column=(type=datetime updatewhereclause=yes name=act_tagout_sections_sign_on_lock_date dbname="act_tagout_sections.sign_on_lock_date" )
+ column=(type=char(30) updatewhereclause=yes name=rec_lock_user_name dbname="rec_lock_user_name" )
+ column=(type=datetime updatewhereclause=yes name=rec_lock_dt dbname="act_tagout_sections.rec_lock_dt" )
+ column=(type=char(250) updatewhereclause=yes name=act_tagout_sections_sign_on_lock_reason dbname="act_tagout_sections.sign_on_lock_reason" )
+ column=(type=long updatewhereclause=yes name=selected dbname="selected" values="	1/	0" )
+ column=(type=long updatewhereclause=yes name=open_on_handheld dbname="open_on_handheld" )
+ column=(type=char(12) updatewhereclause=yes name=rec_lock_user_id dbname="act_tagout_sections.rec_lock_user_id" )
+ retrieve="SELECT   d.tagout_type_desc, 
+         c.tagout_type_id,
+         c.act_tagout_number,
+         c.act_tagout_section_number,
+         c.equip_operator_id,
+         c.act_tagout_section_description,
+         c.act_tagout_section_reason,
+         c.act_tagout_section_hazards,
+         c.act_tagout_section_completion,
+         c.sign_on_lock_user_id,
+         c.sign_on_lock_date,
+         ( SELECT a.name 
+			    FROM userlog a 
+				WHERE ( a.user_id = c.rec_lock_user_id ) ) AS rec_lock_user_name,
+         c.rec_lock_dt,
+         c.sign_on_lock_reason,  
+         1 selected, 
+         0 open_on_handheld,
+         c.rec_lock_user_id
+    FROM act_tagout_sections c,
+         tagout_types d 
+   WHERE c.tagout_type_id = d.tagout_type_id 
+ORDER BY 1,
+         2,
+         3" )
+text(band=header alignment="0" text="" border="6" color="33554432" x="9" y="4" height="60" width="151" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=15 alignment="2" tabsequence=32766 border="0" color="0" x="9" y="4" height="56" width="151" format="[general]" html.valueishtml="0" protect="0~t/*If(  IsNull(   rec_lock_user_id )  or Trim(rec_lock_user_id ) = Trim(Get_Current_User_ID() ) , 0 , 1 )*/0"  name=selected visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=yes checkbox.threed=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="553648127~tif(NOT ISNULL(rec_lock_user_id), RGB(192,192,192), if(currentrow()=getrow(), rgb(255,255,0), rgb(255,255,255)))" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="0" x="169" y="4" height="56" width="855" format="[general]" html.valueishtml="0"  name=act_tagout_section_number visible="1" height.autosize=yes edit.limit=50 edit.case=any edit.focusrectangle=no  edit.autoselect=yes edit.autohscroll=yes   font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="553648127~tif(NOT ISNULL(rec_lock_user_id), RGB(192,192,192), if(currentrow()=getrow(), rgb(255,255,0), rgb(255,255,255)))" )
+text(band=header alignment="2" text="" border="6" color="33554432" x="9" y="4" height="60" width="151" html.valueishtml="0"  name=selected_t visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Section Number~tf_DW_Language_call_2('Section Number')" border="6" color="0" x="169" y="4" height="60" width="855" html.valueishtml="0"  name=act_tagout_section_number_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" netscapelayers="0" )
+ 

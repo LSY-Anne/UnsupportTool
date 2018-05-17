@@ -1,0 +1,23 @@
+﻿$PBExportHeader$psat_eng.srf
+global type psat_eng from function_object
+end type
+
+forward prototypes
+global function double psat_eng (double t)
+end prototypes
+
+global function double psat_eng (double t);double p, rhol, rhov
+
+IF t = 0 THEN
+	SetNull(t)
+	RETURN t
+END IF
+
+
+t = fahr2kelvin(t)
+
+psat( t, p, rhol, rhov )
+
+RETURN mpa2psi(p)
+end function
+

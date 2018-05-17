@@ -1,0 +1,14 @@
+﻿$PBExportHeader$f_ml_type_is_granted.srf
+global type f_ml_type_is_granted from function_object
+end type
+
+forward prototypes
+global function boolean f_ml_type_is_granted (string ls_type_id, long level)
+end prototypes
+
+global function boolean f_ml_type_is_granted (string ls_type_id, long level);boolean lb_Return
+
+lb_Return = ( w_select_from_asa.uo_user_ml.Is_Granted('NCS' + ls_Type_Id, level) > 0 )
+RETURN lb_Return
+end function
+

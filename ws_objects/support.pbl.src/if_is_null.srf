@@ -1,0 +1,15 @@
+﻿$PBExportHeader$if_is_null.srf
+global type if_is_null from function_object
+end type
+
+forward prototypes
+global function any if_is_null (any a_passed)
+end prototypes
+
+global function any if_is_null (any a_passed);IF ISNULL(a_Passed) THEN
+	RETURN ''
+ELSE
+	RETURN a_Passed
+END IF
+end function
+

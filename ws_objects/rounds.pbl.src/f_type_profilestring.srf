@@ -1,0 +1,38 @@
+﻿$PBExportHeader$f_type_profilestring.srf
+global type f_type_profilestring from function_object
+end type
+
+forward prototypes
+global function string f_type_profilestring (string as_type_id, string as_key, string as_default)
+end prototypes
+
+global function string f_type_profilestring (string as_type_id, string as_key, string as_default);long ll_Row
+string ls_Return
+string ls_Find
+string ls_Value_Id
+string ls_Default_Id
+
+ls_Find = " type_id = '" + TRIM(as_Type_Id) + "' AND key_id = '" + as_Key + "' "
+ll_Row = ads_types.Find(ls_Find, 1, ads_types.RowCount())
+IF ( ll_Row > 0 ) THEN
+	ls_Value_Id = ads_types.GetItemString(ll_Row, 4)
+	ls_Default_Id = ads_types.GetItemString(ll_Row, 5)
+END IF
+
+IF Empty(ls_Value_Id) THEN
+	IF Empty(ls_Default_Id) THEN
+		ls_Return = as_Default
+	ELSE
+		ls_Return = as_Default
+	END IF
+ELSE
+	ls_Return = ls_Value_Id
+END IF
+
+IF Empty(ls_Return) THEN
+	ls_Return = ''
+END IF
+
+RETURN ls_Return
+end function
+

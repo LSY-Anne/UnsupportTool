@@ -1,0 +1,50 @@
+﻿$PBExportHeader$f_profilestring.srf
+global type f_profilestring from function_object
+end type
+
+forward prototypes
+global function string f_profilestring (string as_module_id, string as_key, string as_default)
+end prototypes
+
+global function string f_profilestring (string as_module_id, string as_key, string as_default);long ll_Num_Rows
+string ls_Return
+string ls_Find
+long ll_Found_Row
+
+IF gb_Using_ML THEN
+	ls_Find = " module_id = '" + as_module_id + "' AND key_id = '" + as_Key + "' "
+	ll_Found_Row = guo_user_settings.ids_user_settings.Find(ls_Find, 1, guo_user_settings.ids_user_settings.RowCount() + 1)
+	IF ( ll_Found_Row > 0 ) THEN
+		ls_Return = guo_user_settings.ids_user_settings.Object.value_id[ll_Found_Row]
+		IF Empty(ls_Return) THEN
+			ls_Return = guo_user_settings.ids_user_settings.Object.default_value[ll_Found_Row]
+		END IF
+	ELSE
+		ls_Return = as_Default
+	END IF
+		
+	IF IsNull(ls_Return) THEN
+		ls_Return = ''
+	END IF
+ELSE
+	ll_Num_Rows = guo_user_settings.uf_Get_User_Settings(as_Module_Id, as_Key)
+		
+	IF ( ll_Num_Rows = 1 ) THEN
+		ls_Return = guo_user_settings.ids_user_settings.Object.value_id[1]
+		IF Empty(ls_Return) THEN
+			ls_Return = guo_user_settings.ids_user_settings.Object.default_value[1]
+		END IF
+	ELSE
+		ls_Return = as_Default
+	END IF
+		
+	IF IsNull(ls_Return) THEN
+		ls_Return = ''
+	END IF
+END IF
+
+RETURN ls_Return
+
+
+end function
+
