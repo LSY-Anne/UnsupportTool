@@ -4,5 +4,6 @@ global type os_rect from structure
 	long		top
 	long		right
 	long		bottom
+	long		c
 end type
 
