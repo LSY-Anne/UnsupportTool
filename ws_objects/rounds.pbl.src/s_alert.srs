@@ -8,6 +8,5 @@ global type s_alert from structure
 	integer		reading_id
 	integer		alert_id
 	datetime		datetime
-	datetime		f
 end type
 
