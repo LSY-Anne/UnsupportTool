@@ -9,5 +9,6 @@ global type s_alert from structure
 	integer		alert_id
 	datetime		datetime
 	datetime		aa
+	datetime		e
 end type
 
